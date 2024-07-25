@@ -5,6 +5,11 @@
                 <div class="container p-6 text-gray-900">
                     <div class="row justify-content-center">
                         <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
+                        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
                             <!-- Cartões usuário comum -->
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
@@ -13,7 +18,7 @@
                                     <p class="card-text">Serviço de consulta criminal e processual, estadual e municipal, e antecedentes criminais de pessoas.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-primary">Consultar</a>
+                                    <a href="{{Route('employee.create')}}" class="btn btn-primary">Consultar</a>
                                 </div>
                             </div>
                         </div>
