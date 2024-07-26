@@ -148,6 +148,6 @@
   "You have not enabled two factor authentication.": "Você ainda não habilitou a autenticação de dois fatores.",
   "You may delete any of your existing tokens if they are no longer needed.": "Você deve deletar os tokens sem utilização.",
   "Your email address is unverified.": "Seu endereço de e-mail não foi verificado.",
-  "Formulário de Funcionário": "Formulário de Cadastro de Funcionário",
-  "Aviso Formulário de Funcionário": "Tenha todas as informações necessárias em mão antes de consultar."
+  "Formulário de Consulta": "Formulário de solicitação de consulta",
+  "Aviso Formulário": "Tenha todas as informações necessárias em mão antes de consultar."
 }
