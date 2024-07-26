@@ -3,13 +3,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="container p-6 text-gray-900">
+                @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                            @endif
                     <div class="row justify-content-center">
                         <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
-                        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
                             <!-- Cartões usuário comum -->
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">

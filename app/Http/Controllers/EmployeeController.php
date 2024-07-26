@@ -46,8 +46,8 @@ class EmployeeController extends Controller
             $request->all(),
             ['user_id' => $userId]  // Adiciona o ID do usuário aos dados
         ));
-    
-        return redirect()->route('dashboard')->with('success', 'Employee created with success.');
+        
+        return redirect(route('dashboard', absolute: false))->with('success','Consulta realizada');
     }
     
 
