@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +60,7 @@ class EmployeeController extends Controller
             // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
-        } catch (Exception $e) {
+        } catch (ValidationException $e) {
             // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
