@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\FreelancerController;
+use App\Models\Freelancer;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\Cache\Store;
@@ -32,6 +34,17 @@ Route::middleware('auth')
         Route::patch    ('/employee/update',  'update')->name('employee.update');
         Route::delete   ('/employee/destroy','destroy')->name('employee.destroy');
     });
+
+//Freelancer
+Route::middleware('auth')
+->controller(FreelancerController::class)
+->group(function(){
+    Route::get('/freelancer/create', 'create')->name('freelancer.create');
+    Route::post('/freelancer/store', 'store')->name('freelancer.store');
+    Route::get('/freelancer/edit', 'edit')->name('freelancer.edit');
+    Route::patch('/freelancer/update', 'update')->name('freelancer.update');
+    Route::delete('/freelancer/destroy', 'destroy')->name('freelancer.destroy');
+});
 
 
 require __DIR__ . '/auth.php';

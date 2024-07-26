@@ -35,7 +35,7 @@
                                     <p class="card-text">Consulta criminal e processual, status de CNH e veículo de prestadores.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-primary">Consultar</a>
+                                    <a href="{{Route('freelancer.create')}}" class="btn btn-primary">Consultar</a>
                                 </div>
                             </div>
                         </div>
