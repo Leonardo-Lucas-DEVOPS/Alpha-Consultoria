@@ -34,20 +34,17 @@ class EmployeeController extends Controller
                 'mae' => 'required',
                 'nascimento' => 'required|date',
             ]);
-    
+
             // Formatação dos dados (remover pontos, traços e outros caracteres não numéricos)
             $validatedData['rg'] = preg_replace('/\D/', '', $validatedData['rg']);
             $validatedData['cpf'] = preg_replace('/\D/', '', $validatedData['cpf']);
-    
+
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
-    
+
             // Cria o registro do empregado com o ID do usuário
-            Employee::create(array_merge(
-                $validatedData,
-                ['user_id' => $userId]  // Adiciona o ID do usuário aos dados
-            ));
-    
+            Employee::create(array_merge($validatedData,['user_id' => $userId]));
+
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
             // Armazena os dados na sessão para depuração
@@ -59,7 +56,7 @@ class EmployeeController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
-    
+
 
 
 
