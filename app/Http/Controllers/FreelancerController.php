@@ -22,13 +22,13 @@ class FreelancerController extends Controller
             // Validação dos dados (aceitar qualquer formato para RG e CPF)
             $validatedData = $request->validate([
                 'rg' => 'required|string',
-                'cpf' => 'required|string|unique:freelancer,cpf',
+                'cpf' => 'required|string|unique:freelancers,cpf',
                 'name' => 'required',
                 'pai' => 'nullable',
                 'mae' => 'required',
                 'nascimento' => 'required|date',
-                'cnh' => 'required|unique:freelancer,placa',
-                'placa' => 'required|unique:freelancer,placa',
+                'cnh' => 'required|unique:freelancers,placa',
+                'placa' => 'required|unique:freelancers,placa',
             ]);
             $validatedData['rg'] = preg_replace('/\D/', '', $validatedData['rg']);
             $validatedData['cpf'] = preg_replace('/\D/', '', $validatedData['cpf']);
@@ -37,9 +37,9 @@ class FreelancerController extends Controller
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
-
+            
             Freelancer::create(array_merge($validatedData, ['user_id' => $userId]));
-            return redirect(route('dashobard'))->with('success', 'Registro criado com sucesso');
+            return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
