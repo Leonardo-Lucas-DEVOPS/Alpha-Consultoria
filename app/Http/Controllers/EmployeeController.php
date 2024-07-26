@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Exception;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeController extends Controller
 {
@@ -29,27 +32,44 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'rg' => 'required',
-            'cpf' => 'required|unique:employees,cpf',
-            'pai' => 'required',
-            'mae' => 'required',
-            'nascimento' => 'required|date',
-        ]);
+        try {
+            // Validação dos dados (aceitar qualquer formato para RG e CPF)
+            $validatedData = $request->validate([
+                'rg' => 'required|string',
+                'cpf' => 'required|string|unique:employees,cpf',
+                'name' => 'required',
+                'pai' => 'nullable',
+                'mae' => 'required',
+                'nascimento' => 'required|date',
+            ]);
     
-        // Obtém o ID do usuário autenticado
-        $userId = Auth::id();
+            // Formatação dos dados (remover pontos, traços e outros caracteres não numéricos)
+            $validatedData['rg'] = preg_replace('/\D/', '', $validatedData['rg']);
+            $validatedData['cpf'] = preg_replace('/\D/', '', $validatedData['cpf']);
     
-        // Cria o registro do empregado com o ID do usuário
-        Employee::create(array_merge(
-            $request->all(),
-            ['user_id' => $userId]  // Adiciona o ID do usuário aos dados
-        ));
-        
-        return redirect(route('dashboard', absolute: false))->with('success','Consulta realizada');
+            // Obtém o ID do usuário autenticado
+            $userId = Auth::id();
+    
+            // Cria o registro do empregado com o ID do usuário
+            Employee::create(array_merge(
+                $validatedData,
+                ['user_id' => $userId]  // Adiciona o ID do usuário aos dados
+            ));
+    
+            return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
+        } catch (ValidationException $e) {
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+        } catch (Exception $e) {
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha no registro: ' . $e->getMessage());
+        }
     }
     
+
+
 
     /**
      * Display the specified resource.

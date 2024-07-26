@@ -17,9 +17,9 @@ class CreateEmployeesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('rg');
-            $table->string('cpf');
+            $table->string('cpf')->unique();
             $table->date('nascimento');
-            $table->string('pai');
+            $table->string('pai')->nullable();
             $table->string('mae');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('return_status')->default('Em análise');
