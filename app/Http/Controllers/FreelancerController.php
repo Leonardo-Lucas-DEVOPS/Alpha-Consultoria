@@ -27,7 +27,7 @@ class FreelancerController extends Controller
                 'pai' => 'nullable',
                 'mae' => 'required',
                 'nascimento' => 'required|date',
-                'cnh' => 'required',
+                'cnh' => 'required|unique:freelancer,placa',
                 'placa' => 'required|unique:freelancer,placa',
             ]);
             $validatedData['rg'] = preg_replace('/\D/', '', $validatedData['rg']);
