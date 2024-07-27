@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FreelancerController;
+use App\Http\Controllers\VehicleController;
 use App\Models\Freelancer;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
@@ -46,6 +47,16 @@ Route::middleware('auth')
     Route::delete('/freelancer/destroy', 'destroy')->name('freelancer.destroy');
 });
 
+//Vehicle
+Route::middleware('auth')
+->controller(VehicleController::class)
+->group(function(){
+    Route::get('/vehicle/create', 'create')->name('vehicle.create');
+    Route::post('/vehicle/store', 'store')->name('vehicle.store');
+    Route::get('/vehicle/edit', 'edit')->name('vehicle.edit');
+    Route::patch('/vehicle/update', 'update')->name('vehicle.update');
+    Route::delete('/vehicle/destroy', 'destroy')->name('vehicle.destroy');
+});
 
 require __DIR__ . '/auth.php';
     
