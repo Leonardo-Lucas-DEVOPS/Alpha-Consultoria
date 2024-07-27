@@ -47,7 +47,7 @@
                                     <p class="card-text">Consulta de Débitos e Restrições, Regularidade Documental, Situação Judicial, Informações Técnicas.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-primary">Consultar</a>
+                                    <a href="{{Route('vehicles.create')}}" class="btn btn-primary">Consultar</a>
                                 </div>
                             </div>
                         </div>
