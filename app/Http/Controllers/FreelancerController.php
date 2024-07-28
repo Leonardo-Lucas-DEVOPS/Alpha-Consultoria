@@ -49,4 +49,14 @@ class FreelancerController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
+
+    public function show(Freelancer $freelancer)
+    {
+        // Recupera todos os registros da tabela 'employees'
+        $freelancers = Freelancer::paginate(10);
+
+        // Retorna a view 'employee.partials.show-employee' com os dados recuperados
+        return view('freelancer.partials.show-freelancer', compact('freelancers'));
+    }
+
 }
