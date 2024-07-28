@@ -53,7 +53,7 @@
                         </div>
 
                         <!-- Cartões Admin -->
-                        @if (Auth::user()->usertype >= 2)
+                        @if (Auth::user()->usertype >= 1)
                         <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
@@ -74,7 +74,7 @@
                                     <p class="card-text">Consulta criminal e processual, status de CNH e veículo de prestadores.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-primary">Consultar</a>
+                                    <a href="{{route('freelancer.show')}}" class="btn btn-primary">Consultar</a>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
                                     <p class="card-text">Consulta de Débitos e Restrições, Regularidade Documental, Situação Judicial, Informações Técnicas.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-primary">Consultar</a>
+                                    <a href="{{route('vehicle.show')}}" class="btn btn-primary">Consultar</a>
                                 </div>
                             </div>
                         </div>
