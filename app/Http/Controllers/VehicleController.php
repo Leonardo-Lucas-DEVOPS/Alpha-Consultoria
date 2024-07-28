@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class VehicleController extends Controller
 {
@@ -16,7 +16,7 @@ class VehicleController extends Controller
     public function store(Request $request){
         try {
             
-            $validatedData = $request->validade([
+            $validatedData = $request->validate([
                 'placa'=>'required|unique:vehicles,placa',
                 'chassi'=>'required|unique:vehicles,chassi',
                 'renavam'=>'required|unique:vehicles,renavam',
@@ -24,8 +24,8 @@ class VehicleController extends Controller
             ]); 
             
             $validatedData['placa'] = preg_replace('/\D/', '', $validatedData['placa']);
-            $validatedData['cnh'] = preg_replace('/\D/', '', $validatedData['cnh']);
-            $validatedData['placa'] = preg_replace('/\D/', '', $validatedData['placa']);
+            $validatedData['renavam'] = preg_replace('/\D/', '', $validatedData['renavam']);
+            $validatedData['chassi'] = preg_replace('/\D/', '', $validatedData['chassi']);
 
 
             $userId = Auth::id();
@@ -35,10 +35,13 @@ class VehicleController extends Controller
             return redirect(route('dashboard'))->with('success','Registro criado com sucesso');
         }
         catch (ValidationException $e) {
-            return redirect(route('dashboard'))->with('fail','Falha na validação dos dados' . $e->getMessage());
-        }
-        catch (ValidationException $e) {
-            return redirect(route('dashboard'))->with('fail','Falha no registros dos dados' . $e->getMessage());
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+        } catch (ValidationException $e) {
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
 }
