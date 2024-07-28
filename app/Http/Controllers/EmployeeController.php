@@ -63,10 +63,15 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Employee $employee)
     {
-        //
+        // Recupera todos os registros da tabela 'employees'
+        $employees = Employee::paginate(10);
+
+        // Retorna a view 'employee.partials.show-employee' com os dados recuperados
+        return view('employee.partials.show-employee', compact('employees'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
