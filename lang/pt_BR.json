@@ -149,5 +149,6 @@
   "You may delete any of your existing tokens if they are no longer needed.": "Você deve deletar os tokens sem utilização.",
   "Your email address is unverified.": "Seu endereço de e-mail não foi verificado.",
   "Formulário de Consulta": "Formulário de solicitação de consulta",
-  "Aviso Formulário": "Tenha todas as informações necessárias em mão antes de consultar."
+  "Aviso Formulário": "Tenha todas as informações necessárias em mão antes de consultar.",
+  "Aviso do Registro":"Em caso de alteração de dados contatar o 'key user' da empresa"
 }

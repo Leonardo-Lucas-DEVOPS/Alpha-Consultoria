@@ -62,7 +62,7 @@
                                     <p class="card-text">Serviço de consulta criminal e processual, estadual e municipal, e antecedentes criminais de pessoas.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-primary">Consultar</a>
+                                    <a href="{{route('employee.show')}}" class="btn btn-primary">Consultar</a>
                                 </div>
                             </div>
                         </div>

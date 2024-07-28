@@ -31,6 +31,7 @@ Route::middleware('auth')
     ->group(function () {
         Route::get      ('/employee/create',  'create')->name('employee.create');
         Route::post      ('/employee/store',  'store')->name('employee.store');
+        Route::get      ('/employee/show',  'show')->name('employee.show');
         Route::get      ('/employee/edit',    'edit')->name('employee.edit');
         Route::patch    ('/employee/update',  'update')->name('employee.update');
         Route::delete   ('/employee/destroy','destroy')->name('employee.destroy');
