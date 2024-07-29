@@ -50,10 +50,14 @@
                                     @if (Auth::user()->usertype >= 2)
                                     <th>
                                         <div class="flex">
-                                            
-                                            <button class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="">Editar</button>
-                                            <button class="btn btn-danger ml-1 " style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="">Excluir</button>
+                                            <a class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="{{ route('employee.edit', ['id' => $employee->id]) }}">Editar</a>
+                                            <form action="{{ route('employee.destroy', $employee->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger ml-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Excluir</button>
+                                            </form>
                                         </div>
+
                                     </th>
                                     @endif
                                 </tr>
