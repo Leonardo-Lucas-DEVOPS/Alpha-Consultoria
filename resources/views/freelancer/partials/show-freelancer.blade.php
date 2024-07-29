@@ -53,10 +53,13 @@
                                     <td class="px-4 py-2">{{ $freelancer->return_status }}</td>
                                     @if (Auth::user()->usertype >= 2)
                                     <th>
-                                        <div class="flex">
-                                            
-                                            <button class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="">Editar</button>
-                                            <button class="btn btn-danger ml-1 " style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="">Excluir</button>
+                                    <div class="flex">
+                                            <a class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="{{ route('freelancer.edit', ['id' => $freelancer->id]) }}">Editar</a>
+                                            <form action="{{ route('freelancer.destroy', $freelancer->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger ml-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Excluir</button>
+                                            </form>
                                         </div>
                                     </th>
                                     @endif
