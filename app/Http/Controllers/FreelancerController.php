@@ -6,15 +6,13 @@ use App\Models\Freelancer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use PHPUnit\TextUI\Configuration\Merger;
 
 class FreelancerController extends Controller
 {
     public function create()
     {
-        return view('freelancer.create-freelancer');
+        return view('freelancer.freelancer', ['freelancer'=>null]);
     }
-
     public function store(Request $request)
     {
         try {
@@ -37,7 +35,7 @@ class FreelancerController extends Controller
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
-            
+
             Freelancer::create(array_merge($validatedData, ['user_id' => $userId]));
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
@@ -49,14 +47,54 @@ class FreelancerController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
-
     public function show(Freelancer $freelancer)
     {
-        // Recupera todos os registros da tabela 'employees'
         $freelancers = Freelancer::paginate(10);
-
-        // Retorna a view 'employee.partials.show-employee' com os dados recuperados
         return view('freelancer.partials.show-freelancer', compact('freelancers'));
     }
+    public function edit($id)
+    {
+        $freelancer = Freelancer::findOrFail($id);
+        return view('freelancer.freelancer', compact('freelancer'));
+    }
+    public function update(Request $request, $id)
+    {
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required',
+                'rg' => 'required|string',
+                'cpf' => 'required|string|unique:freelancers,cpf,' . $id,
+                'pai' => 'nullable',
+                'mae' => 'required',
+                'nascimento' => 'required|date',
+                'cnh' => 'required|unique:freelancers,cnh,' . $id,
+                'placa' => 'required|unique:freelancers,placa,' . $id,
+            ]);
 
+            $freelancer = Freelancer::findOrFail($id);
+
+            // Atualiza os dados do empregado
+            $freelancer->name = $request->input('name');
+            $freelancer->rg = preg_replace('/\D/', '', $request->input('rg'));
+            $freelancer->cpf = preg_replace('/\D/', '', $request->input('cpf'));
+            $freelancer->pai = $request->input('pai');
+            $freelancer->mae = $request->input('mae');
+            $freelancer->nascimento = $request->input('nascimento');
+            $freelancer->placa = $request->input('placa');
+            $freelancer->cnh = $request->input('cnh');
+            $freelancer->user_id = Auth::id(); // Ou use outro campo se necessário
+
+            $freelancer->save();
+
+            return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
+        } catch (ValidationException $e) {
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+        } catch (ValidationException $e) {
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha no registro: ' . $e->getMessage());
+        }
+    }
 }
