@@ -58,7 +58,7 @@
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
                                 <div class="card-body">
-                                    <h5 class="card-title">Consulta de funcionário</h5>
+                                    <h5 class="card-title">Gerenciar consulta de funcionário</h5>
                                     <p class="card-text">Serviço de consulta criminal e processual, estadual e municipal, e antecedentes criminais de pessoas.</p>
                                 </div>
                                 <div class="m-2 mt-0">
@@ -70,7 +70,7 @@
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
                                 <div class="card-body">
-                                    <h5 class="card-title">Consulta de prestadores de serviço</h5>
+                                    <h5 class="card-title">Gerenciar consulta de prestadores de serviço</h5>
                                     <p class="card-text">Consulta criminal e processual, status de CNH e veículo de prestadores.</p>
                                 </div>
                                 <div class="m-2 mt-0">
@@ -82,7 +82,7 @@
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
                                 <div class="card-body">
-                                    <h5 class="card-title">Consulta de veículo</h5>
+                                    <h5 class="card-title">Gerenciar consulta de veículo</h5>
                                     <p class="card-text">Consulta de Débitos e Restrições, Regularidade Documental, Situação Judicial, Informações Técnicas.</p>
                                 </div>
                                 <div class="m-2 mt-0">

@@ -29,24 +29,26 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')
     ->controller(EmployeeController::class)
     ->group(function () {
-        Route::get          ('/employee/create',  'create')     ->name('employee.create');
-        Route::post         ('/employee/store',  'store')       ->name('employee.store');
-        Route::get          ('/employee/show',  'show')         ->name('employee.show');
-        Route::get          ('/employee/edit',    'edit')       ->name('employee.edit');
-        Route::patch        ('/employee/update',  'update')     ->name('employee.update');
-        Route::delete       ('/employee/destroy', 'destroy')    ->name('employee.destroy');
+        Route::get          ('/employee/create',  'create')          ->name('employee.create');
+        Route::post         ('/employee/store',  'store')            ->name('employee.store');
+        Route::get          ('/employee/show',  'show')              ->name('employee.show');
+        Route::get          ('/employee/edit/{id}',    'edit')       ->name('employee.edit');
+        Route::patch        ('/employee/update/{id}',  'update')     ->name('employee.update');
+
+        Route::delete       ('/employee/destroy/{id}', 'destroy')    ->name('employee.destroy');
     });
 
 //Freelancer
 Route::middleware('auth')
     ->controller(FreelancerController::class)
     ->group(function () {
-        Route::get      ('/freelancer/create', 'create')    ->name('freelancer.create');
-        Route::post     ('/freelancer/store', 'store')      ->name('freelancer.store');
-        Route::get      ('/freelancer/show',  'show')       ->name('freelancer.show');
-        Route::get      ('/freelancer/edit', 'edit')        ->name('freelancer.edit');
-        Route::patch    ('/freelancer/update', 'update')    ->name('freelancer.update');
-        Route::delete   ('/freelancer/destroy', 'destroy')  ->name('freelancer.destroy');
+        Route::get      ('/freelancer/create', 'create')       ->name('freelancer.create');
+        Route::post     ('/freelancer/store', 'store')         ->name('freelancer.store');
+        Route::get      ('/freelancer/show',  'show')          ->name('freelancer.show');
+        Route::get      ('/freelancer/edit/{id}', 'edit')      ->name('freelancer.edit');
+        Route::patch    ('/freelancer/update/{id}', 'update')  ->name('freelancer.update');
+
+        Route::delete   ('/freelancer/destroy/{id}', 'destroy')->name('freelancer.destroy');
     });
 
 //Vehicle
@@ -55,12 +57,11 @@ Route::middleware('auth')
     ->group(function () {
         Route::get      ('/vehicle/create', 'create')       ->name('vehicle.create');
         Route::post     ('/vehicle/store', 'store')         ->name('vehicle.store');
-        
         Route::get      ('/vehicle/show',  'show')          ->name('vehicle.show');
-
-        Route::get      ('/vehicle/edit', 'edit')           ->name('vehicle.edit');
-        Route::patch    ('/vehicle/update', 'update')       ->name('vehicle.update');
-        Route::delete   ('/vehicle/destroy', 'destroy')     ->name('vehicle.destroy');
+        Route::get      ('/vehicle/edit/{id}', 'edit')      ->name('vehicle.edit');
+        Route::patch    ('/vehicle/update/{id}', 'update')  ->name('vehicle.update');
+        
+        Route::delete   ('/vehicle/destroy/{id}', 'destroy')->name('vehicle.destroy');
     });
 
 require __DIR__ . '/auth.php';
