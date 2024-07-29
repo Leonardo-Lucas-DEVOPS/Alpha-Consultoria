@@ -25,7 +25,7 @@
                                     <th class="px-4 py-2">Consultor</th>
                                     <th class="px-4 py-2">Criado em</th>
                                     <th class="px-4 py-2">Status de Retorno</th>
-                                    
+
                                     @if (Auth::user()->usertype >= 2)
                                     <th class="px-4 py-2">Ação</th>
                                     @endif
@@ -44,9 +44,12 @@
                                     @if (Auth::user()->usertype >= 2)
                                     <th>
                                         <div class="flex">
-                                            
-                                            <button class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="">Editar</button>
-                                            <button class="btn btn-danger ml-1 " style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="">Excluir</button>
+                                            <a class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="{{ route('vehicle.edit', ['id' => $vehicle->id]) }}">Editar</a>
+                                            <form action="{{ route('vehicle.destroy', $vehicle->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger ml-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Excluir</button>
+                                            </form>
                                         </div>
                                     </th>
                                     @endif
