@@ -85,4 +85,28 @@ class VehicleController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
+
+    public function destroy(string $id)
+    {
+        // Obtém o usuário autenticado
+        $user = auth()->user();
+    
+        // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
+        if ($user->usertype == 2 || $user->usertype == 3) {
+            try {
+                Vehicle::destroy($id);
+                return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
+            } catch (ValidationException $e) {
+                // Armazena os dados na sessão para depuração
+                return redirect(route('dashboard'))
+                    ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+            } catch (\Exception $e) {
+                // Armazena os dados na sessão para depuração
+                return redirect(route('dashboard'))
+                    ->with('fail', 'Falha no registro: ' . $e->getMessage());
+            }
+        } else {
+            return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');
+        }
+    }
 }
