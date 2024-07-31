@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\Freelancer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,7 @@ class FreelancerController extends Controller
 {
     public function create()
     {
-        return view('freelancer.freelancer', ['freelancer'=>null]);
+        return view('freelancer.freelancer', ['freelancer' => null]);
     }
     public function store(Request $request)
     {
@@ -73,6 +74,21 @@ class FreelancerController extends Controller
 
             $freelancer = Freelancer::findOrFail($id);
 
+            // Criação de uma auditoria antes de atualizar os dados
+            Audit::create([
+                'freelancer_id' => $freelancer->id,
+                'OldName' => $freelancer->name,
+                'OldRg' => $freelancer->rg,
+                'OldCpf' => $freelancer->cpf,
+                'OldNascimento' => $freelancer->nascimento,
+                'OldPai' => $freelancer->pai,
+                'OldMae' => $freelancer->mae,
+                'OldCnh' => $freelancer->cnh,
+                'OldPlaca' => $freelancer->placa,
+                'OldUser_id' => $freelancer->user_id,
+                'OldReturn_status' => $freelancer->return_status,
+            ]);
+
             // Atualiza os dados do empregado
             $freelancer->name = $request->input('name');
             $freelancer->rg = preg_replace('/\D/', '', $request->input('rg'));
@@ -97,12 +113,11 @@ class FreelancerController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
-
     public function destroy(string $id)
     {
         // Obtém o usuário autenticado
         $user = auth()->user();
-    
+
         // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if ($user->usertype == 2 || $user->usertype == 3) {
             try {

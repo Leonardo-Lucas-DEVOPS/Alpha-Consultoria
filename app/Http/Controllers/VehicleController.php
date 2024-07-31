@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,13 +59,23 @@ class VehicleController extends Controller
     {
         try {
             $validatedData = $request->validate([
-            
+
                 'chassi' => 'required|unique:vehicles,chassi,' . $id,
-                'renavam' => 'required|unique:vehicles,renavam,' . $id,  
+                'renavam' => 'required|unique:vehicles,renavam,' . $id,
                 'placa' => 'required|unique:vehicles,placa,' . $id,
             ]);
 
             $vehicle = Vehicle::findOrFail($id);
+
+            // Criação de uma auditoria antes de atualizar os dados
+            Audit::create([
+                'vehicle_id' => $vehicle->id,
+                'OldChassi' => $vehicle->chassi,
+                'OldRenavam' => $vehicle->renavam,
+                'OldPlaca' => $vehicle->placa,
+                'OldUser_id' => $vehicle->user_id,
+                'OldReturn_status' => $vehicle->return_status,
+            ]);
 
             // Atualiza os dados do empregado
             $vehicle->chassi = preg_replace('/\D/', '', $request->input('chassi'));
@@ -85,12 +96,11 @@ class VehicleController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
-
     public function destroy(string $id)
     {
         // Obtém o usuário autenticado
         $user = auth()->user();
-    
+
         // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if ($user->usertype == 2 || $user->usertype == 3) {
             try {
