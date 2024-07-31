@@ -98,6 +98,7 @@ class FreelancerController extends Controller
             $freelancer->nascimento = $request->input('nascimento');
             $freelancer->placa = $request->input('placa');
             $freelancer->cnh = $request->input('cnh');
+            $freelancer->return_status = 'Em análise';
             $freelancer->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $freelancer->save();

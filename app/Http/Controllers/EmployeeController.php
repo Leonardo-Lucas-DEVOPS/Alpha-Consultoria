@@ -97,6 +97,7 @@ class EmployeeController extends Controller
             $employee->pai = $request->input('pai');
             $employee->mae = $request->input('mae');
             $employee->nascimento = $request->input('nascimento');
+            $employee->return_status = 'Em análise';
             $employee->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $employee->save();
