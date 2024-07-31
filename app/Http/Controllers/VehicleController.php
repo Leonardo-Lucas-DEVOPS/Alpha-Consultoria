@@ -81,6 +81,7 @@ class VehicleController extends Controller
             $vehicle->chassi = preg_replace('/\D/', '', $request->input('chassi'));
             $vehicle->placa = preg_replace('/\D/', '', $request->input('placa'));
             $vehicle->renavam = preg_replace('/\D/', '', $request->input('renavam'));
+            $vehicle->return_status = 'Em análise';
             $vehicle->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $vehicle->save();
