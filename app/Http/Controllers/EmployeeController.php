@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\Employee;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -16,9 +17,7 @@ class EmployeeController extends Controller
     {
         return view('employee.employee', ['employee' => null]);
     }
-
-
-    public function store(Request $request)
+   public function store(Request $request)
     {
         try {
             // Validação dos dados (aceitar qualquer formato para RG e CPF)
@@ -52,7 +51,6 @@ class EmployeeController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
-
     public function show(Employee $employee)
     {
         // Recupera todos os registros da tabela 'employees'
@@ -62,14 +60,11 @@ class EmployeeController extends Controller
         // Retorna a view 'employee.partials.show-employee' com os dados recuperados
         return view('employee.partials.show-employee', compact('employees'));
     }
-
-
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
         return view('employee.employee', compact('employee'));
     }
-
     public function update(Request $request, $id)
     {
         try {
@@ -83,7 +78,18 @@ class EmployeeController extends Controller
             ]);
 
             $employee = Employee::findOrFail($id);
-
+            // Criação de uma auditoria antes de atualizar os dados
+            Audit::create([
+                'employee_id' => $employee->id,
+                'OldName' =>     $employee->name,
+                'OldRg' =>       $employee->rg,
+                'OldCpf' =>      $employee->cpf,
+                'OldNascimento'=>$employee->nascimento,
+                'OldPai' =>      $employee->pai,
+                'OldMae' =>      $employee->mae,            
+                'OldUser_id' =>  $employee->user_id,
+                'OldReturn_status' => $employee->return_status,
+            ]);
             // Atualiza os dados do empregado
             $employee->rg = preg_replace('/\D/', '', $request->input('rg'));
             $employee->cpf = preg_replace('/\D/', '', $request->input('cpf'));
@@ -106,16 +112,11 @@ class EmployeeController extends Controller
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
     }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         // Obtém o usuário autenticado
         $user = auth()->user();
-    
+
         // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if ($user->usertype == 2 || $user->usertype == 3) {
             try {
@@ -134,5 +135,4 @@ class EmployeeController extends Controller
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');
         }
     }
-    
 }
