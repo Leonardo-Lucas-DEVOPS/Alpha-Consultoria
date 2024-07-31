@@ -47,7 +47,7 @@ class VehicleController extends Controller
     }
     public function show(Vehicle $vehicle)
     {
-        $vehicles = Vehicle::paginate(10);
+        $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(10);
         return view('vehicle.partials.show-vehicle', compact('vehicles'));
     }
     public function edit($id)
