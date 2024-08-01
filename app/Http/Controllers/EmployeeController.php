@@ -31,8 +31,8 @@ class EmployeeController extends Controller
             ]);
 
             // Formatação dos dados (remover pontos, traços e outros caracteres não numéricos)
-            $validatedData['rg'] = preg_replace('/\D/', '', $validatedData['rg']);
-            $validatedData['cpf'] = preg_replace('/\D/', '', $validatedData['cpf']);
+            $validatedData['rg'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['rg']);
+            $validatedData['cpf'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cpf']);
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
@@ -91,8 +91,8 @@ class EmployeeController extends Controller
                 'OldReturn_status' => $employee->return_status,
             ]);
             // Atualiza os dados do empregado
-            $employee->rg = preg_replace('/\D/', '', $request->input('rg'));
-            $employee->cpf = preg_replace('/\D/', '', $request->input('cpf'));
+            $employee->rg = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('rg'));
+            $employee->cpf = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cpf'));
             $employee->name = $request->input('name');
             $employee->pai = $request->input('pai');
             $employee->mae = $request->input('mae');

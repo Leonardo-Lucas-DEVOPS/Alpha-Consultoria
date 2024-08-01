@@ -29,10 +29,10 @@ class FreelancerController extends Controller
                 'cnh' => 'required|unique:freelancers,placa',
                 'placa' => 'required|unique:freelancers,placa',
             ]);
-            $validatedData['rg'] = preg_replace('/\D/', '', $validatedData['rg']);
-            $validatedData['cpf'] = preg_replace('/\D/', '', $validatedData['cpf']);
-            $validatedData['cnh'] = preg_replace('/\D/', '', $validatedData['cnh']);
-            $validatedData['placa'] = preg_replace('/\D/', '', $validatedData['placa']);
+            $validatedData['rg'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['rg']);
+            $validatedData['cpf'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cpf']);
+            $validatedData['cnh'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cnh']);
+            $validatedData['placa'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['placa']);
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();

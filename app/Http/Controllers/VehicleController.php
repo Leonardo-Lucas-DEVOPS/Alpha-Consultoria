@@ -17,30 +17,24 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         try {
-
             $validatedData = $request->validate([
                 'placa' => 'required|unique:vehicles,placa',
                 'chassi' => 'required|unique:vehicles,chassi',
                 'renavam' => 'required|unique:vehicles,renavam',
-
             ]);
 
-            $validatedData['placa'] = preg_replace('/\D/', '', $validatedData['placa']);
-            $validatedData['renavam'] = preg_replace('/\D/', '', $validatedData['renavam']);
-            $validatedData['chassi'] = preg_replace('/\D/', '', $validatedData['chassi']);
-
+            $validatedData['placa'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['placa']);
+            $validatedData['renavam'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['renavam']);
+            $validatedData['chassi'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['chassi']);
 
             $userId = Auth::id();
             Vehicle::create(array_merge($validatedData, ['user_id' => $userId]));
 
-
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
@@ -54,12 +48,11 @@ class VehicleController extends Controller
     {
         $vehicle = Vehicle::findOrFail($id);
         return view('Vehicle.Vehicle', compact('vehicle'));
-    }
+    } 
     public function update(Request $request, $id)
     {
         try {
             $validatedData = $request->validate([
-
                 'chassi' => 'required|unique:vehicles,chassi,' . $id,
                 'renavam' => 'required|unique:vehicles,renavam,' . $id,
                 'placa' => 'required|unique:vehicles,placa,' . $id,
@@ -77,22 +70,20 @@ class VehicleController extends Controller
                 'OldReturn_status' => $vehicle->return_status,
             ]);
 
-            // Atualiza os dados do empregado
-            $vehicle->chassi = preg_replace('/\D/', '', $request->input('chassi'));
-            $vehicle->placa = preg_replace('/\D/', '', $request->input('placa'));
-            $vehicle->renavam = preg_replace('/\D/', '', $request->input('renavam'));
+            // Atualiza os dados do veículo
+            $vehicle->chassi = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('chassi'));
+            $vehicle->placa = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('placa'));
+            $vehicle->renavam = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('renavam'));
             $vehicle->return_status = 'Em análise';
-            $vehicle->user_id = Auth::id(); // Ou use outro campo se necessário
+            $vehicle->user_id = Auth::id();
 
             $vehicle->save();
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha no registro: ' . $e->getMessage());
         }
