@@ -105,8 +105,15 @@ class VehicleController extends Controller
         // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if ($user->usertype == 2 || $user->usertype == 3) {
             try {
+                $vehicle = Vehicle::findOrFail($id);
+                if ($vehicle->return_status != 'Em análise') {
+
+                    return redirect(route('dashboard'))
+                        ->with('fail', 'Consultas completas não podem ser excluídas.');
+                }
                 Vehicle::destroy($id);
-                return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
+                return redirect(route('dashboard'))
+                    ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
                 // Armazena os dados na sessão para depuração
                 return redirect(route('dashboard'))
