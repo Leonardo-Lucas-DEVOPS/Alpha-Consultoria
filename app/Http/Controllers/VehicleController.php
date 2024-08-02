@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Audit;
+
+use App\Models\AuditVehicle;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,15 +65,15 @@ class VehicleController extends Controller
                 'placa' => [
                     'required',
                     'string',
-                    Rule::unique('freelancers'),
-                    Rule::unique('vehicles'),
+                    Rule::unique('freelancers')->ignore($id),
+                    Rule::unique('vehicles')->ignore($id),
                 ],
             ]);
 
             $vehicle = Vehicle::findOrFail($id);
 
             // Criação de uma auditoria antes de atualizar os dados
-            Audit::create([
+            AuditVehicle::create([
                 'vehicle_id' => $vehicle->id,
                 'OldChassi' => $vehicle->chassi,
                 'OldRenavam' => $vehicle->renavam,

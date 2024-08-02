@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Audit;
+use App\Models\AuditEmployee;
 use App\Models\Employee;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -77,8 +77,8 @@ class EmployeeController extends Controller
                 'rg' => 'required|string', 'cpf' => [
                     'required',
                     'string',
-                    Rule::unique('freelancers'),
-                    Rule::unique('employees'),
+                    Rule::unique('freelancers')->ignore($id),
+                    Rule::unique('employees')->ignore($id),
                 ],
                 'pai' => 'nullable',
                 'mae' => 'required',
@@ -87,7 +87,7 @@ class EmployeeController extends Controller
 
             $employee = Employee::findOrFail($id);
             // Criação de uma auditoria antes de atualizar os dados
-            Audit::create([
+            AuditEmployee::create([
                 'employee_id' => $employee->id,
                 'OldName' =>     $employee->name,
                 'OldRg' =>       $employee->rg,

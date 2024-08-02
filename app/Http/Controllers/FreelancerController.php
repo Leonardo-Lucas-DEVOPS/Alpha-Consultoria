@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Audit;
+use App\Models\AuditFreelancer;
 use App\Models\Freelancer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,7 @@ class FreelancerController extends Controller
                 'rg' => 'required|string', 'cpf' => [
                     'required',
                     'string',
-                    Rule::unique('freelancers'),
+                    Rule::unique('freelancers')     ,
                     Rule::unique('employees'),
                 ],
                 'name' => 'required',
@@ -72,8 +72,8 @@ class FreelancerController extends Controller
                 'rg' => 'required|string', 'cpf' => [
                     'required',
                     'string',
-                    Rule::unique('freelancers'),
-                    Rule::unique('employees'),
+                    Rule::unique('freelancers')->ignore($id),
+                    Rule::unique('employees')->ignore($id),
                 ],
                 'pai' => 'nullable',
                 'mae' => 'required',
@@ -85,7 +85,7 @@ class FreelancerController extends Controller
             $freelancer = Freelancer::findOrFail($id);
 
             // Criação de uma auditoria antes de atualizar os dados
-            Audit::create([
+            AuditFreelancer::create([
                 'freelancer_id' => $freelancer->id,
                 'OldName' => $freelancer->name,
                 'OldRg' => $freelancer->rg,
