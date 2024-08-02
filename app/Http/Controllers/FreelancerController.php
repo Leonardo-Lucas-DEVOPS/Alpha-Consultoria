@@ -92,13 +92,13 @@ class FreelancerController extends Controller
 
             // Atualiza os dados do empregado
             $freelancer->name = $request->input('name');
-            $freelancer->rg = preg_replace('/\D/', '', $request->input('rg'));
-            $freelancer->cpf = preg_replace('/\D/', '', $request->input('cpf'));
+            $freelancer->rg = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('rg'));
+            $freelancer->cpf = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cpf'));
+            $freelancer->placa = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('placa'));
+            $freelancer->cnh = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cnh'));
             $freelancer->pai = $request->input('pai');
             $freelancer->mae = $request->input('mae');
             $freelancer->nascimento = $request->input('nascimento');
-            $freelancer->placa = $request->input('placa');
-            $freelancer->cnh = $request->input('cnh');
             $freelancer->return_status = 'Em análise';
             $freelancer->user_id = Auth::id(); // Ou use outro campo se necessário
 
