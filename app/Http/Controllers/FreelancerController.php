@@ -6,6 +6,7 @@ use App\Models\Audit;
 use App\Models\Freelancer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class FreelancerController extends Controller
@@ -20,8 +21,12 @@ class FreelancerController extends Controller
 
             // Validação dos dados (aceitar qualquer formato para RG e CPF)
             $validatedData = $request->validate([
-                'rg' => 'required|string',
-                'cpf' => 'required|string|unique:freelancers,cpf',
+                'rg' => 'required|string', 'cpf' => [
+                    'required',
+                    'string',
+                    Rule::unique('freelancers'),
+                    Rule::unique('employees'),
+                ],
                 'name' => 'required',
                 'pai' => 'nullable',
                 'mae' => 'required',
@@ -64,8 +69,12 @@ class FreelancerController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => 'required',
-                'rg' => 'required|string',
-                'cpf' => 'required|string|unique:freelancers,cpf,' . $id,
+                'rg' => 'required|string', 'cpf' => [
+                    'required',
+                    'string',
+                    Rule::unique('freelancers'),
+                    Rule::unique('employees'),
+                ],
                 'pai' => 'nullable',
                 'mae' => 'required',
                 'nascimento' => 'required|date',

@@ -7,7 +7,7 @@ use App\Models\Employee;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -22,8 +22,12 @@ class EmployeeController extends Controller
         try {
             // Validação dos dados (aceitar qualquer formato para RG e CPF)
             $validatedData = $request->validate([
-                'rg' => 'required|string',
-                'cpf' => 'required|string|unique:employees,cpf',
+                'rg' => 'required|string', 'cpf' => [
+                    'required',
+                    'string',
+                    Rule::unique('freelancers'),
+                    Rule::unique('employees'),
+                ],
                 'name' => 'required',
                 'pai' => 'nullable',
                 'mae' => 'required',
@@ -70,8 +74,12 @@ class EmployeeController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => 'required',
-                'rg' => 'required|string',
-                'cpf' => 'required|string|unique:employees,cpf,' . $id,
+                'rg' => 'required|string', 'cpf' => [
+                    'required',
+                    'string',
+                    Rule::unique('freelancers'),
+                    Rule::unique('employees'),
+                ],
                 'pai' => 'nullable',
                 'mae' => 'required',
                 'nascimento' => 'required|date',

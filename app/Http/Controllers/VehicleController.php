@@ -6,6 +6,7 @@ use App\Models\Audit;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class VehicleController extends Controller
@@ -18,9 +19,14 @@ class VehicleController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'placa' => 'required|unique:vehicles,placa',
                 'chassi' => 'required|unique:vehicles,chassi',
                 'renavam' => 'required|unique:vehicles,renavam',
+                'placa' => [
+                    'required',
+                    'string',
+                    Rule::unique('freelancers'),
+                    Rule::unique('vehicles'),
+                ],
             ]);
 
             $validatedData['placa'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['placa']);
@@ -48,14 +54,19 @@ class VehicleController extends Controller
     {
         $vehicle = Vehicle::findOrFail($id);
         return view('Vehicle.Vehicle', compact('vehicle'));
-    } 
+    }
     public function update(Request $request, $id)
     {
         try {
             $validatedData = $request->validate([
                 'chassi' => 'required|unique:vehicles,chassi,' . $id,
                 'renavam' => 'required|unique:vehicles,renavam,' . $id,
-                'placa' => 'required|unique:vehicles,placa,' . $id,
+                'placa' => [
+                    'required',
+                    'string',
+                    Rule::unique('freelancers'),
+                    Rule::unique('vehicles'),
+                ],
             ]);
 
             $vehicle = Vehicle::findOrFail($id);
