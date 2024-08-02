@@ -11,21 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('audits', function (Blueprint $table) {
+        Schema::create('audit_vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('OldName')->nullable();
-            $table->string('OldRg')->nullable();
-            $table->string('OldCpf')->nullable();
-            $table->date('OldNascimento')->nullable();
-            $table->string('OldPai')->nullable();
-            $table->string('OldMae')->nullable();
-            $table->string('OldCnh')->nullable();
             $table->string('OldPlaca')->nullable();
             $table->string('OldChassi')->nullable();
             $table->string('OldRenavam')->nullable();
             $table->string('OldUser_id')->nullable();
-            $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('cascade'); //id do Consultor
-            $table->foreignId('freelancer_id')->nullable()->constrained('freelancers')->onDelete('cascade');//id do Consultor
             $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->onDelete('cascade');//id do Consultor
             $table->string('OldReturn_status')->nullable();
             $table->timestamps();
@@ -37,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('audits');
+        Schema::dropIfExists('audit_vehicles');
     }
 };
