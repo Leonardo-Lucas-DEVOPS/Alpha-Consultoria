@@ -14,7 +14,7 @@ class VehicleController extends Controller
 {
     public function create()
     {
-        return view('vehicle.vehicle', ['vehicle' => null]);
+        return view('vehicle.create-vehicle', ['vehicle' => null]);
     }
     public function store(Request $request)
     {
@@ -49,12 +49,14 @@ class VehicleController extends Controller
     public function show(Vehicle $vehicle)
     {
         $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(10);
-        return view('vehicle.partials.show-vehicle', compact('vehicles'));
+        $olddatas = AuditVehicle::orderBy('created_at', 'asc')->paginate(3);
+
+        return view('vehicle.show-vehicle', compact('vehicles','olddatas') );
     }
     public function edit($id)
     {
         $vehicle = Vehicle::findOrFail($id);
-        return view('Vehicle.Vehicle', compact('vehicle'));
+        return view('Vehicle.create-vehicle', compact('vehicle'));
     }
     public function update(Request $request, $id)
     {

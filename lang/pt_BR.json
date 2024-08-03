@@ -150,5 +150,7 @@
   "Your email address is unverified.": "Seu endereço de e-mail não foi verificado.",
   "Formulário de Consulta": "Formulário de solicitação de consulta",
   "Aviso Formulário": "Tenha todas as informações necessárias em mão antes de consultar.",
-  "Aviso do Registro":"Em caso de alteração de dados contatar o 'key user' da empresa"
+  "Aviso do Registro":"Em caso de alteração de dados contatar o 'key user' da empresa",
+  "Auditoria": "Historico de alterações.",
+  "Aviso Auditoria":"Cada registro possui um histórico único com todas as alterações registradas."
 }
