@@ -49,7 +49,7 @@ class VehicleController extends Controller
     public function show(Vehicle $vehicle)
     {
         $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(10);
-        $olddatas = AuditVehicle::orderBy('created_at', 'asc')->paginate(3);
+        $olddatas = AuditVehicle::orderBy('created_at', 'asc')->paginate(1);
 
         return view('vehicle.show-vehicle', compact('vehicles','olddatas') );
     }

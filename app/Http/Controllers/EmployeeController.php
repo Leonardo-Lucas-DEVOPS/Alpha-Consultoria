@@ -15,7 +15,7 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        return view('employee.employee', ['employee' => null]);
+        return view('employee.create-employee', ['employee' => null]);
     }
    public function store(Request $request)
     {
@@ -59,15 +59,16 @@ class EmployeeController extends Controller
     {
         // Recupera todos os registros da tabela 'employees'
         $employees = Employee::orderBy('created_at', 'desc')->paginate(10);
+        $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(1);
 
 
         // Retorna a view 'employee.partials.show-employee' com os dados recuperados
-        return view('employee.partials.show-employee', compact('employees'));
+        return view('employee.show-employee', compact('employees','olddatas'));
     }
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-        return view('employee.employee', compact('employee'));
+        return view('employee.create-employee', compact('employee'));
     }
     public function update(Request $request, $id)
     {

@@ -13,7 +13,7 @@ class FreelancerController extends Controller
 {
     public function create()
     {
-        return view('freelancer.freelancer', ['freelancer' => null]);
+        return view('freelancer.create-freelancer', ['freelancer' => null]);
     }
     public function store(Request $request)
     {
@@ -57,12 +57,13 @@ class FreelancerController extends Controller
     {
         
         $freelancers = Freelancer::orderBy('created_at', 'desc')->paginate(10);
-        return view('freelancer.partials.show-freelancer', compact('freelancers'));
+        $olddatas = AuditFreelancer::orderBy('created_at', 'asc')->paginate(1);
+        return view('freelancer.show-freelancer', compact('freelancers','olddatas'));
     }
     public function edit($id)
     {
         $freelancer = Freelancer::findOrFail($id);
-        return view('freelancer.freelancer', compact('freelancer'));
+        return view('freelancer.create-freelancer', compact('freelancer'));
     }
     public function update(Request $request, $id)
     {
