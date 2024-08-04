@@ -14,9 +14,12 @@
         <thead class="bg-gray-200">
             <tr>
                 <th class="px-4 py-2">ID</th>
-                <th class="px-4 py-2">Placa</th>
-                <th class="px-4 py-2">Renavam</th>
-                <th class="px-4 py-2">Chassi</th>
+                <th class="px-4 py-2">Nome</th>
+                <th class="px-4 py-2">RG</th>
+                <th class="px-4 py-2">CPF</th>
+                <th class="px-4 py-2">Nascimento</th>
+                <th class="px-4 py-2">Pai</th>
+                <th class="px-4 py-2">Mãe</th>
                 <th class="px-4 py-2">Consultor</th>
                 <th class="px-4 py-2">Criado em</th>
                 <th class="px-4 py-2">Status de Retorno</th>
@@ -27,25 +30,29 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($vehicles as $vehicle)
+            @foreach ($employees as $employee)
             <tr class="border-b">
-                <td class="px-4 py-2">{{ $vehicle->id }}</td>
-                <td class="px-4 py-2">{{ $vehicle->placa }}</td>
-                <td class="px-4 py-2">{{ $vehicle->renavam }}</td>
-                <td class="px-4 py-2">{{ $vehicle->chassi }}</td>
-                <td class="px-4 py-2">{{ $vehicle->user_id }}</td>
-                <td class="px-4 py-2">{{ $vehicle->created_at }}</td>
-                <td class="px-4 py-2">{{ $vehicle->return_status }}</td>
+                <td class="px-4 py-2">{{ $employee->id }}</td>
+                <td class="px-4 py-2">{{ $employee->name }}</td>
+                <td class="px-4 py-2">{{ $employee->rg }}</td>
+                <td class="px-4 py-2">{{ $employee->cpf }}</td>
+                <td class="px-4 py-2">{{ $employee->nascimento }}</td>
+                <td class="px-4 py-2">{{ $employee->pai }}</td>
+                <td class="px-4 py-2">{{ $employee->mae }}</td>
+                <td class="px-4 py-2">{{ $employee->user_id }}</td>
+                <td class="px-4 py-2">{{ $employee->created_at }}</td>
+                <td class="px-4 py-2">{{ $employee->return_status }}</td>
                 @if (Auth::user()->usertype >= 2)
                 <th>
                     <div class="flex">
-                        <a class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="{{ route('vehicle.edit', ['id' => $vehicle->id]) }}">Editar</a>
-                        <form action="{{ route('vehicle.destroy', $vehicle->id) }}" method="POST" style="display: inline;">
+                        <a class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="{{ route('employee.edit', ['id' => $employee->id]) }}">Editar</a>
+                        <form action="{{ route('employee.destroy', $employee->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger ml-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Excluir</button>
                         </form>
                     </div>
+
                 </th>
                 @endif
             </tr>
@@ -54,6 +61,6 @@
     </table>
     <!-- Navegação de Paginação -->
     <div class="mt-4">
-        {{ $vehicles->links() }}
+        {{ $employees->links() }}
     </div>
 </div>
