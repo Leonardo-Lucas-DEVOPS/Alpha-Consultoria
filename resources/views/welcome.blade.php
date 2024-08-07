@@ -133,7 +133,7 @@
                     transform: translateX(0);
                 }
             }
-        </style>    
+        </style>
     </head>
 
     <body>
@@ -196,12 +196,12 @@
                 </div>
             </section>
 
-            <section id="servicos" class="">
-                <div class="container p-5">
+            <section id="servicos" class="m-5">
+                <div class="container p-5 ">
 
                     <!-- Conteúdo dos serviços -->
                     <h2 class="text-center"><em>Nossos serviços</em></h2>
-                    <p >
+                    <p>
                         <em>Alpha Consultoria é uma empresa especializada em investigações corporativas.
                             Realizamos um levantamento completo de dados dos funcionários, candidatos às vagas e prestadores de serviço. Nossa análise minuciosa abrange passagens criminais, histórico jurídico, processos trabalhistas, criminais e cíveis.
                             Evite exposições de risco como fraudes, golpes, roubos e improdutividade, confiando na Alpha Consultoria para garantir a segurança e a integridade da sua empresa.
@@ -212,10 +212,10 @@
 
                     </p>
                     <p>
-                            </br> <strong>Evite Exposições de Risco:</strong> Adotar estas práticas de análise de dados ajuda a evitar exposições a riscos significativos como fraudes, golpes, roubos e improdutividade. Garantir que todos os funcionários e prestadores de serviço sejam submetidos a um rigoroso processo de verificação é fundamental para manter um ambiente de trabalho seguro, eficiente e confiável.
-                            Implementar essas medidas de segurança não só protege a empresa contra possíveis ameaças, mas também reforça a confiança de clientes e parceiros, contribuindo para um ambiente corporativo mais seguro e produtivo.
+                        </br> <strong>Evite Exposições de Risco:</strong> Adotar estas práticas de análise de dados ajuda a evitar exposições a riscos significativos como fraudes, golpes, roubos e improdutividade. Garantir que todos os funcionários e prestadores de serviço sejam submetidos a um rigoroso processo de verificação é fundamental para manter um ambiente de trabalho seguro, eficiente e confiável.
+                        Implementar essas medidas de segurança não só protege a empresa contra possíveis ameaças, mas também reforça a confiança de clientes e parceiros, contribuindo para um ambiente corporativo mais seguro e produtivo.
 
-                                </br> <strong></strong>
+                        </br> <strong></strong>
                         </em>
                     </p>
 
