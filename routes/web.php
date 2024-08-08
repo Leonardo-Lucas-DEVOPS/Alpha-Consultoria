@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FreelancerController;
+use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\VehicleController;
 use App\Models\Freelancer;
 use App\Models\User;
@@ -34,7 +36,6 @@ Route::middleware('auth')
         Route::get          ('/employee/show',  'show')              ->name('employee.show');
         Route::get          ('/employee/edit/{id}',    'edit')       ->name('employee.edit');
         Route::patch        ('/employee/update/{id}',  'update')     ->name('employee.update');
-
         Route::delete       ('/employee/destroy/{id}', 'destroy')    ->name('employee.destroy');
     });
 
@@ -47,7 +48,6 @@ Route::middleware('auth')
         Route::get      ('/freelancer/show',  'show')          ->name('freelancer.show');
         Route::get      ('/freelancer/edit/{id}', 'edit')      ->name('freelancer.edit');
         Route::patch    ('/freelancer/update/{id}', 'update')  ->name('freelancer.update');
-
         Route::delete   ('/freelancer/destroy/{id}', 'destroy')->name('freelancer.destroy');
     });
 
@@ -60,8 +60,15 @@ Route::middleware('auth')
         Route::get      ('/vehicle/show',  'show')          ->name('vehicle.show');
         Route::get      ('/vehicle/edit/{id}', 'edit')      ->name('vehicle.edit');
         Route::patch    ('/vehicle/update/{id}', 'update')  ->name('vehicle.update');
-        
         Route::delete   ('/vehicle/destroy/{id}', 'destroy')->name('vehicle.destroy');
     });
 
+//return_status
+route::middleware('auth')
+->controller(ResponseController::class)
+    ->group(function (){
+    route::get('/return/status', 'update')->name('return.status');
+    route::patch('/return/accept/{id}', 'accept')->name('return.accept');
+    route::patch('/return/recuse/{id}', 'recuse')->name('return.recuse');
+});
 require __DIR__ . '/auth.php';
