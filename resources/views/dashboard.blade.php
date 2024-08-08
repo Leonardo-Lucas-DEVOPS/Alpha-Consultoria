@@ -98,11 +98,11 @@
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
                                 <div class="card-body">
-                                    <h5 class="card-title">Consulta de funcionário</h5>
-                                    <p class="card-text">Serviço de consulta criminal e processual, estadual e municipal, e antecedentes criminais de pessoas.</p>
+                                    <h5 class="card-title">Responder as Consulta</h5>
+                                    <p class="card-text">Serviço de resposta de consulta criminal, processual e veicular.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-dark">Consultar</a>
+                                    <a href="{{route('return.status')}}" class="btn btn-dark">Responder</a>
                                 </div>
                             </div>
                         </div>
@@ -110,11 +110,11 @@
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
                                 <div class="card-body">
-                                    <h5 class="card-title">Consulta de prestadores de serviço</h5>
-                                    <p class="card-text">Consulta criminal e processual, status de CNH e veículo de prestadores.</p>
+                                    <h5 class="card-title">Cadastrar Empresas</h5>
+                                    <p class="card-text">Criação do cadastro de novos clientes.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="#" class="btn btn-dark">Consultar</a>
+                                    <a href="#" class="btn btn-dark">Cadastrar</a>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                             <div class="card" style="width: 100%;">
                                 <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card image">
                                 <div class="card-body">
-                                    <h5 class="card-title">Consulta de veículo</h5>
+                                    <h5 class="card-title">Gerenciar Empresas</h5>
                                     <p class="card-text">Consulta de Débitos e Restrições, Regularidade Documental, Situação Judicial, Informações Técnicas.</p>
                                 </div>
                                 <div class="m-2 mt-0">
