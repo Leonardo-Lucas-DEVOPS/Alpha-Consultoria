@@ -57,13 +57,15 @@ class EmployeeController extends Controller
     }
     public function show(Employee $employee)
     {
+        
+        $page = 'show';
         // Recupera todos os registros da tabela 'employees'
         $employees = Employee::orderBy('created_at', 'desc')->paginate(10);
         $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(1);
 
 
         // Retorna a view 'employee.partials.show-employee' com os dados recuperados
-        return view('employee.show-employee', compact('employees','olddatas'));
+        return view('employee.show-employee', compact('page','employees','olddatas'));
     }
     public function edit($id)
     {

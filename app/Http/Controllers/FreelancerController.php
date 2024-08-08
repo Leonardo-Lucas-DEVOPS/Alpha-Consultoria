@@ -56,9 +56,10 @@ class FreelancerController extends Controller
     public function show(Freelancer $freelancer)
     {
         
+        $page = 'show';
         $freelancers = Freelancer::orderBy('created_at', 'desc')->paginate(10);
         $olddatas = AuditFreelancer::orderBy('created_at', 'asc')->paginate(1);
-        return view('freelancer.show-freelancer', compact('freelancers','olddatas'));
+        return view('freelancer.show-freelancer', compact('page','freelancers','olddatas'));
     }
     public function edit($id)
     {
