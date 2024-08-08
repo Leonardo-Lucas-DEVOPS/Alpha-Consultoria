@@ -7,7 +7,9 @@
                 </div>
             </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                @include('vehicle.partials.vehicle-audit')
+                <div class="max-w-x2">
+                    @include('vehicle.partials.vehicle-audit')
+                </div>
             </div>
         </div>
     </div>
