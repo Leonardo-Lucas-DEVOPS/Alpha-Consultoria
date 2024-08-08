@@ -17,8 +17,10 @@
                 <th class="px-4 py-2">Placa</th>
                 <th class="px-4 py-2">Renavam</th>
                 <th class="px-4 py-2">Chassi</th>
+                @if (Auth::user()->usertype >= 2 && $page === 'show')
                 <th class="px-4 py-2">Consultor</th>
                 <th class="px-4 py-2">Criado em</th>
+                @endif
                 <th class="px-4 py-2">Status de Retorno</th>
 
                 @if (Auth::user()->usertype >= 2)
@@ -33,10 +35,12 @@
                 <td class="px-4 py-2">{{ $vehicle->placa }}</td>
                 <td class="px-4 py-2">{{ $vehicle->renavam }}</td>
                 <td class="px-4 py-2">{{ $vehicle->chassi }}</td>
+                @if (Auth::user()->usertype >= 2 && $page === 'show')
                 <td class="px-4 py-2">{{ $vehicle->user_id }}</td>
                 <td class="px-4 py-2">{{ $vehicle->created_at }}</td>
+                @endif
                 <td class="px-4 py-2">{{ $vehicle->return_status }}</td>
-                @if (Auth::user()->usertype >= 2)
+                @if (Auth::user()->usertype >= 2 && $page === 'show')
                 <th>
                     <div class="flex">
                         <a class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="{{ route('vehicle.edit', ['id' => $vehicle->id]) }}">Editar</a>
@@ -44,6 +48,22 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger ml-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Excluir</button>
+                        </form>
+                    </div>
+                </th>
+                @endif
+                @if (Auth::user()->usertype >= 3 && $page === 'return')
+                <th>
+                    <div class="flex">
+                        <form action="{{ route('return.accept', ['id' => $vehicle->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-success m-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Aceitar</button>
+                        </form>
+                        <form action="{{ route('return.recuse', ['id' => $vehicle->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-dark m-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Recusar</button>
                         </form>
                     </div>
                 </th>

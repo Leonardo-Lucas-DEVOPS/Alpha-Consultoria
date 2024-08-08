@@ -22,8 +22,10 @@
                 <th class="px-4 py-2">Mãe</th>
                 <th class="px-4 py-2">CNH</th>
                 <th class="px-4 py-2">Placa</th>
+                @if (Auth::user()->usertype >= 2 && $page === 'show')
                 <th class="px-4 py-2">Consultor</th>
                 <th class="px-4 py-2">Criado em</th>
+                @endif
                 <th class="px-4 py-2">Status de Retorno</th>
 
                 @if (Auth::user()->usertype >= 2)
@@ -43,10 +45,14 @@
                 <td class="px-4 py-2">{{ $freelancer->mae }}</td>
                 <td class="px-4 py-2">{{ $freelancer->cnh }}</td>
                 <td class="px-4 py-2">{{ $freelancer->placa }}</td>
+                
+                @if (Auth::user()->usertype >= 2 && $page === 'show')
                 <td class="px-4 py-2">{{ $freelancer->user_id }}</td>
                 <td class="px-4 py-2">{{ $freelancer->created_at }}</td>
+                
+                @endif
                 <td class="px-4 py-2">{{ $freelancer->return_status }}</td>
-                @if (Auth::user()->usertype >= 2)
+                @if (Auth::user()->usertype >= 2&& $page === 'show')
                 <th>
                     <div class="flex">
                         <a class="btn btn-primary mr-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" href="{{ route('freelancer.edit', ['id' => $freelancer->id]) }}">Editar</a>
@@ -54,6 +60,22 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger ml-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Excluir</button>
+                        </form>
+                    </div>
+                </th>
+                @endif
+                @if (Auth::user()->usertype >= 3 && $page === 'return')
+                <th>
+                    <div class="flex">
+                        <form action="{{ route('return.accept', ['id' => $freelancer->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-success m-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Aceitar</button>
+                        </form>
+                        <form action="{{ route('return.recuse', ['id' => $freelancer->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-dark m-1" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Recusar</button>
                         </form>
                     </div>
                 </th>
