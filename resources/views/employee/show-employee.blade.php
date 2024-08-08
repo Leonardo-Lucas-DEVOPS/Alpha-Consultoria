@@ -9,9 +9,10 @@
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                @include('employee.partials.employee-audit')
+                <div class="max-w-x2">
+                    @include('employee.partials.employee-audit')
+                </div>
             </div>
-
         </div>
     </div>
 </x-app-layout>

@@ -7,7 +7,10 @@
                 </div>
             </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                @include('freelancer.partials.freelancer-audit')
+
+                <div class="max-w-x2">
+                    @include('freelancer.partials.freelancer-audit')
+                </div>
             </div>
         </div>
     </div>
