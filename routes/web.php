@@ -34,8 +34,8 @@ Route::middleware('auth')
         Route::get          ('/employee/show',  'show')              ->name('employee.show');
         Route::get          ('/employee/edit/{id}',    'edit')       ->name('employee.edit');
         Route::patch        ('/employee/update/{id}',  'update')     ->name('employee.update');
-
         Route::delete       ('/employee/destroy/{id}', 'destroy')    ->name('employee.destroy');
+        Route::delete   ('/employee/delete/{id}', 'delete')->name('employee.delete');
     });
 
 //Freelancer
@@ -47,8 +47,8 @@ Route::middleware('auth')
         Route::get      ('/freelancer/show',  'show')          ->name('freelancer.show');
         Route::get      ('/freelancer/edit/{id}', 'edit')      ->name('freelancer.edit');
         Route::patch    ('/freelancer/update/{id}', 'update')  ->name('freelancer.update');
-
         Route::delete   ('/freelancer/destroy/{id}', 'destroy')->name('freelancer.destroy');
+        Route::delete   ('/freelancer/delete/{id}', 'delete')->name('freelancer.delete');
     });
 
 //Vehicle
@@ -60,8 +60,8 @@ Route::middleware('auth')
         Route::get      ('/vehicle/show',  'show')          ->name('vehicle.show');
         Route::get      ('/vehicle/edit/{id}', 'edit')      ->name('vehicle.edit');
         Route::patch    ('/vehicle/update/{id}', 'update')  ->name('vehicle.update');
-        
         Route::delete   ('/vehicle/destroy/{id}', 'destroy')->name('vehicle.destroy');
+        Route::delete   ('/vehicle/delete/{id}', 'delete')->name('vehicle.delete');
     });
 
 require __DIR__ . '/auth.php';
