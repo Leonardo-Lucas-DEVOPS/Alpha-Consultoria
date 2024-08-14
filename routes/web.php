@@ -4,10 +4,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\VehicleController;
-use App\Models\Freelancer;
-use App\Models\User;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,10 +15,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 //profile
+define('ROTA_PERFIL', '/profile');
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get(ROTA_PERFIL, [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch(ROTA_PERFIL, [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete(ROTA_PERFIL, [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 //Employee
@@ -34,8 +31,9 @@ Route::middleware('auth')
         Route::get          ('/employee/show',  'show')              ->name('employee.show');
         Route::get          ('/employee/edit/{id}',    'edit')       ->name('employee.edit');
         Route::patch        ('/employee/update/{id}',  'update')     ->name('employee.update');
+        Route::patch        ('/employee/accept/{id}', 'accept')      ->name('employee.accept');
+        Route::patch        ('/employee/reject/{id}', 'reject')      ->name('employee.reject');
         Route::delete       ('/employee/destroy/{id}', 'destroy')    ->name('employee.destroy');
-        Route::delete   ('/employee/delete/{id}', 'delete')->name('employee.delete');
     });
 
 //Freelancer
@@ -47,8 +45,9 @@ Route::middleware('auth')
         Route::get      ('/freelancer/show',  'show')          ->name('freelancer.show');
         Route::get      ('/freelancer/edit/{id}', 'edit')      ->name('freelancer.edit');
         Route::patch    ('/freelancer/update/{id}', 'update')  ->name('freelancer.update');
+        Route::patch    ('/freelancer/accept/{id}', 'accept')  ->name('freelancer.accept');
+        Route::patch    ('/freelancer/reject/{id}', 'reject')  ->name('freelancer.reject');
         Route::delete   ('/freelancer/destroy/{id}', 'destroy')->name('freelancer.destroy');
-        Route::delete   ('/freelancer/delete/{id}', 'delete')->name('freelancer.delete');
     });
 
 //Vehicle
@@ -60,8 +59,9 @@ Route::middleware('auth')
         Route::get      ('/vehicle/show',  'show')          ->name('vehicle.show');
         Route::get      ('/vehicle/edit/{id}', 'edit')      ->name('vehicle.edit');
         Route::patch    ('/vehicle/update/{id}', 'update')  ->name('vehicle.update');
+        Route::patch    ('/vehicle/accept/{id}', 'accept')  ->name('vehicle.accept');
+        Route::patch    ('/vehicle/reject/{id}', 'reject')  ->name('vehicle.reject');
         Route::delete   ('/vehicle/destroy/{id}', 'destroy')->name('vehicle.destroy');
-        Route::delete   ('/vehicle/delete/{id}', 'delete')->name('vehicle.delete');
     });
 
-require __DIR__ . '/auth.php';
+require_once __DIR__ . '/auth.php';

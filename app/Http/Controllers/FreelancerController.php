@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
+define('REGEX', '/[^a-zA-Z0-9]/');
+define('FALHA', 'Falha na validação dos dados: ');
+
 class FreelancerController extends Controller
 {
     public function create()
@@ -18,13 +21,13 @@ class FreelancerController extends Controller
     public function store(Request $request)
     {
         try {
-
             // Validação dos dados (aceitar qualquer formato para RG e CPF)
             $validatedData = $request->validate([
-                'rg' => 'required|string', 'cpf' => [
+                'rg' => 'required|string',
+                'cpf' => [
                     'required',
                     'string',
-                    Rule::unique('freelancers')     ,
+                    Rule::unique('freelancers'),
                     Rule::unique('employees'),
                 ],
                 'name' => 'required',
@@ -34,10 +37,10 @@ class FreelancerController extends Controller
                 'cnh' => 'required|unique:freelancers,placa',
                 'placa' => 'required|unique:freelancers,placa',
             ]);
-            $validatedData['rg'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['rg']);
-            $validatedData['cpf'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cpf']);
-            $validatedData['cnh'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cnh']);
-            $validatedData['placa'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['placa']);
+            $validatedData['rg'] = preg_replace(REGEX, '', $validatedData['rg']);
+            $validatedData['cpf'] = preg_replace(REGEX, '', $validatedData['cpf']);
+            $validatedData['cnh'] = preg_replace(REGEX, '', $validatedData['cnh']);
+            $validatedData['placa'] = preg_replace(REGEX, '', $validatedData['placa']);
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
@@ -46,19 +49,14 @@ class FreelancerController extends Controller
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
-        } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
-            return redirect(route('dashboard'))
-                ->with('fail', 'Falha no registro: ' . $e->getMessage());
+                ->with('fail', FALHA . $e->getMessage());
         }
     }
     public function show(Freelancer $freelancer)
     {
-        
         $freelancers = Freelancer::orderBy('created_at', 'desc')->paginate(10);
         $olddatas = AuditFreelancer::orderBy('created_at', 'asc')->paginate(1);
-        return view('freelancer.show-freelancer', compact('freelancers','olddatas'));
+        return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
     }
     public function edit($id)
     {
@@ -68,9 +66,10 @@ class FreelancerController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $validatedData = $request->validate([
+            $request->validate([
                 'name' => 'required',
-                'rg' => 'required|string', 'cpf' => [
+                'rg' => 'required|string',
+                'cpf' => [
                     'required',
                     'string',
                     Rule::unique('freelancers')->ignore($id),
@@ -102,10 +101,10 @@ class FreelancerController extends Controller
 
             // Atualiza os dados do empregado
             $freelancer->name = $request->input('name');
-            $freelancer->rg = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('rg'));
-            $freelancer->cpf = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cpf'));
-            $freelancer->placa = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('placa'));
-            $freelancer->cnh = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cnh'));
+            $freelancer->rg = preg_replace(REGEX, '', $request->input('rg'));
+            $freelancer->cpf = preg_replace(REGEX, '', $request->input('cpf'));
+            $freelancer->placa = preg_replace(REGEX, '', $request->input('placa'));
+            $freelancer->cnh = preg_replace(REGEX, '', $request->input('cnh'));
             $freelancer->pai = $request->input('pai');
             $freelancer->mae = $request->input('mae');
             $freelancer->nascimento = $request->input('nascimento');
@@ -118,57 +117,40 @@ class FreelancerController extends Controller
         } catch (ValidationException $e) {
             // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
-        } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
-            return redirect(route('dashboard'))
-                ->with('fail', 'Falha no registro: ' . $e->getMessage());
+                ->with('fail', FALHA . $e->getMessage());
         }
     }
+
+    public function accept(string $id)
+    {
+        $freelancer = Freelancer::findOrFail($id);
+        $freelancer->return_status = "Aceito";
+        $freelancer->save();
+    }
+
+    public function reject(string $id)
+    {
+        $freelancer = Freelancer::findOrFail($id);
+        $freelancer->return_status = "Recusado";
+        $freelancer->save();
+    }
+
     public function destroy(string $id)
     {  // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if (Auth::user()->usertype >= 2) {
             try {
                 $freelancer = Freelancer::findOrFail($id);
-                if ($freelancer->return_status != 'Em análise') {
+                if ($freelancer->return_status != 'Em análise' && Auth::user()->usertype == 2) {
 
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
                 }
-                    Freelancer::destroy($id);
-                    return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
-                
-            } catch (ValidationException $e) {
-                // Armazena os dados na sessão para depuração
-                return redirect(route('dashboard'))
-                    ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
-            } catch (\Exception $e) {
-                // Armazena os dados na sessão para depuração
-                return redirect(route('dashboard'))
-                    ->with('fail', 'Falha no registro: ' . $e->getMessage());
-            }
-        } else {
-            return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');
-        }
-    }
-    public function delete(string $id)
-    {
-        ;
-
-        if ( Auth::user()->usertype == 3) {
-            try {
-
                 Freelancer::destroy($id);
-                return redirect(route('dashboard'))
-                    ->with('success', 'Registro deletado com sucesso');
+                return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
                 // Armazena os dados na sessão para depuração
                 return redirect(route('dashboard'))
-                    ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
-            } catch (\Exception $e) {
-                // Armazena os dados na sessão para depuração
-                return redirect(route('dashboard'))
-                    ->with('fail', 'Falha no registro: ' . $e->getMessage());
+                    ->with('fail', FALHA . $e->getMessage());
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

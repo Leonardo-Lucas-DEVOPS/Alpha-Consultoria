@@ -5,7 +5,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Aviso Auditoria") }}
+            {{ __('Aviso Auditoria') }}
         </p>
     </header>
 </section>
@@ -25,7 +25,7 @@
                 <th class="px-4 py-2">Consultor</th>
                 <th class="px-4 py-2">Alterado em</th>
                 <th class="px-4 py-2">Status de Retorno</th>
-                
+
             </tr>
         </thead>
 
@@ -33,22 +33,22 @@
 
         <tbody>
             @foreach ($olddatas as $olddata)
-            <tr class="border-b">
-                <td class="px-4 py-2">{{ $olddata->freelancer_id }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldName }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldRg }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldCpf }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldNascimento }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldPai }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldMae }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldCnh }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldPlaca }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldUser_id }}</td>
-                <td class="px-4 py-2">{{ $olddata->created_at }}</td>
-                <td class="px-4 py-2">{{ $olddata->OldReturn_status }}</td>
-                
+                <tr class="border-b">
+                    <td class="px-4 py-2">{{ $olddata->freelancer_id }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldName }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldRg }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldCpf }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldNascimento }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldPai }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldMae }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldCnh }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldPlaca }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldUser_id }}</td>
+                    <td class="px-4 py-2">{{ $olddata->created_at }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldReturn_status }}</td>
 
-            </tr>
+
+                </tr>
             @endforeach
         </tbody>
     </table>
