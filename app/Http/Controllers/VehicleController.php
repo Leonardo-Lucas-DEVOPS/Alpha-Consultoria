@@ -107,15 +107,29 @@ class VehicleController extends Controller
     public function accept(string $id)
     {
         $vehicle = Vehicle::findOrFail($id);
-        $vehicle->return_status = "Aceito";
-        $vehicle->save();
+        try {
+            $vehicle->return_status = "Aprovado";
+            $vehicle->save();
+            return redirect(route('dashboard'))
+                ->with('success', 'Veículo aprovado.');
+        } catch (ValidationException $e) {
+            return redirect(route('dashboard'))
+                ->with('fail', FALHA . $e->getMessage());
+        }
     }
 
     public function reject(string $id)
     {
         $vehicle = Vehicle::findOrFail($id);
-        $vehicle->return_status = "Recusado";
-        $vehicle->save();
+        try {
+            $vehicle->return_status = "Rejeitado";
+            $vehicle->save();
+            return redirect(route('dashboard'))
+                ->with('success', 'Veículo rejeitado.');
+        } catch (ValidationException $e) {
+            return redirect(route('dashboard'))
+                ->with('fail', FALHA . $e->getMessage());
+        }
     }
 
     public function destroy(string $id)

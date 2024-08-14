@@ -64,7 +64,7 @@
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-dark btn-sm w-full">Recusado</button>
                                 </form>
-                                <form action="{{ route('vehicle.delete', $vehicle->id) }}" method="POST">
+                                <form action="{{ route('vehicle.destroy', $vehicle->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm w-full">Deletar</button>
