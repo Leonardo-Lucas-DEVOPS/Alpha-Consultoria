@@ -10,7 +10,7 @@ class AuditEmployee extends Model
     use HasFactory;
     protected  $fillable = [
 
-        'OldName',  
+        'OldName',
         'OldRg',
         'OldCpf',
         'OldNascimento',

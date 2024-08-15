@@ -1,5 +1,7 @@
 <?php
 
+define('ATRIBUTO_INVALIDO', 'O campo :attribute selecionado é inválido.');
+
 return [
 
     /*
@@ -47,7 +49,7 @@ return [
     'email'                => 'O campo :attribute deve ser um endereço de e-mail válido.',
     'ends_with'            => 'O campo :attribute deve terminar com um dos seguintes: :values',
     'enum'                 => 'O :attribute selecionado é inválido.',
-    'exists'               => 'O campo :attribute selecionado é inválido.',
+    'exists'               => ATRIBUTO_INVALIDO,
     'file'                 => 'O campo :attribute deve ser um arquivo.',
     'filled'               => 'O campo :attribute deve ter um valor.',
     'gt' => [
@@ -63,7 +65,7 @@ return [
         'array'   => 'O campo :attribute deve conter :value itens ou mais.',
     ],
     'image'                => 'O campo :attribute deve ser uma imagem.',
-    'in'                   => 'O campo :attribute selecionado é inválido.',
+    'in'                   => ATRIBUTO_INVALIDO,
     'in_array'             => 'O campo :attribute não existe em :other.',
     'integer'              => 'O campo :attribute deve ser um número inteiro.',
     'ip'                   => 'O campo :attribute deve ser um endereço de IP válido.',
@@ -99,7 +101,7 @@ return [
     ],
     'missing_with' => 'O campo :attribute não deve estar presente quando houver :values.',
     'min_digits'           => 'O campo :attribute deve ter pelo menos :min dígitos',
-    'not_in'               => 'O campo :attribute selecionado é inválido.',
+    'not_in'               => ATRIBUTO_INVALIDO,
     'multiple_of'          => 'O campo :attribute deve ser um múltiplo de :value.',
     'not_regex'            => 'O campo :attribute possui um formato inválido.',
     'numeric'              => 'O campo :attribute deve ser um número.',

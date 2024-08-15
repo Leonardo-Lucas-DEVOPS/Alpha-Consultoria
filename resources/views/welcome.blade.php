@@ -5,11 +5,17 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Alpha Consultoria | Investigação Corporativa e Segurança Empresarial</title>
-        <meta name="description" content="Alpha Consultoria é especializada em investigações corporativas e segurança empresarial, garantindo a integridade e proteção da sua empresa.">
+        <meta name="description"
+            content="Alpha Consultoria é especializada em investigações corporativas e segurança empresarial, garantindo a integridade e proteção da sua empresa.">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicons/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicons/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ asset('imgas/favicons/site.webmanifest') }}">
         <style>
             .bg-image {
                 background-image: url('/images/Background.png');
@@ -18,13 +24,11 @@
                 height: 100vh;
             }
 
-
-
             .navbar-brand img {
                 height: 40px;
                 margin-left: 120%;
             }
-
+            
             .btn-custom,
             .btn-outline-custom {
                 color: #fff;
@@ -152,25 +156,26 @@
                             <a class="nav-link" href="#servicos">Serviços</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://wa.me/5511993233989?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20os%20serviços%20da%20Alpha%20Consultoria.">Contato</a>
+                            <a class="nav-link"
+                                href="https://wa.me/5511993233989?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20os%20serviços%20da%20Alpha%20Consultoria.">Contato</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         @if (Route::has('login'))
-                        @auth
-                        <li class="nav-item">
-                            <a class="btn btn-outline-custom" href="{{ url('/dashboard') }}">Dashboard</a>
-                        </li>
-                        @else
-                        <li class="nav-item">
-                            <a class="btn btn-outline-custom mr-2" href="{{ route('login') }}">Entrar</a>
-                        </li>
-                        @if (Route::has('register'))
-                        <li class="nav-item">
-                            <a class="btn btn-custom" href="{{ route('register') }}">Criar conta</a>
-                        </li>
-                        @endif
-                        @endauth
+                            @auth
+                                <li class="nav-item">
+                                    <a class="btn btn-outline-custom" href="{{ url('/dashboard') }}">Dashboard</a>
+                                </li>
+                            @else
+                                <li class="nav-item">
+                                    <a class="btn btn-outline-custom mr-2" href="{{ route('login') }}">Entrar</a>
+                                </li>
+                                @if (Route::has('register'))
+                                    <li class="nav-item">
+                                        <a class="btn btn-custom" href="{{ route('register') }}">Criar conta</a>
+                                    </li>
+                                @endif
+                            @endauth
                         @endif
                     </ul>
                 </div>
@@ -189,8 +194,11 @@
                     <h2 class="text-center"><em>Sobre Nós</em></h2>
                     <p class="text-center">
                         <em>Alpha Consultoria é uma empresa especializada em investigações corporativas.
-                            Realizamos um levantamento completo de dados dos funcionários, candidatos às vagas e prestadores de serviço. Nossa análise minuciosa abrange passagens criminais, histórico jurídico, processos trabalhistas, criminais e cíveis.
-                            Evite exposições de risco como fraudes, golpes, roubos e improdutividade, confiando na Alpha Consultoria para garantir a segurança e a integridade da sua empresa.
+                            Realizamos um levantamento completo de dados dos funcionários, candidatos às vagas e
+                            prestadores de serviço. Nossa análise minuciosa abrange passagens criminais, histórico
+                            jurídico, processos trabalhistas, criminais e cíveis.
+                            Evite exposições de risco como fraudes, golpes, roubos e improdutividade, confiando na Alpha
+                            Consultoria para garantir a segurança e a integridade da sua empresa.
                         </em>
                     </p>
                 </div>
@@ -203,17 +211,30 @@
                     <h2 class="text-center"><em>Nossos serviços</em></h2>
                     <p>
                         <em>Alpha Consultoria é uma empresa especializada em investigações corporativas.
-                            Realizamos um levantamento completo de dados dos funcionários, candidatos às vagas e prestadores de serviço. Nossa análise minuciosa abrange passagens criminais, histórico jurídico, processos trabalhistas, criminais e cíveis.
-                            Evite exposições de risco como fraudes, golpes, roubos e improdutividade, confiando na Alpha Consultoria para garantir a segurança e a integridade da sua empresa.
+                            Realizamos um levantamento completo de dados dos funcionários, candidatos às vagas e
+                            prestadores de serviço. Nossa análise minuciosa abrange passagens criminais, histórico
+                            jurídico, processos trabalhistas, criminais e cíveis.
+                            Evite exposições de risco como fraudes, golpes, roubos e improdutividade, confiando na Alpha
+                            Consultoria para garantir a segurança e a integridade da sua empresa.
                         </em>
                     </p>
                     <p><em>
-                            </br><strong>Análise Minuciosa:</strong> A análise minuciosa dos dados deve incluir a verificação de antecedentes criminais, histórico jurídico, processos trabalhistas, criminais e cíveis. Esse exame aprofundado é crucial para assegurar que os indivíduos que estão se candidatando a uma vaga ou que já estão em exercício na empresa não possuam histórico que possa comprometer a segurança ou a reputação da organização.
+                            </br><strong>Análise Minuciosa:</strong> A análise minuciosa dos dados deve incluir a
+                            verificação de antecedentes criminais, histórico jurídico, processos trabalhistas, criminais
+                            e cíveis. Esse exame aprofundado é crucial para assegurar que os indivíduos que estão se
+                            candidatando a uma vaga ou que já estão em exercício na empresa não possuam histórico que
+                            possa comprometer a segurança ou a reputação da organização.
 
                     </p>
                     <p>
-                        </br> <strong>Evite Exposições de Risco:</strong> Adotar estas práticas de análise de dados ajuda a evitar exposições a riscos significativos como fraudes, golpes, roubos e improdutividade. Garantir que todos os funcionários e prestadores de serviço sejam submetidos a um rigoroso processo de verificação é fundamental para manter um ambiente de trabalho seguro, eficiente e confiável.
-                        Implementar essas medidas de segurança não só protege a empresa contra possíveis ameaças, mas também reforça a confiança de clientes e parceiros, contribuindo para um ambiente corporativo mais seguro e produtivo.
+                        </br> <strong>Evite Exposições de Risco:</strong> Adotar estas práticas de análise de dados
+                        ajuda a evitar exposições a riscos significativos como fraudes, golpes, roubos e
+                        improdutividade. Garantir que todos os funcionários e prestadores de serviço sejam submetidos a
+                        um rigoroso processo de verificação é fundamental para manter um ambiente de trabalho seguro,
+                        eficiente e confiável.
+                        Implementar essas medidas de segurança não só protege a empresa contra possíveis ameaças, mas
+                        também reforça a confiança de clientes e parceiros, contribuindo para um ambiente corporativo
+                        mais seguro e produtivo.
 
                         </br> <strong></strong>
                         </em>
