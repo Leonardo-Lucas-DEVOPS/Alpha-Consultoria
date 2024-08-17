@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Employee;
+use App\Models\Freelancer;
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,15 +16,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Registro fixo
         User::factory()->create([
             'id' => 1,
             'name' => 'Test User',
             'email' => 'leonardolucas181204@gmail.com',
-            'password' => Hash::make('123'), // Senha deve ser criptografada
+            'password' => Hash::make('123'),
             'usertype' => '3',
-            'email_verified_at' => now(), // Data atual para email verificado
-            'created_at' => now(), // Data atual
-            'updated_at' => now(), // Data atual
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
+
+        // Vários registros aleatórios
+        /*User::factory(10)->create();
+        Employee::factory(10)->create();
+        Vehicle::factory(10)->create();
+        Freelancer::factory(10)->create();*/
     }
 }

@@ -74,7 +74,7 @@
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-dark btn-sm w-full">Recusado</button>
                                 </form>
-                                <form action="{{ route('freelancer.delete', $freelancer->id) }}" method="POST">
+                                <form action="{{ route('freelancer.destroy', $freelancer->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm w-full">Deletar</button>
