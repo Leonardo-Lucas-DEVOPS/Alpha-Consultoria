@@ -4,13 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditEmployee;
 use App\Models\Employee;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 define('REGEX', '/[^a-zA-Z0-9]/');
-define('FALHA', 'Falha na validação dos dados: ');
+define('ANALISE', 'Em análise');
+
+// Armazena os dados na sessão para depuração
+function fail($e)
+{
+    return redirect(route('dashboard'))
+        ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+}
 
 class EmployeeController extends Controller
 {
@@ -48,9 +55,7 @@ class EmployeeController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+            fail($e);
         }
     }
     public function show(Employee $employee)
@@ -59,13 +64,17 @@ class EmployeeController extends Controller
         $employees = Employee::orderBy('created_at', 'desc')->paginate(10);
         $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(1);
 
-
         // Retorna a view 'employee.partials.show-employee' com os dados recuperados
         return view('employee.show-employee', compact('employees', 'olddatas'));
     }
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
+
+        if ($employee->return_status != ANALISE) {
+            return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
+        }
+
         return view('employee.create-employee', compact('employee'));
     }
     public function update(Request $request, $id)
@@ -105,30 +114,43 @@ class EmployeeController extends Controller
             $employee->pai = $request->input('pai');
             $employee->mae = $request->input('mae');
             $employee->nascimento = $request->input('nascimento');
-            $employee->return_status = 'Em análise';
+            $employee->return_status = ANALISE;
             $employee->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $employee->save();
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+            fail($e);
         }
     }
 
     public function accept(string $id)
     {
         $employee = Employee::findOrFail($id);
-        $employee->return_status = "Aceito";
+
+        try {
+            $employee->return_status = "Aprovado";
+            $employee->save();
+            return redirect(route('dashboard'))
+                ->with('sucess', 'Empregado aprovado');
+        } catch (ValidationException $e) {
+            fail($e);
+        }
         $employee->save();
     }
 
     public function reject(string $id)
     {
         $employee = Employee::findOrFail($id);
-        $employee->return_status = "Recusado";
+        try {
+            $employee->return_status = "Rejeitado";
+            $employee->save();
+            return redirect(route('dashboard'))
+                ->with('sucess', 'Empregado rejeitado');
+        } catch (ValidationException $e) {
+            fail($e);
+        }
         $employee->save();
     }
 
@@ -138,7 +160,7 @@ class EmployeeController extends Controller
             try {
                 $employee = Employee::findOrFail($id);
 
-                if ($employee->return_status != 'Em análise' && Auth::user()->usertype == 2) {
+                if ($employee->return_status != ANALISE && Auth::user()->usertype == 2) {
 
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
@@ -146,9 +168,7 @@ class EmployeeController extends Controller
                 Employee::destroy($id);
                 return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                // Armazena os dados na sessão para depuração
-                return redirect(route('dashboard'))
-                    ->with('fail', FALHA . $e->getMessage());
+                fail($e);
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

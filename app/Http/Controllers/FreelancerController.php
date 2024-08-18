@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\AuditFreelancer;
 use App\Models\Freelancer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 define('REGEX', '/[^a-zA-Z0-9]/');
-define('FALHA', 'Falha na validação dos dados: ');
+define('ANALISE', 'Em análise');
+
+// Armazena os dados na sessão para depuração
+function fail($e)
+{
+    return redirect(route('dashboard'))
+        ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+}
 
 class FreelancerController extends Controller
 {
@@ -47,9 +54,8 @@ class FreelancerController extends Controller
 
             Freelancer::create(array_merge($validatedData, ['user_id' => $userId]));
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
-        } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+        } catch (ValidationException $e) {
+            fail($e);
         }
     }
     public function show(Freelancer $freelancer)
@@ -61,6 +67,11 @@ class FreelancerController extends Controller
     public function edit($id)
     {
         $freelancer = Freelancer::findOrFail($id);
+
+        if ($freelancer->return_status != 'Em análise') {
+            return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
+        }
+
         return view('freelancer.create-freelancer', compact('freelancer'));
     }
     public function update(Request $request, $id)
@@ -108,30 +119,42 @@ class FreelancerController extends Controller
             $freelancer->pai = $request->input('pai');
             $freelancer->mae = $request->input('mae');
             $freelancer->nascimento = $request->input('nascimento');
-            $freelancer->return_status = 'Em análise';
+            $freelancer->return_status = ANALISE;
             $freelancer->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $freelancer->save();
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+            fail($e);
         }
     }
 
     public function accept(string $id)
     {
         $freelancer = Freelancer::findOrFail($id);
-        $freelancer->return_status = "Aceito";
+        try {
+            $freelancer->return_status = "Aprovado";
+            $freelancer->save();
+            return redirect(route('dashboard'))
+                ->with('sucess', 'Prestador aprovado');
+        } catch (ValidationException $e) {
+            fail($e);
+        }
         $freelancer->save();
     }
 
     public function reject(string $id)
     {
         $freelancer = Freelancer::findOrFail($id);
-        $freelancer->return_status = "Recusado";
+        try {
+            $freelancer->return_status = "Rejeitado";
+            $freelancer->save();
+            return redirect(route('dashboard'))
+                ->with('sucess', 'Prestador rejeitado');
+        } catch (ValidationException $e) {
+            fail($e);
+        }
         $freelancer->save();
     }
 
@@ -140,7 +163,7 @@ class FreelancerController extends Controller
         if (Auth::user()->usertype >= 2) {
             try {
                 $freelancer = Freelancer::findOrFail($id);
-                if ($freelancer->return_status != 'Em análise' && Auth::user()->usertype == 2) {
+                if ($freelancer->return_status != ANALISE && Auth::user()->usertype == 2) {
 
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
@@ -148,9 +171,7 @@ class FreelancerController extends Controller
                 Freelancer::destroy($id);
                 return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                // Armazena os dados na sessão para depuração
-                return redirect(route('dashboard'))
-                    ->with('fail', FALHA . $e->getMessage());
+                fail($e);
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

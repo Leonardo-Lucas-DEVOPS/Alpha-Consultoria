@@ -56,29 +56,29 @@
                                 </form>
                             </div>
                         </td>
-                    @endif
-                    @if (Auth::user()->usertype == 3)
-                        <td>
-                            <div class="flex flex-col space-y-2">
-                                <form action="{{ route('employee.accept', $employee->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-success btn-sm w-full">Aprovado</button>
-                                </form>
-                                <form action="{{ route('employee.reject', $employee->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-dark btn-sm w-full">Recusado</button>
-                                </form>
-                                <form action="{{ route('employee.destroy', $employee->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm w-full">Deletar</button>
-                                </form>
-                            </div>
-                        </td>
-                    @endif
+                        @if (Auth::user()->usertype == 3)
+                            <td>
+                                <div class="flex flex-col space-y-2">
+                                    <form action="{{ route('employee.accept', $employee->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-success btn-sm w-full">Aprovado</button>
+                                    </form>
+                                    <form action="{{ route('employee.reject', $employee->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-dark btn-sm w-full">Recusado</button>
+                                    </form>
+                                    <form action="{{ route('employee.destroy', $employee->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm w-full">Deletar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        @endif
                 </tr>
+            @endif
             @endforeach
 
         </tbody>

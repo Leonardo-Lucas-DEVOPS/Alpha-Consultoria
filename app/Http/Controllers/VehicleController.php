@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\AuditVehicle;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 define('REGEX', '/[^a-zA-Z0-9]/');
-define('FALHA', 'Falha na validação dos dados: ');
+define('ANALISE', 'Em análise');
+
+// Armazena os dados na sessão para depuração
+function fail($e)
+{
+    return redirect(route('dashboard'))
+        ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+}
 
 class VehicleController extends Controller
 {
@@ -43,8 +49,7 @@ class VehicleController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+            fail($e);
         }
     }
 
@@ -59,6 +64,11 @@ class VehicleController extends Controller
     public function edit($id)
     {
         $vehicle = Vehicle::findOrFail($id);
+
+        if ($vehicle->return_status != 'Em análise') {
+            return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
+        }
+
         return view('Vehicle.create-vehicle', compact('vehicle'));
     }
 
@@ -92,15 +102,14 @@ class VehicleController extends Controller
             $vehicle->chassi = preg_replace(REGEX, '', $request->input('chassi'));
             $vehicle->placa = preg_replace(REGEX, '', $request->input('placa'));
             $vehicle->renavam = preg_replace(REGEX, '', $request->input('renavam'));
-            $vehicle->return_status = 'Em análise';
+            $vehicle->return_status = ANALISE;
             $vehicle->user_id = Auth::id();
 
             $vehicle->save();
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+            fail($e);
         }
     }
 
@@ -113,8 +122,7 @@ class VehicleController extends Controller
             return redirect(route('dashboard'))
                 ->with('success', 'Veículo aprovado.');
         } catch (ValidationException $e) {
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+            fail($e);
         }
     }
 
@@ -127,8 +135,7 @@ class VehicleController extends Controller
             return redirect(route('dashboard'))
                 ->with('success', 'Veículo rejeitado.');
         } catch (ValidationException $e) {
-            return redirect(route('dashboard'))
-                ->with('fail', FALHA . $e->getMessage());
+            fail($e);
         }
     }
 
@@ -139,7 +146,7 @@ class VehicleController extends Controller
             try {
                 $vehicle = Vehicle::findOrFail($id);
 
-                if ($vehicle->return_status != 'Em análise' && Auth::user()->usertype == 2) {
+                if ($vehicle->return_status != ANALISE && Auth::user()->usertype == 2) {
 
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
@@ -148,9 +155,7 @@ class VehicleController extends Controller
                 return redirect(route('dashboard'))
                     ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                // Armazena os dados na sessão para depuração
-                return redirect(route('dashboard'))
-                    ->with('fail', FALHA . $e->getMessage());
+                fail($e);
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');
