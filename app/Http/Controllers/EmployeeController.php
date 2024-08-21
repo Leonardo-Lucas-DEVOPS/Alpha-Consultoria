@@ -9,16 +9,6 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-define('REGEX', '/[^a-zA-Z0-9]/');
-define('ANALISE', 'Em análise');
-
-// Armazena os dados na sessão para depuração
-function fail($e)
-{
-    return redirect(route('dashboard'))
-        ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
-}
-
 class EmployeeController extends Controller
 {
     public function create()
@@ -44,8 +34,8 @@ class EmployeeController extends Controller
             ]);
 
             // Formatação dos dados (remover pontos, traços e outros caracteres não numéricos)
-            $validatedData['rg'] = preg_replace(REGEX, '', $validatedData['rg']);
-            $validatedData['cpf'] = preg_replace(REGEX, '', $validatedData['cpf']);
+            $validatedData['rg'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['rg']);
+            $validatedData['cpf'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cpf']);
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
@@ -55,14 +45,16 @@ class EmployeeController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            return fail($e);
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
     }
     public function show(Employee $employee)
     {
         // Recupera todos os registros da tabela 'employees'
-        $employees = Employee::orderBy('created_at', 'desc')->paginate(10);
-        $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(1);
+        $employees = Employee::orderBy('created_at', 'desc')->paginate(5);
+        $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(3);
 
         // Retorna a view 'employee.partials.show-employee' com os dados recuperados
         return view('employee.show-employee', compact('employees', 'olddatas'));
@@ -108,8 +100,8 @@ class EmployeeController extends Controller
                 'OldReturn_status' => $employee->return_status,
             ]);
             // Atualiza os dados do empregado
-            $employee->rg = preg_replace(REGEX, '', $request->input('rg'));
-            $employee->cpf = preg_replace(REGEX, '', $request->input('cpf'));
+            $employee->rg = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('rg'));
+            $employee->cpf = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cpf'));
             $employee->name = $request->input('name');
             $employee->pai = $request->input('pai');
             $employee->mae = $request->input('mae');
@@ -121,41 +113,42 @@ class EmployeeController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            return fail($e);
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
     }
 
     public function accept(string $id)
     {
         $employee = Employee::findOrFail($id);
-
         try {
             $employee->return_status = "Aprovado";
             $employee->save();
             return redirect(route('dashboard'))
-                ->with('success', 'Empregado aprovado');
+                ->with('success', 'Registro aprovado.');
         } catch (ValidationException $e) {
-            return fail($e);
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
-        $employee->save();
     }
 
     public function reject(string $id)
     {
         $employee = Employee::findOrFail($id);
         try {
-            $employee->return_status = "Recusado";
+            $employee->return_status = "Rejeitado";
             $employee->save();
             return redirect(route('dashboard'))
-                ->with('fail', 'Empregado recusado');
+                ->with('success', 'Registro rejeitado.');
         } catch (ValidationException $e) {
-            return fail($e);
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
-        $employee->save();
     }
 
     public function destroy(string $id)
-    {  // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
+    {
+        // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if (Auth::user()->usertype >= 2) {
             try {
                 $employee = Employee::findOrFail($id);
@@ -166,9 +159,12 @@ class EmployeeController extends Controller
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
                 }
                 Employee::destroy($id);
-                return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
+                return redirect(route('dashboard'))
+                    ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                return fail($e);
+                // Armazena os dados na sessão para depuração
+                return redirect(route('dashboard'))
+                    ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

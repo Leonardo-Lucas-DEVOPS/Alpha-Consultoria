@@ -9,16 +9,6 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-define('REGEX', '/[^a-zA-Z0-9]/');
-define('ANALISE', 'Em análise');
-
-// Armazena os dados na sessão para depuração
-function fail($e)
-{
-    return redirect(route('dashboard'))
-        ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
-}
-
 class FreelancerController extends Controller
 {
     public function create()
@@ -44,24 +34,25 @@ class FreelancerController extends Controller
                 'cnh' => 'required|unique:freelancers,placa',
                 'placa' => 'required|unique:freelancers,placa',
             ]);
-            $validatedData['rg'] = preg_replace(REGEX, '', $validatedData['rg']);
-            $validatedData['cpf'] = preg_replace(REGEX, '', $validatedData['cpf']);
-            $validatedData['cnh'] = preg_replace(REGEX, '', $validatedData['cnh']);
-            $validatedData['placa'] = preg_replace(REGEX, '', $validatedData['placa']);
+            $validatedData['rg'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['rg']);
+            $validatedData['cpf'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cpf']);
+            $validatedData['cnh'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cnh']);
+            $validatedData['placa'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['placa']);
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
 
             Freelancer::create(array_merge($validatedData, ['user_id' => $userId]));
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
-        } catch (ValidationException $e) {
-            return fail($e);
+        } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
         }
     }
     public function show(Freelancer $freelancer)
     {
-        $freelancers = Freelancer::orderBy('created_at', 'desc')->paginate(10);
-        $olddatas = AuditFreelancer::orderBy('created_at', 'asc')->paginate(1);
+        $freelancers = Freelancer::orderBy('created_at', 'desc')->paginate(5);
+        $olddatas = AuditFreelancer::orderBy('created_at', 'desc')->paginate(3);
         return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
     }
     public function edit($id)
@@ -112,10 +103,10 @@ class FreelancerController extends Controller
 
             // Atualiza os dados do empregado
             $freelancer->name = $request->input('name');
-            $freelancer->rg = preg_replace(REGEX, '', $request->input('rg'));
-            $freelancer->cpf = preg_replace(REGEX, '', $request->input('cpf'));
-            $freelancer->placa = preg_replace(REGEX, '', $request->input('placa'));
-            $freelancer->cnh = preg_replace(REGEX, '', $request->input('cnh'));
+            $freelancer->rg = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('rg'));
+            $freelancer->cpf = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cpf'));
+            $freelancer->placa = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('placa'));
+            $freelancer->cnh = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cnh'));
             $freelancer->pai = $request->input('pai');
             $freelancer->mae = $request->input('mae');
             $freelancer->nascimento = $request->input('nascimento');
@@ -126,52 +117,54 @@ class FreelancerController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            return fail($e);
+            // Armazena os dados na sessão para depuração
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
     }
-
     public function accept(string $id)
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
-            $freelancer->return_status = "Aprovado";
-            $freelancer->save();
+            $freelancer ->return_status = "Registro aprovado";
+            $freelancer ->save();
             return redirect(route('dashboard'))
-                ->with('success', 'Prestador aprovado');
+                ->with('success', 'Registro aprovado.');
         } catch (ValidationException $e) {
-            return fail($e);
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
         }
-        $freelancer->save();
     }
-
     public function reject(string $id)
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
-            $freelancer->return_status = "Recusado";
+            $freelancer->return_status = "Rejeitado";
             $freelancer->save();
             return redirect(route('dashboard'))
-                ->with('fail', 'Prestador recusado');
+                ->with('success', 'Registro rejeitado.');
         } catch (ValidationException $e) {
-            return fail($e);
+            return redirect(route('dashboard'))
+                ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
         }
-        $freelancer->save();
     }
-
     public function destroy(string $id)
-    {  // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
+    {
+        // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if (Auth::user()->usertype >= 2) {
             try {
                 $freelancer = Freelancer::findOrFail($id);
-                if ($freelancer->return_status != ANALISE && Auth::user()->usertype == 2) {
-
+                if ($freelancer->return_status != 'Em análise' && Auth::user()->usertype == 2) {
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
                 }
                 Freelancer::destroy($id);
-                return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
+                return redirect(route('dashboard'))
+                    ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                return fail($e);
+                // Armazena os dados na sessão para depuração
+                return redirect(route('dashboard'))
+                    ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');
