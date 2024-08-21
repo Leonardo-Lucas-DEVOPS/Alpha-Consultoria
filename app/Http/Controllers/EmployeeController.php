@@ -55,7 +55,7 @@ class EmployeeController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
     }
     public function show(Employee $employee)
@@ -121,7 +121,7 @@ class EmployeeController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
     }
 
@@ -133,9 +133,9 @@ class EmployeeController extends Controller
             $employee->return_status = "Aprovado";
             $employee->save();
             return redirect(route('dashboard'))
-                ->with('sucess', 'Empregado aprovado');
+                ->with('success', 'Empregado aprovado');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
         $employee->save();
     }
@@ -144,12 +144,12 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($id);
         try {
-            $employee->return_status = "Rejeitado";
+            $employee->return_status = "Recusado";
             $employee->save();
             return redirect(route('dashboard'))
-                ->with('sucess', 'Empregado rejeitado');
+                ->with('fail', 'Empregado recusado');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
         $employee->save();
     }
@@ -168,7 +168,7 @@ class EmployeeController extends Controller
                 Employee::destroy($id);
                 return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                fail($e);
+                return fail($e);
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

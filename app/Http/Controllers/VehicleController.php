@@ -49,7 +49,7 @@ class VehicleController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
     }
 
@@ -109,7 +109,7 @@ class VehicleController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
     }
 
@@ -122,21 +122,23 @@ class VehicleController extends Controller
             return redirect(route('dashboard'))
                 ->with('success', 'Veículo aprovado.');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
+        $vehicle->save();
     }
 
     public function reject(string $id)
     {
         $vehicle = Vehicle::findOrFail($id);
         try {
-            $vehicle->return_status = "Rejeitado";
+            $vehicle->return_status = "Recusado";
             $vehicle->save();
             return redirect(route('dashboard'))
-                ->with('success', 'Veículo rejeitado.');
+                ->with('fail', 'Veículo recusado');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
+        $vehicle->save();
     }
 
     public function destroy(string $id)
@@ -155,7 +157,7 @@ class VehicleController extends Controller
                 return redirect(route('dashboard'))
                     ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                fail($e);
+                return fail($e);
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

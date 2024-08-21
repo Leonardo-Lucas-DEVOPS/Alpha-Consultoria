@@ -55,7 +55,7 @@ class FreelancerController extends Controller
             Freelancer::create(array_merge($validatedData, ['user_id' => $userId]));
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
     }
     public function show(Freelancer $freelancer)
@@ -126,7 +126,7 @@ class FreelancerController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
     }
 
@@ -137,9 +137,9 @@ class FreelancerController extends Controller
             $freelancer->return_status = "Aprovado";
             $freelancer->save();
             return redirect(route('dashboard'))
-                ->with('sucess', 'Prestador aprovado');
+                ->with('success', 'Prestador aprovado');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
         $freelancer->save();
     }
@@ -148,12 +148,12 @@ class FreelancerController extends Controller
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
-            $freelancer->return_status = "Rejeitado";
+            $freelancer->return_status = "Recusado";
             $freelancer->save();
             return redirect(route('dashboard'))
-                ->with('sucess', 'Prestador rejeitado');
+                ->with('fail', 'Prestador recusado');
         } catch (ValidationException $e) {
-            fail($e);
+            return fail($e);
         }
         $freelancer->save();
     }
@@ -171,7 +171,7 @@ class FreelancerController extends Controller
                 Freelancer::destroy($id);
                 return redirect(route('dashboard'))->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
-                fail($e);
+                return fail($e);
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

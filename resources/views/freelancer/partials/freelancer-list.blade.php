@@ -33,56 +33,139 @@
         </thead>
         <tbody>
             @foreach ($freelancers as $freelancer)
-                <tr class="border-b">
-                    <td class="px-4 py-2">{{ $freelancer->id }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->name }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->rg }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->cpf }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->nascimento }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->pai }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->mae }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->cnh }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->placa }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->user_id }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->created_at }}</td>
-                    <td class="px-4 py-2">{{ $freelancer->return_status }}</td>
-                    @if (Auth::user()->usertype == 2)
-                        <td>
-                            <div class="flex space-x-2">
-                                <form action="{{ route('freelancer.edit', $freelancer->id) }}" method="GET">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm">Alterar</button>
-                                </form>
-                                <form action="{{ route('freelancer.destroy', $freelancer->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
-                                </form>
-                            </div>
-                        </td>
-                        @if (Auth::user()->usertype == 3)
+                @if ($freelancer->return_status == 'Em análise' || Auth::user()->usertype == 2)
+                    <tr class="border-b">
+                        <td class="px-4 py-2">{{ $freelancer->id }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->name }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->rg }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->cpf }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->nascimento }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->pai }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->mae }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->cnh }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->placa }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->user_id }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->created_at }}</td>
+                        <td class="px-4 py-2">{{ $freelancer->return_status }}</td>
+                        @if (Auth::user()->usertype == 2)
                             <td>
-                                <div class="flex flex-col space-y-2">
-                                    <form action="{{ route('freelancer.accept', $freelancer->id) }}" method="POST">
+                                <div class="flex space-x-2">
+                                    <form action="{{ route('freelancer.edit', $freelancer->id) }}" method="GET">
                                         @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="btn btn-success btn-sm w-full">Aprovado</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">Alterar</button>
                                     </form>
-                                    <form action="{{ route('freelancer.reject', $freelancer->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="btn btn-dark btn-sm w-full">Recusado</button>
-                                    </form>
-                                    <form action="{{ route('freelancer.delete', $freelancer->id) }}" method="POST">
+                                    <form action="{{ route('freelancer.destroy', $freelancer->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm w-full">Deletar</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
                                     </form>
                                 </div>
                             </td>
                         @endif
-                </tr>
-            @endif
+                        @if (Auth::user()->usertype == 3)
+                            <td>
+                                <div class="flex flex-col space-y-2">
+                                    <button type="button" class="btn btn-success btn-sm w-full" data-bs-toggle="modal"
+                                        data-bs-target="#aprovar">
+                                        Aprovar
+                                    </button>
+                                    <div class="modal fade" id="aprovar" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Aprovar
+                                                        consulta
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Tem certeza que deseja aprovar esta consulta?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Não</button>
+                                                    <form action="{{ route('freelancer.accept', $freelancer->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-success">Aprovar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-dark btn-sm w-full" data-bs-toggle="modal"
+                                        data-bs-target="#recusar">
+                                        Recusar
+                                    </button>
+
+                                    <div class="modal fade" id="recusar" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Recusar
+                                                        consulta
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Tem certeza que deseja recusar esta consulta?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Não</button>
+                                                    <form action="{{ route('freelancer.reject', $freelancer->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-dark">Recusar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-danger btn-sm w-full" data-bs-toggle="modal"
+                                        data-bs-target="#exclusao">
+                                        Excluir
+                                    </button>
+
+                                    <div class="modal fade" id="exclusao" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Excluir
+                                                        consulta</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Tem certeza que deseja apagar esta consulta?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Não</button>
+                                                    <form action="{{ route('freelancer.destroy', $freelancer->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Excluir</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        @endif
+                    </tr>
+                @endif
             @endforeach
 
         </tbody>
