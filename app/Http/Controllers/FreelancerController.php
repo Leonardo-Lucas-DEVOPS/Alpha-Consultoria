@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\AuditFreelancer;
 use App\Models\Freelancer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-
 
 class FreelancerController extends Controller
 {
@@ -59,6 +58,11 @@ class FreelancerController extends Controller
     public function edit($id)
     {
         $freelancer = Freelancer::findOrFail($id);
+
+        if ($freelancer->return_status != 'Em análise') {
+            return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
+        }
+
         return view('freelancer.create-freelancer', compact('freelancer'));
     }
     public function update(Request $request, $id)
@@ -106,7 +110,7 @@ class FreelancerController extends Controller
             $freelancer->pai = $request->input('pai');
             $freelancer->mae = $request->input('mae');
             $freelancer->nascimento = $request->input('nascimento');
-            $freelancer->return_status = 'Em análise';
+            $freelancer->return_status = ANALISE;
             $freelancer->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $freelancer->save();
@@ -150,9 +154,7 @@ class FreelancerController extends Controller
         if (Auth::user()->usertype >= 2) {
             try {
                 $freelancer = Freelancer::findOrFail($id);
-
                 if ($freelancer->return_status != 'Em análise' && Auth::user()->usertype == 2) {
-
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
                 }
