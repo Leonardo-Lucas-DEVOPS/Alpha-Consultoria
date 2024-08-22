@@ -17,8 +17,10 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
+        'cpf_cnpj',
         'name',
         'email',
+        'phone',
         'password',
         'usertype',
     ];
