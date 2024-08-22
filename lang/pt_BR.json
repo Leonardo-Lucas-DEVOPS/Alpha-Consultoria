@@ -152,5 +152,7 @@
     "Aviso Formulário": "Tenha todas as informações necessárias em mão antes de consultar.",
     "Aviso do Registro": "Em caso de alteração de dados contatar o 'key user' da empresa",
     "Auditoria": "Historico de alterações.",
-    "Aviso Auditoria": "Cada registro possui um histórico único com todas as alterações registradas."
+    "Aviso Auditoria": "Cada registro possui um histórico único com todas as alterações registradas.",
+    "Aviso afiliados": "Esse campo é obrigatório para empresas que possuem afiliados.",
+    "Formulario Afiliados":"Formulário de cadastro de afiliados"
 }
