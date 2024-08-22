@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FreelancerController;
@@ -15,11 +16,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 //profile
-define('ROTA_PERFIL', '/profile');
+
 Route::middleware('auth')->group(function () {
-    Route::get(ROTA_PERFIL, [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch(ROTA_PERFIL, [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete(ROTA_PERFIL, [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 //Employee
@@ -64,4 +65,17 @@ Route::middleware('auth')
         Route::delete   ('/vehicle/destroy/{id}', 'destroy')->name('vehicle.destroy');
     });
 
+//affiliates
+Route::middleware('auth')
+->controller(AffiliateController::class)
+->group(function () {
+    Route::get      ('/affiliate/create', 'create')       ->name('affiliate.create');
+    Route::post     ('/affiliate/store', 'store')         ->name('affiliate.store');
+    Route::get      ('/affiliate/show',  'show')          ->name('affiliate.show');
+    Route::get      ('/affiliate/edit/{id}', 'edit')      ->name('affiliate.edit');
+    Route::patch    ('/affiliate/update/{id}', 'update')  ->name('affiliate.update');
+    Route::patch    ('/affiliate/accept/{id}', 'accept')  ->name('affiliate.accept');
+    Route::patch    ('/affiliate/reject/{id}', 'reject')  ->name('affiliate.reject');
+    Route::delete   ('/affiliate/destroy/{id}', 'destroy')->name('affiliate.destroy');
+});
 require_once __DIR__ . '/auth.php';
