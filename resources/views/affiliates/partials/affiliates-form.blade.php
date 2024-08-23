@@ -1,59 +1,74 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Formulario Afiliados') }}
+            @if ($affiliates != null)
+                {{ __('Atualizar Afiliado') }}
+            @else
+                {{ __('Criar Afiliados') }}
+            @endif
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Aviso afiliados') }}
+            @if ($affiliates != null)
+                {{ __('Aviso atualize afiliado') }}
+            @else
+                {{ __('Aviso criar afiliados') }}
+            @endif
         </p>
     </header>
 
-
-
-    <form method="POST" action="{{ route('affiliate.store') }}">
+    <form class="mt-5 space-y-6"
+        action="{{ $affiliates ? route('affiliate.update', $affiliates->id) : route('affiliate.store') }}" method="POST">
         @csrf
+        @if ($affiliates)
+        @method('PATCH')
+        @endif
 
         <!-- Name -->
         <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
-                autocomplete />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
+                :value="$affiliates ? $affiliates->name : old('name')" required autocomplete />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
-                required autocomplete />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
+                :value="$affiliates ? $affiliates->email : old('email')" required autocomplete />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        @if (!$affiliates)
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
-
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete />
-
+                autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                name="password_confirmation" required autocomplete />
-
+                name="password_confirmation" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
-       
-    
-        <div class="flex items-center gap-4 mt-4">
-            <x-primary-button>{{ __('Criar Afiliado') }}</x-primary-button>
-        </div>
+        @endif
 
+        @if($affiliates)
+        <!-- Reset Password Switch -->
+        <label class="inline-flex items-center mt-4 cursor-pointer">
+            <input id="reset_password" name="reset_password" type="checkbox" value="reset_password" class="sr-only peer">
+            <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none  rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <span for="reset_password" class="ms-3 text-sm font-medium text-black-900 dark:text-black-300">Reset Senha </span>
+        </label>
+        @endif
+
+        <div class="flex items-center gap-4 mt-4">
+            <x-primary-button>{{ $affiliates ? __('Atualizar Afiliado') : __('Criar Afiliado') }}</x-primary-button>
+        </div>
     </form>
 </section>

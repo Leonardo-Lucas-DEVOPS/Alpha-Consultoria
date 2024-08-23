@@ -20,12 +20,8 @@ class AffiliateController extends Controller
      */
     public function create():View
     {
-        return view('affiliates.create-affiliates');
+        return view('affiliates.create-affiliates', ['affiliates' => null]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         
@@ -57,4 +53,49 @@ try {
             return redirect()->route('dashboard')->with('fail', 'Erro ao cadastrar o Afiliado');
         }
     }
+    public function show(Affiliate $affiliate)
+    {
+        $affiliates = Affiliate::orderBy('created_at', 'desc')->paginate(5);
+        return view('affiliates.show-affiliates', compact('affiliates'));
+    }
+
+    public function edit($id)
+    {
+        $affiliates = Affiliate::findOrFail($id);
+        
+        return view('affiliates.create-affiliates', compact('affiliates'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        
+        $affiliate = Affiliate::findOrFail($id);
+    
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:affiliates,email,' . $affiliate->id,
+        ]);
+    
+        $affiliate->name = $request->input('name');
+        $affiliate->email = $request->input('email');
+    
+        // Se a checkbox "reset_password" estiver marcada
+        if ($request->has('reset_password')) {
+            // Redefine a senha para um valor padrão ou gera uma nova senha aleatória
+            $affiliate->password = Hash::make('12345678'); // Ou use Str::random(8) para uma senha aleatória
+        }
+    
+        $affiliate->save();
+    
+        return redirect()->route('affiliate.show')->with('success', 'Afiliado atualizado com sucesso.');
+    }
+    
+
+    public function destroy($id)
+    {
+        $affiliate = Affiliate::findOrFail($id);
+        $affiliate->delete();
+        return redirect()->route('affiliate.show')->with('success', 'Afiliado excluído com sucesso.');
+   }
+
 }
