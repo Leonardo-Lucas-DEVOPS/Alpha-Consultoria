@@ -132,7 +132,7 @@
                                             Situação Judicial, Informações Técnicas.</p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{route('affiliate.create')}}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('affiliate.create') }}" class="btn btn-dark">Consultar</a>
                                     </div>
                                 </div>
                             </div>

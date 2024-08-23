@@ -47,7 +47,7 @@ class FreelancerController extends Controller
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
+                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
     }
     public function show(Freelancer $freelancer)
@@ -59,6 +59,10 @@ class FreelancerController extends Controller
     public function edit($id)
     {
         $freelancer = Freelancer::findOrFail($id);
+
+        if ($freelancer->return_status != 'Em análise') {
+            return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
+        }
         return view('freelancer.create-freelancer', compact('freelancer'));
     }
     public function update(Request $request, $id)
@@ -115,20 +119,20 @@ class FreelancerController extends Controller
         } catch (ValidationException $e) {
             // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+                ->with('fail', 'Falha na atualização dos dados: ' . $e->getMessage());
         }
     }
     public function accept(string $id)
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
-            $freelancer ->return_status = "Registro aprovado";
-            $freelancer ->save();
+            $freelancer->return_status = "Registro aprovado";
+            $freelancer->save();
             return redirect(route('dashboard'))
                 ->with('success', 'Registro aprovado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
+                ->with('fail', 'Falha na aprovação dos dados: ' . $e->getMessage());
         }
     }
     public function reject(string $id)
@@ -141,7 +145,7 @@ class FreelancerController extends Controller
                 ->with('success', 'Registro rejeitado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
+                ->with('fail', 'Falha na rejeição dos dados: ' . $e->getMessage());
         }
     }
     public function destroy(string $id)
@@ -162,7 +166,7 @@ class FreelancerController extends Controller
             } catch (ValidationException $e) {
                 // Armazena os dados na sessão para depuração
                 return redirect(route('dashboard'))
-                    ->with('fail', 'Falha na validação dos dados: '. $e->getMessage());
+                    ->with('fail', 'Falha na exclusão dos dados: ' . $e->getMessage());
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

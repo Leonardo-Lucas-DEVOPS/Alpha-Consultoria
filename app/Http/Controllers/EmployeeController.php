@@ -63,6 +63,10 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
+
+        if ($employee->return_status != 'Em análise') {
+            return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
+        }
         return view('employee.create-employee', compact('employee'));
     }
     public function update(Request $request, $id)
@@ -111,7 +115,7 @@ class EmployeeController extends Controller
         } catch (ValidationException $e) {
             // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+                ->with('fail', 'Falha na atualização dos dados: ' . $e->getMessage());
         }
     }
 
@@ -125,7 +129,7 @@ class EmployeeController extends Controller
                 ->with('success', 'Registro aprovado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+                ->with('fail', 'Falha na aprovação dos dados: ' . $e->getMessage());
         }
     }
 
@@ -139,7 +143,7 @@ class EmployeeController extends Controller
                 ->with('success', 'Registro rejeitado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
-                ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+                ->with('fail', 'Falha na rejeição dos dados: ' . $e->getMessage());
         }
     }
 
@@ -161,7 +165,7 @@ class EmployeeController extends Controller
             } catch (ValidationException $e) {
                 // Armazena os dados na sessão para depuração
                 return redirect(route('dashboard'))
-                    ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
+                    ->with('fail', 'Falha na exclusão dos dados: ' . $e->getMessage());
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');

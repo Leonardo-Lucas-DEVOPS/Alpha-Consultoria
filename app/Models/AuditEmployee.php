@@ -19,6 +19,6 @@ class AuditEmployee extends Model
         'OldUser_id',
         'employee_id',
         'OldReturn_status',
-        
+
     ];
 }

@@ -24,5 +24,5 @@ class VehicleFactory extends Factory
             'user_id' => User::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
             'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
         ];
-    }   
+    }
 }

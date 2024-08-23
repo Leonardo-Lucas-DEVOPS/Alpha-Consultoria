@@ -16,6 +16,6 @@ class AuditVehicle extends Model
         'OldUser_id',
         'vehicle_id',
         'OldReturn_status',
-        
+
     ];
 }

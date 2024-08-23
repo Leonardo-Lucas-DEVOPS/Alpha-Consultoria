@@ -45,4 +45,3 @@ class Affiliate  extends Authenticatable implements MustVerifyEmail
         ];
     }
 }
-

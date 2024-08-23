@@ -33,6 +33,6 @@ class FreelancerFactory extends Factory
             'cnh' => $this->faker->bothify('###############'), // Gera um número de CNH fictício
             'user_id' => User::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
             'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
-       ];
+        ];
     }
 }
