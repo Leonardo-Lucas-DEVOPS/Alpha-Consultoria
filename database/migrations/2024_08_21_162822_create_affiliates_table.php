@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('affiliates', function (Blueprint $table) {
             $table->id();
+            $table->string('id_affiliate')->foreign('cpf_cnpj')->on('users');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
             $table->integer('usertype')->default(1);
-            $table->string('id_affiliate')->foreign('id')->on('users');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
-
             $table->timestamps();
         });
       
