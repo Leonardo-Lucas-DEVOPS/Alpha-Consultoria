@@ -13,10 +13,9 @@ Route::get('/', function () {
 // dashboard
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth:web,affiliate', 'verified'])->name('dashboard');
 
 //profile
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -78,4 +77,5 @@ Route::middleware('auth')
     Route::patch    ('/affiliate/reject/{id}', 'reject')  ->name('affiliate.reject');
     Route::delete   ('/affiliate/destroy/{id}', 'destroy')->name('affiliate.destroy');
 });
+
 require_once __DIR__ . '/auth.php';

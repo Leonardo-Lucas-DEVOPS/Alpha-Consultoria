@@ -42,7 +42,7 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
 
         // Tenta autenticar com o guard 'web'
-        if (!Auth::guard('web')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if ( !Auth::guard('web')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
 
             // Se a autenticação com 'web' falhar, tenta com 'affiliate'
             if (!Auth::guard('affiliate')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
@@ -50,11 +50,13 @@ class LoginRequest extends FormRequest
                 // Se ambos os guards falharem, aplica limitação de taxa e lança exceção
                 RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
+                throw ValidationException::withMessages([
+                    'email' => trans('auth.failed')
+                ]);
+            }
         }
 
+        // Limpa a limitação de taxa após uma autenticação bem-sucedida
         RateLimiter::clear($this->throttleKey());
     }
 

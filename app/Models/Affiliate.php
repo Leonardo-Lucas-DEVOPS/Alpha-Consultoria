@@ -21,7 +21,6 @@ class Affiliate  extends Authenticatable implements MustVerifyEmail
         'id_affiliate',
     ];
 
-
     /**
      * The attributes that should be hidden for serialization.
      *

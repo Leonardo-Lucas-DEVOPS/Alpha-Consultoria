@@ -1,11 +1,19 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Formulario Afiliados') }}
+            @if ($affiliates != null)
+                {{ __('Atualizar Afiliado') }}
+            @else
+                {{ __('Criar Afiliados') }}
+            @endif
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Aviso afiliados') }}
+            @if ($affiliates != null)
+                {{ __('Aviso atualize afiliado') }}
+            @else
+                {{ __('Aviso criar afiliados') }}
+            @endif
         </p>
     </header>
 

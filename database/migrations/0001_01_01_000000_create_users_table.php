@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('cpf_cnpj')->default('000.000.000-00'); // Definir um valor padrão
+            $table->string('cpf_cnpj')->unique()->nullable(); // Definir um valor padrão
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->unique();
+            $table->string('password');
+            $table->string('phone')->unique()->nullable();
             $table->integer('usertype')->default(2);
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
