@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form class="mt-5f  space-y-6"
+    <form class="mt-5f space-y-6"
         action="{{ $employee ? route('employee.update', $employee->id) : route('employee.store') }}" method="POST">
         @csrf
         @if ($employee)

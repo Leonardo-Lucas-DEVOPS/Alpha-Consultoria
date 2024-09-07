@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
-class AffiliateController extends Controller
+class AdminController extends Controller
 {
     /**
      * Show the form for creating a new resource.
      */
     public function create(): View
     {
-        return view('affiliates.create-affiliates', ['affiliates' => null]);
+        return view('admins.create-admins', ['admins' => null]);
     }
 
     /**
@@ -47,54 +47,52 @@ class AffiliateController extends Controller
                 'usertype' => '1',
             ]);
 
-            return redirect()->route('dashboard')->with('success', 'Afiliado cadastrado com sucesso');
+            return redirect()->route('dashboard')->with('success', 'Admin cadastrado com sucesso');
         } catch (\Exception $e) {
-            return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Afiliado");
+            return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Admin");
         }
     }
 
-    public function show(User $affiliate)
+    public function show(User $admin)
     {
-        $affiliates = User::where('usertype', '1')->orderBy('created_at', 'desc')->paginate(5);
-        return view('affiliates.show-affiliates', compact('affiliates'));
+        $admins = User::where('usertype', '2')->orderBy('created_at', 'desc')->paginate(5);
+        return view('admins.show-admins', compact('admins'));
     }
 
     public function edit($id)
     {
-        $affiliates = User::findOrFail($id);
-
-        return view('affiliates.create-affiliates', compact('affiliates'));
+        $admins = User::findOrFail($id);
+        return view('admins.create-admins', compact('admins'));
     }
 
     public function update(Request $request, $id)
     {
-
-        $affiliate = User::findOrFail($id);
+        $admin = User::findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $affiliate->id,
+            'email' => 'required|string|email|max:255|unique:user,email,' . $admin->id,
         ]);
 
-        $affiliate->name = $request->input('name');
-        $affiliate->email = $request->input('email');
+        $admin->name = $request->input('name');
+        $admin->email = $request->input('email');
 
         // Se a checkbox "reset_password" estiver marcada
         if ($request->has('reset_password')) {
             // Redefine a senha para um valor padrão ou gera uma nova senha aleatória
-            $affiliate->password = Hash::make('12345678'); // Ou use Str::random(8) para uma senha aleatória
+            $admin->password = Hash::make('12345678'); // Ou use Str::random(8) para uma senha aleatória
         }
 
-        $affiliate->save();
+        $admin->save();
 
-        return redirect()->route('affiliate.show')->with('success', 'Afiliado atualizado com sucesso.');
+        return redirect()->route('admin.show')->with('success', 'Admin atualizado com sucesso.');
     }
 
 
     public function destroy($id)
     {
-        $affiliate = User::findOrFail($id);
-        $affiliate->delete();
-        return redirect()->route('affiliate.show')->with('success', 'Afiliado excluído com sucesso.');
+        $admin = User::findOrFail($id);
+        $admin->delete();
+        return redirect()->route('admin.show')->with('success', 'Admin excluído com sucesso.');
     }
 }
