@@ -10,13 +10,6 @@ use Illuminate\View\View;
 
 class AffiliateController extends Controller
 {
-<<<<<<< HEAD
-    /**
-     * Show the form for creating a new resource.
-     */
-=======
- 
->>>>>>> b9db87837b34846046c3ddee7ca9af20a69c3cb9
     public function create(): View
     {
         return view('affiliates.create-affiliates', ['affiliates' => null]);
