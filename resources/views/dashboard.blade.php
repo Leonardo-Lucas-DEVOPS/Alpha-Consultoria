@@ -96,7 +96,7 @@
                         @endif
 
                         <!-- Cartões SUPER Admin -->
-                        @if (Auth::user()->usertype >= 3)
+                        @if (Auth::user()->usertype >= 2)
                             <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
                                 <div class="card" style="width: 100%;">
                                     <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card">

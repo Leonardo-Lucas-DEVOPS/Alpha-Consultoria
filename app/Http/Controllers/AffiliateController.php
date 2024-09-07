@@ -12,22 +12,11 @@ use Illuminate\Validation\Rules;
 
 class AffiliateController extends Controller
 {
-    
-    
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
+ 
     public function create(): View
     {
         return view('affiliates.create-affiliates', ['affiliates' => null]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
 
@@ -47,12 +36,12 @@ class AffiliateController extends Controller
         // ]);
         try {
             User::create([
-                'cpf_cnpj' => null,
+                'cpf_cnpj' => Auth::user()->cpf_cnpj,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'phone' => null,
-                'usertype' => '2',
+                'phone' => Auth::user()->phone,
+                'usertype' => '1',
             ]);
 
             return redirect()->route('dashboard')->with('success', 'Afiliado cadastrado com sucesso');
@@ -60,12 +49,15 @@ class AffiliateController extends Controller
             return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Afiliado: {$e->getMessage()}");
         }
     }
-
     public function show(User $affiliate)
     {
-        $affiliates = User::orderBy('created_at', 'desc')->paginate(5);
+        $affiliates = User::where('usertype', 1)
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(5);
+        
         return view('affiliates.show-affiliates', compact('affiliates'));
     }
+    
 
     public function edit($id)
     {
