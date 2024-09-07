@@ -10,17 +10,17 @@ use Illuminate\View\View;
 
 class AffiliateController extends Controller
 {
+<<<<<<< HEAD
     /**
      * Show the form for creating a new resource.
      */
+=======
+ 
+>>>>>>> b9db87837b34846046c3ddee7ca9af20a69c3cb9
     public function create(): View
     {
         return view('affiliates.create-affiliates', ['affiliates' => null]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
 
@@ -52,12 +52,13 @@ class AffiliateController extends Controller
             return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Afiliado");
         }
     }
-
     public function show(User $affiliate)
     {
         $affiliates = User::where('usertype', '1')->orderBy('created_at', 'desc')->paginate(5);
+
         return view('affiliates.show-affiliates', compact('affiliates'));
     }
+    
 
     public function edit($id)
     {
