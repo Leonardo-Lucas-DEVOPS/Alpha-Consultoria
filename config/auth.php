@@ -40,7 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'affiliate' => [
+            'driver' => 'session', // Tipo de sessão
+            'provider' => 'affiliates', // Provider associado (configurado abaixo)
+        ],
     ],
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -63,6 +68,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+        'affiliates' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\Affiliate::class),
         ],
 
         // 'users' => [

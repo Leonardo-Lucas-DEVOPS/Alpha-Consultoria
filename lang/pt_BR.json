@@ -152,5 +152,9 @@
     "Aviso Formulário": "Tenha todas as informações necessárias em mão antes de consultar.",
     "Aviso do Registro": "Em caso de alteração de dados contatar o 'key user' da empresa",
     "Auditoria": "Historico de alterações.",
-    "Aviso Auditoria": "Cada registro possui um histórico único com todas as alterações registradas."
+    "Aviso Auditoria": "Cada registro possui um histórico único com todas as alterações registradas.",
+    "Atualizar Afiliado":"Formulário de atualização de afiliados",
+    "Aviso atualize afiliado":"Em caso de reset de senha informar a nova ao afiliado. (Senha padrão: 12345678)",  
+    "Criar Afiliados":"Formulário de criação de afiliados",
+    "Aviso criar afiliados":"Esse formulário é destinado a criação de novos afiliados com limitação de acesso."
 }
