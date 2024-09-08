@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('cpf_cnpj')->unique(); //ad
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->unique(); //ad
-            $table->integer('usertype')->default(2);
+            $table->integer('usertype')->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

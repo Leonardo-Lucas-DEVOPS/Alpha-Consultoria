@@ -36,22 +36,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        // Verifica se o usuário está autenticado no guard 'affiliate'
-        if (Auth::guard('affiliate')->check()) {
-            Auth::guard('affiliate')->logout();
-        }
-    
-        // Realiza o logout do usuário no guard 'web'
         Auth::guard('web')->logout();
-    
-        // Invalida a sessão atual
+
         $request->session()->invalidate();
-    
-        // Regenera o token CSRF para a nova sessão
+
         $request->session()->regenerateToken();
-    
-        // Redireciona para a página inicial
+
         return redirect('/');
     }
-    
 }
