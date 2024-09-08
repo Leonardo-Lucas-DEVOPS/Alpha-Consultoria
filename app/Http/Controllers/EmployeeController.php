@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditEmployee;
 use App\Models\Employee;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class EmployeeController extends Controller
 {
@@ -55,7 +55,6 @@ class EmployeeController extends Controller
         // Recupera todos os registros da tabela 'employees'
         $employees = Employee::orderBy('created_at', 'desc')->paginate(5);
         $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(3);
-
 
         // Retorna a view 'employee.partials.show-employee' com os dados recuperados
         return view('employee.show-employee', compact('employees', 'olddatas'));
@@ -106,14 +105,13 @@ class EmployeeController extends Controller
             $employee->pai = $request->input('pai');
             $employee->mae = $request->input('mae');
             $employee->nascimento = $request->input('nascimento');
-            $employee->return_status = 'Em análise';
+            $employee->return_status = ANALISE;
             $employee->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $employee->save();
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na atualização dos dados: ' . $e->getMessage());
         }
@@ -154,7 +152,7 @@ class EmployeeController extends Controller
             try {
                 $employee = Employee::findOrFail($id);
 
-                if ($employee->return_status != 'Em análise' && Auth::user()->usertype == 2) {
+                if ($employee->return_status != ANALISE && Auth::user()->usertype == 2) {
 
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\AuditVehicle;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class VehicleController extends Controller
@@ -86,12 +86,11 @@ class VehicleController extends Controller
                 'OldUser_id' => $vehicle->user_id,
                 'OldReturn_status' => $vehicle->return_status,
             ]);
-
-            // Atualiza os dados do veículo
             $vehicle->chassi = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('chassi'));
             $vehicle->placa = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('placa'));
             $vehicle->renavam = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('renavam'));
             $vehicle->return_status = 'Em análise';
+          
             $vehicle->user_id = Auth::id();
 
             $vehicle->save();
@@ -115,20 +114,22 @@ class VehicleController extends Controller
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na aprovação dos dados: ' . $e->getMessage());
         }
+        $vehicle->save();
     }
 
     public function reject(string $id)
     {
         $vehicle = Vehicle::findOrFail($id);
         try {
-            $vehicle->return_status = "Rejeitado";
+            $vehicle->return_status = "Recusado";
             $vehicle->save();
             return redirect(route('dashboard'))
-                ->with('success', 'Veículo rejeitado.');
+                ->with('fail', 'Veículo recusado');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na rejeição dos dados: ' . $e->getMessage());
         }
+        $vehicle->save();
     }
 
     public function destroy(string $id)
@@ -138,7 +139,7 @@ class VehicleController extends Controller
             try {
                 $vehicle = Vehicle::findOrFail($id);
 
-                if ($vehicle->return_status != 'Em análise' && Auth::user()->usertype == 2) {
+                if ($vehicle->return_status != ANALISE && Auth::user()->usertype == 2) {
 
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
