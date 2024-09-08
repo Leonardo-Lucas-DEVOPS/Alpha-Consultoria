@@ -6,15 +6,15 @@
         <div>
             <x-input-label for="cpf_cnpj" :value="__('CPF ou CNPJ')" />
             <x-text-input id="cpf_cnpj" class="block mt-1 w-full" type="text" name="cpf_cnpj" :value="old('cpf_cnpj')"
-            autofocus   required autocomplete />
+                autofocus required autocomplete />
             <x-input-error :messages="$errors->get('cpf_cnpj')" class="mt-2" />
         </div>
 
         <!-- Name -->
         <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
-                autocomplete />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
+                required autocomplete />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 

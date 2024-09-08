@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'cpf_cnpj' => '12.345.678/0001-00',
             'name' => 'Test User',
-            'email' => 'leonardolucas181204@gmail.com',
+            'email' => 'atlkwn@gmail.com',
             'phone' => '11997385214',
             'password' => Hash::make('123'),
             'usertype' => '3',

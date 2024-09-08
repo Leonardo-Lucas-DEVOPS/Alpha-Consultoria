@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form class="mt-5f  space-y-6"
+    <form class="mt-5f space-y-6"
         action="{{ $employee ? route('employee.update', $employee->id) : route('employee.store') }}" method="POST">
         @csrf
         @if ($employee)
@@ -52,8 +52,7 @@
 
         </div>
         <div>
-            <x-text-input id="user_id" name="user_id" type="hidden" class="mt-1 block w-full"
-                autocomplete />
+            <x-text-input id="user_id" name="user_id" type="hidden" class="mt-1 block w-full" autocomplete />
         </div>
 
         <div class="flex items-center gap-4">

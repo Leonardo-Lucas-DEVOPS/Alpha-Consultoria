@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\User;
+use App\Models\Affiliate;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -36,10 +38,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        // Verifica se o usuário está autenticado no guard 'affiliate'
-        if (Auth::guard('affiliate')->check()) {
-            Auth::guard('affiliate')->logout();
-        }
+      
     
         // Realiza o logout do usuário no guard 'web'
         Auth::guard('web')->logout();
