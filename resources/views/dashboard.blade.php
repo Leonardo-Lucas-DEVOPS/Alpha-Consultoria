@@ -55,8 +55,7 @@
                             </div>
                         </div>
 
-                        <!-- Cartões Admin -->
-                        @if (Auth::user()->usertype >= 1)
+                        @if (Auth::user()->usertype >= 2)
                             <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
                                 <div class="card" style="width: 100%;">
                                     <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card">
@@ -93,20 +92,16 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
 
-                        <!-- Cartões SUPER Admin -->
-                        @if (Auth::user()->usertype >= 3)
                             <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
                                 <div class="card" style="width: 100%;">
                                     <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Consulta de funcionário</h5>
-                                        <p class="card-text">Serviço de consulta criminal e processual, estadual e
-                                            municipal, e antecedentes criminais de pessoas.</p>
+                                        <h5 class="card-title">Gerenciamento de administradores</h5>
+                                        <p class="card-text">Altere e/ou deleta os administradores e seus e-mails e senhas.</p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="#" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('admin.show')}}" class="btn btn-dark">Consultar</a>
                                     </div>
                                 </div>
                             </div>
@@ -114,9 +109,9 @@
                                 <div class="card" style="width: 100%;">
                                     <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Consulta de prestadores de serviço</h5>
-                                        <p class="card-text">Consulta criminal e processual, status de CNH e veículo de
-                                            prestadores.</p>
+                                        <h5 class="card-title">Gerenciar os afiliados</h5>
+                                        <p class="card-text">Altere e/ou deleta os afiliados e seus e-mails e senhas.
+                                        </p>
                                     </div>
                                     <div class="m-2 mt-0">
                                         <a href="{{route('affiliate.show')}}" class="btn btn-dark">Consultar</a>
@@ -127,12 +122,11 @@
                                 <div class="card" style="width: 100%;">
                                     <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Consulta de veículo</h5>
-                                        <p class="card-text">Consulta de Débitos e Restrições, Regularidade Documental,
-                                            Situação Judicial, Informações Técnicas.</p>
+                                        <h5 class="card-title">Criação de afiliados</h5>
+                                        <p class="card-text">Usuários de nível inferior de acesso limitado.</p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{route('affiliate.create')}}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('affiliate.create') }}" class="btn btn-dark">Consultar</a>
                                     </div>
                                 </div>
                             </div>

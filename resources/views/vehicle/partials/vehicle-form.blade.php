@@ -21,23 +21,23 @@
         <div>
             <x-input-label for="placa" :value="__('Placa do veículo')" />
             <x-text-input value="{{ $vehicle ? $vehicle->placa : old('placa') }}" id="placa" name="placa"
-                type="text" class="mt-1 block w-full" autocomplete="placa" required />
+                type="text" class="mt-1 block w-full" autocomplete required />
         </div>
         <div>
             <x-input-label for="chassi" :value="__('Chassi do veículo')" />
             <x-text-input value="{{ $vehicle ? $vehicle->chassi : old('chassi') }}" id="chassi" name="chassi"
-                type="text" class="mt-1 block w-full" autocomplete="chassi" placeholder="Apenas digitos" required />
+                type="text" class="mt-1 block w-full" autocomplete placeholder="Apenas digitos" required />
 
         </div>
         <div>
             <x-input-label for="renavam" :value="__('Renavam do veículo')" />
             <x-text-input value="{{ $vehicle ? $vehicle->renavam : old('renavam') }}" id="renavam" name="renavam"
-                type="text" class="mt-1 block w-full" autocomplete="renavam" placeholder="Apenas digitos" required />
+                type="text" class="mt-1 block w-full" autocomplete placeholder="Apenas digitos" required />
 
         </div>
         <div>
             <x-text-input id="user_id" name="user_id" type="hidden" class="mt-1 block w-full"
-                autocomplete="user_id" />
+                autocomplete />
         </div>
 
         <div class="flex items-center gap-4">

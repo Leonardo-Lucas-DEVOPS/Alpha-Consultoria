@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
@@ -16,7 +17,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth:web,affiliate', 'verified'])->name('dashboard');
 
 //profile
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -78,4 +78,19 @@ Route::middleware('auth')
     Route::patch    ('/affiliate/update/{id}', 'update')  ->name('affiliate.update');
     Route::delete   ('/affiliate/destroy/{id}', 'destroy')->name('affiliate.destroy');
 });
+
+//admin
+Route::middleware('auth')
+->controller(AdminController::class)
+->group(function () {
+    Route::get      ('/admin/create', 'create')       ->name('admin.create');
+    Route::post     ('/admin/store', 'store')         ->name('admin.store');
+    Route::get      ('/admin/show',  'show')          ->name('admin.show');
+    Route::get      ('/admin/edit/{id}', 'edit')      ->name('admin.edit');
+    Route::patch    ('/admin/update/{id}', 'update')  ->name('admin.update');
+    Route::patch    ('/admin/accept/{id}', 'accept')  ->name('admin.accept');
+    Route::patch    ('/admin/reject/{id}', 'reject')  ->name('admin.reject');
+    Route::delete   ('/admin/destroy/{id}', 'destroy')->name('admin.destroy');
+});
+
 require_once __DIR__ . '/auth.php';
