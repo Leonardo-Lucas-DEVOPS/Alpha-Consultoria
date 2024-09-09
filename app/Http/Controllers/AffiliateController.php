@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Validation\Rules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AffiliateController extends Controller
@@ -16,31 +18,28 @@ class AffiliateController extends Controller
     }
     public function store(Request $request)
     {
-
-        // $request->validate([
-
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'email' => [
-        //         'required',
-        //         'string',
-        //         'lowercase',
-        //         'email',
-        //         'max:255',
-        //         Rule::unique('users'),
-        //     ],
-        //     'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        // ]);
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique('users'),
+            ],
+        ]);
         try {
             User::create([
                 'cpf_cnpj' => Auth::user()->cpf_cnpj,
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => Hash::make('12345678'), 
                 'phone' => Auth::user()->phone,
                 'usertype' => '1',
             ]);
 
-            return redirect()->route('dashboard')->with('success', 'Afiliado cadastrado com sucesso');
+            return redirect()->route('dashboard')->with('success', 'Afiliado cadastrado com sucesso.')->with('alert','A Senha Padrão de Afiliado é "12345678"');
         } catch (\Exception $e) {
             return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Afiliado");
         }

@@ -126,7 +126,7 @@ class FreelancerController extends Controller
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
-            $freelancer->return_status = "Registro aprovado";
+            $freelancer->return_status = "Aprovado";
             $freelancer->save();
             return redirect(route('dashboard'))
                 ->with('success', 'Registro aprovado.');
@@ -135,11 +135,11 @@ class FreelancerController extends Controller
                 ->with('fail', 'Falha na aprovação dos dados: ' . $e->getMessage());
         }
     }
-    public function reject(string $id)
+        public function reject(string $id)
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
-            $freelancer->return_status = "Rejeitado";
+            $freelancer->return_status = "Negado";
             $freelancer->save();
             return redirect(route('dashboard'))
                 ->with('success', 'Registro rejeitado.');

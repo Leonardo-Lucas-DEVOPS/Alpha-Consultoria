@@ -11,6 +11,11 @@
                     {{ session('fail') }}
                 </div>
             @endif
+            @if (session('alert'))
+                <div class="alert alert-warning mb-3">
+                    {{ session('alert') }}
+                </div>
+            @endif
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="container p-6 text-gray-900">
                     <div class="row justify-content-center">

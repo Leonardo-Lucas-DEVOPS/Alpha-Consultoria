@@ -14,7 +14,7 @@ Route::get('/', function () {
 // dashboard
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth:web,affiliate', 'verified'])->name('dashboard');
+})->middleware(['auth','verified'])->name('dashboard');
 
 //profile
 Route::middleware('auth')->group(function () {
