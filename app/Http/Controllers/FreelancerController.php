@@ -139,7 +139,7 @@ class FreelancerController extends Controller
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
-            $freelancer->return_status = "Negado";
+            $freelancer->return_status = "Rejeitado";
             $freelancer->save();
             return redirect(route('dashboard'))
                 ->with('success', 'Registro rejeitado.');

@@ -49,32 +49,135 @@
                                     @csrf
                                     <button type="submit" class="btn btn-primary btn-sm">Alterar</button>
                                 </form>
-                                <form action="{{ route('employee.destroy', $employee->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
-                                </form>
+
+                                <button class="btn btn-danger btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalDeletar_{{ $employee->id }}">
+                                    Deletar
+                                </button>
+                                <div class="modal fade" id="modalDeletar_{{ $employee->id }}"
+                                    tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">Atenção</h1>
+                                                <button type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Tem certeza que deseja deletar o(a) funcionário(a) <strong>{{ $employee->name }}</strong>?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="{{ route('employee.destroy', $employee->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     @endif
                     @if (Auth::user()->usertype == 3)
                         <td>
                             <div class="flex flex-col space-y-2">
-                                <form action="{{ route('employee.accept', $employee->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-success btn-sm w-full">Aprovado</button>
-                                </form>
-                                <form action="{{ route('employee.reject', $employee->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-dark btn-sm w-full">Recusado</button>
-                                </form>
-                                <form action="{{ route('employee.destroy', $employee->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm w-full">Deletar</button>
-                                </form>
+                                <button class="btn btn-success btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalAprovar_{{ $employee->id }}">
+                                    Aprovar
+                                </button>
+                                <div class="modal fade" id="modalAprovar_{{ $employee->id }}"
+                                    tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">Atenção</h1>
+                                                <button type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Tem certeza que deseja aprovar o(a) funcionário(a) <strong>{{ $employee->name }}</strong>?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="{{ route('employee.accept', $employee->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-dark btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalRejeitar_{{ $employee->id }}">
+                                    Rejeitar
+                                </button>
+                                <div class="modal fade" id="modalRejeitar_{{ $employee->id }}"
+                                    tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">Atenção</h1>
+                                                <button type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Tem certeza que deseja rejeitar o(a) funcionário(a) <strong>{{ $employee->name }}</strong>?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="{{ route('employee.reject', $employee->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="btn btn-dark btn-sm">Rejeitar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-danger btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalDeletar_{{ $employee->id }}">
+                                    Deletar
+                                </button>
+                                <div class="modal fade" id="modalDeletar_{{ $employee->id }}"
+                                    tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">Atenção</h1>
+                                                <button type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Tem certeza que deseja deletar o(a) funcionário(a) <strong>{{ $employee->name }}</strong>?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="{{ route('employee.destroy', $employee->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     @endif
