@@ -30,7 +30,7 @@ class EmployeeFactory extends Factory
             'pai' => $this->faker->name, // Gera o nome do pai fictício
             'mae' => $this->faker->name, // Gera o nome da mãe fictício
             'user_id' => User::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
-            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
+            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Rejeitado']), // Status aleatório
         ];
     }
 }
