@@ -39,26 +39,29 @@ class AffiliateController extends Controller
                 'usertype' => '1',
             ]);
 
-            return redirect()->route('dashboard')->with('success', 'Afiliado cadastrado com sucesso.')->with('alert','A Senha Padrão de Afiliado é "12345678"');
+            return redirect()->route('dashboard')->with('success', 'Afiliado cadastrado com sucesso. (Senha padrão: 12345678)');
         } catch (\Exception $e) {
             return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Afiliado");
         }
     }
     public function show(User $affiliate)
     {
-        $affiliates = User::where('usertype', '1')->orderBy('created_at', 'desc')->paginate(5);
-
+    
+        // Filtrar os afiliados com o mesmo cpf_cnpj do admin e com usertype igual a 1
+        $affiliates = User::where('usertype', '1')
+            ->where('cpf_cnpj', Auth::user()->cpf_cnpj)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+    
+        // Retornar a view com os afiliados filtrados
         return view('affiliates.show-affiliates', compact('affiliates'));
     }
-    
-
     public function edit($id)
     {
         $affiliates = User::findOrFail($id);
 
         return view('affiliates.create-affiliates', compact('affiliates'));
     }
-
     public function update(Request $request, $id)
     {
 
@@ -80,10 +83,8 @@ class AffiliateController extends Controller
 
         $affiliate->save();
 
-        return redirect()->route('affiliate.show')->with('success', 'Afiliado atualizado com sucesso.');
+        return redirect()->route('affiliate.show')->with('alert', 'Afiliado atualizado com sucesso. (Senha padrão: 12345678)');
     }
-
-
     public function destroy($id)
     {
         $affiliate = User::findOrFail($id);
