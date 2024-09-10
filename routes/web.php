@@ -71,8 +71,6 @@ Route::middleware('auth')
 ->group(function () {
     Route::get      ('/affiliate/create', 'create')       ->name('affiliate.create');
     Route::get      ('/affiliate/show',  'show')          ->name('affiliate.show');
-
-
     Route::post     ('/affiliate/store', 'store')         ->name('affiliate.store');
     Route::get      ('/affiliate/edit/{id}', 'edit')      ->name('affiliate.edit');
     Route::patch    ('/affiliate/update/{id}', 'update')  ->name('affiliate.update');
@@ -88,8 +86,6 @@ Route::middleware('auth')
     Route::get      ('/admin/show',  'show')          ->name('admin.show');
     Route::get      ('/admin/edit/{id}', 'edit')      ->name('admin.edit');
     Route::patch    ('/admin/update/{id}', 'update')  ->name('admin.update');
-    Route::patch    ('/admin/accept/{id}', 'accept')  ->name('admin.accept');
-    Route::patch    ('/admin/reject/{id}', 'reject')  ->name('admin.reject');
     Route::delete   ('/admin/destroy/{id}', 'destroy')->name('admin.destroy');
 });
 
