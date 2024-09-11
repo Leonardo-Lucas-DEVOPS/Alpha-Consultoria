@@ -47,17 +47,10 @@ class VehicleController extends Controller
     {
         // Atualiza o status dos veículos com mais de 3 meses 
         $this->updateStatusForModel(Vehicle::class);
-
-        // Filtrar os veículos que pertencem à empresa do usuário logado
-        $vehicles = Vehicle::where('cpf_cnpj', Auth::user()->cpf_cnpj)
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
-
-        // Filtrar os dados de auditoria de veículos pertencentes à mesma empresa
-        $olddatas = AuditVehicle::where('cpf_cnpj', Auth::user()->cpf_cnpj)
-            ->orderBy('created_at', 'desc')
-            ->paginate(3);
-
+        // Busca os veículos e dados 
+        $vehicles = $this->filterConsults(Vehicle::class);
+        // Busca os veículos e dados
+        $olddatas = $this->filterAudit(AuditVehicle::class);
         // Retornar a view com os veículos e dados de auditoria filtrados
         return view('vehicle.show-vehicle', compact('vehicles', 'olddatas'));
     }

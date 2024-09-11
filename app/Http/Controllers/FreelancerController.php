@@ -56,14 +56,10 @@ class FreelancerController extends Controller
     $this->updateStatusForModel(Freelancer::class);
 
     // Filtrar os freelancers que pertencem à empresa do usuário logado
-    $freelancers = Freelancer::where('cpf_cnpj', Auth::user()->cpf_cnpj)
-        ->orderBy('created_at', 'desc')
-        ->paginate(5);
+    $freelancers = $this->filterConsults(Freelancer::class);
 
     // Filtrar os dados de auditoria de freelancers pertencentes à mesma empresa
-    $olddatas = AuditFreelancer::where('cpf_cnpj', Auth::user()->cpf_cnpj)
-        ->orderBy('created_at', 'desc')
-        ->paginate(3);
+    $olddatas = $this->filterAudit(AuditFreelancer::class);
 
     // Retornar a view 'freelancer.show-freelancer' com os freelancers e dados de auditoria filtrados
     return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));

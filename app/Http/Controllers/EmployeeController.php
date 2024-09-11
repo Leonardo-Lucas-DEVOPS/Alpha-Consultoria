@@ -56,14 +56,10 @@ class EmployeeController extends Controller
     $this->updateStatusForModel(Employee::class);
 
     // Filtrar os funcionários que pertencem à empresa do usuário logado
-    $employees = Employee::where('cpf_cnpj', Auth::user()->cpf_cnpj)
-        ->orderBy('created_at', 'desc')
-        ->paginate(5);
+    $employees = $this->filterConsults(Employee::class);
 
     // Filtrar os dados de auditoria de funcionários pertencentes à mesma empresa
-    $olddatas = AuditEmployee::where('cpf_cnpj', Auth::user()->cpf_cnpj)
-        ->orderBy('created_at', 'desc')
-        ->paginate(3);
+    $olddatas = $this->filterAudit(AuditEmployee::class);
 
     // Retorna a view 'employee.show-employee' com os dados filtrados
     return view('employee.show-employee', compact('employees', 'olddatas'));
