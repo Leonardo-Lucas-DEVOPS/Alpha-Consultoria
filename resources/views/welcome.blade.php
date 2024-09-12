@@ -17,6 +17,13 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicons/favicon-16x16.png') }}">
         <link rel="manifest" href="{{ asset('imgas/favicons/site.webmanifest') }}">
         <style>
+            :root {
+                --branco: #fff;
+                --amarelo: #ffc107;
+                --preto: #212222;
+                --cinza: #696969;
+            }
+
             .bg-image {
                 background-image: url('/images/Background.png');
                 background-size: cover;
@@ -24,14 +31,23 @@
                 height: 100vh;
             }
 
+            .navbar-nav {
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+                text-align: center;
+                position: relative;
+                z-index: 2;
+            }
+
             .navbar-brand img {
                 height: 40px;
-                margin-left: 120%;
+                margin-left: 75%;
             }
-            
+
             .btn-custom,
             .btn-outline-custom {
-                color: #fff;
+                color: var(--branco);
                 border: 2px solid transparent;
                 border-radius: 5px;
                 padding: 3px 7px;
@@ -42,76 +58,58 @@
             }
 
             .btn-custom {
-                background-color: #ffc107;
-                /* Amarelo */
-                color: #212222;
-                /* Preto */
+                background-color: var(--amarelo);
+                color: var(--preto);
             }
 
             .btn-outline-custom {
-                color: #ffc107;
-                /* Amarelo */
+                color: var(--amarelo);
                 background-color: transparent;
-                border-color: #ffc107;
-                /* Amarelo */
+                border-color: var(--amarelo);
             }
 
             .btn-custom:hover,
             .btn-outline-custom:hover {
-                background-color: #212222;
-                /* Preto */
-                color: #ffc107;
-                /* Amarelo */
-                border-color: #ffc107;
-                /* Amarelo */
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                background-color: var(--preto);
+                color: var(--amarelo);
+                border-color: var(--amarelo);
+                box-shadow: 0 0 10px var(--preto);
             }
 
             .section {
                 padding: 60px 0;
-                background-color: #696969;
+                background-color: var(--cinza);
             }
 
             .section h2 {
-                color: #fff;
-                /* Branco */
+                color: var(--branco);
             }
 
             .section p {
-                color: #fff;
-                /* Branco */
+                color: var(--branco);
             }
 
             .bg-dark {
-                background-color: #212222;
-                /* Preto */
-                color: #ffc107;
-                /* Amarelo */
+                background-color: var(--preto);
+                color: var(--amarelo);
             }
 
             .bg-grey {
-                background-color: #212222;
+                background-color: var(--preto);
             }
 
             .bg-dark h2,
             .bg-dark p {
-                color: #ffc107;
-                /* Amarelo */
+                color: var(--amarelo);
             }
 
             .home {
-                margin: 200px;
+                position: absolute;
+                margin: 15%;
                 margin-bottom: 0;
                 font-family: 'bold';
-            }
-
-            .home span {
-                color: #fff;
-            }
-
-            .home {
                 overflow: hidden;
-                /* Garantir que os itens não apareçam fora do contêiner durante a animação */
+                z-index: 1;
             }
 
             .home h1,
@@ -127,8 +125,16 @@
             }
 
             .home span {
+                color: var(--branco);
                 animation-delay: 1s;
                 /* Atraso para o texto do span */
+            }
+
+            @media screen and (max-width: 992px) {
+                .home {
+                    top: 25%;
+                    left: 5%;
+                }
             }
 
             @keyframes slideIn {
@@ -147,7 +153,12 @@
                     <img src="/images/logo.png" alt="Logo Alpha Consultoria">
                 </a>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <button class="navbar-toggler btn btn-outline-custom" data-bs-toggle="collapse"
+                    href="#responsividadeNavBar" aria-expanded="false" aria-controls="responsividadeNavBar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="responsividadeNavBar">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="#sobre-nos">Sobre Nós</a>
@@ -178,8 +189,8 @@
                             @endauth
                         @endif
                     </ul>
-                </div>
 
+                </div>
             </nav>
 
             <div class="home">
@@ -190,7 +201,7 @@
 
         <main>
             <section id="sobre-nos" class="section">
-                <div class="container">
+                <div class="container p-5">
                     <h2 class="text-center"><em>Sobre Nós</em></h2>
                     <p class="text-center">
                         <em>Alpha Consultoria é uma empresa especializada em investigações corporativas.
@@ -205,20 +216,11 @@
             </section>
 
             <section id="servicos" class="m-5">
-                <div class="container p-5 ">
-
+                <div class="container">
                     <!-- Conteúdo dos serviços -->
                     <h2 class="text-center"><em>Nossos serviços</em></h2>
-                    <p>
-                        <em>Alpha Consultoria é uma empresa especializada em investigações corporativas.
-                            Realizamos um levantamento completo de dados dos funcionários, candidatos às vagas e
-                            prestadores de serviço. Nossa análise minuciosa abrange passagens criminais, histórico
-                            jurídico, processos trabalhistas, criminais e cíveis.
-                            Evite exposições de risco como fraudes, golpes, roubos e improdutividade, confiando na Alpha
-                            Consultoria para garantir a segurança e a integridade da sua empresa.
-                        </em>
-                    </p>
-                    <p><em>
+                    <p class="text-center">
+                        <em>
                             </br><strong>Análise Minuciosa:</strong> A análise minuciosa dos dados deve incluir a
                             verificação de antecedentes criminais, histórico jurídico, processos trabalhistas, criminais
                             e cíveis. Esse exame aprofundado é crucial para assegurar que os indivíduos que estão se
@@ -226,7 +228,7 @@
                             possa comprometer a segurança ou a reputação da organização.
 
                     </p>
-                    <p>
+                    <p class="text-center">
                         </br> <strong>Evite Exposições de Risco:</strong> Adotar estas práticas de análise de dados
                         ajuda a evitar exposições a riscos significativos como fraudes, golpes, roubos e
                         improdutividade. Garantir que todos os funcionários e prestadores de serviço sejam submetidos a
@@ -236,13 +238,9 @@
                         também reforça a confiança de clientes e parceiros, contribuindo para um ambiente corporativo
                         mais seguro e produtivo.
 
-                        </br> <strong></strong>
+                        </br>
                         </em>
                     </p>
-
-
-
-
                 </div>
             </section>
         </main>
@@ -254,6 +252,10 @@
                 </div>
             </section>
         </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        </script>
     </body>
 
     </html>
