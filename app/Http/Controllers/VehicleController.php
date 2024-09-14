@@ -45,9 +45,13 @@ class VehicleController extends Controller
 
     public function show(Vehicle $vehicle)
     {
-        $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(5);
-        $olddatas = AuditVehicle::orderBy('created_at', 'desc')->paginate(3);
-
+        // Atualiza o status dos veículos com mais de 3 meses 
+        $this->updateStatusForModel(Vehicle::class);
+        // Busca os veículos e dados 
+        $vehicles = $this->filterConsults(Vehicle::class);
+        // Busca os veículos e dados
+        $olddatas = $this->filterAudit(AuditVehicle::class);
+        // Retornar a view com os veículos e dados de auditoria filtrados
         return view('vehicle.show-vehicle', compact('vehicles', 'olddatas'));
     }
 
@@ -109,8 +113,8 @@ class VehicleController extends Controller
         try {
             $vehicle->return_status = "Aprovado";
             $vehicle->save();
-            return redirect(route('dashboard'))
-                ->with('success', 'Veículo aprovado.');
+            return redirect(route('vehicle.show'))
+                ->with('success', 'Registro aprovado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na aprovação dos dados: ' . $e->getMessage());
@@ -123,8 +127,8 @@ class VehicleController extends Controller
         try {
             $vehicle->return_status = "Rejeitado";
             $vehicle->save();
-            return redirect(route('dashboard'))
-                ->with('success', 'Veículo rejeitado.');
+            return redirect(route('vehicle.show'))
+                ->with('success', 'Registro rejeitado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na rejeição dos dados: ' . $e->getMessage());
@@ -144,7 +148,7 @@ class VehicleController extends Controller
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
                 }
                 Vehicle::destroy($id);
-                return redirect(route('dashboard'))
+                return redirect(route('vehicle.show'))
                     ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
                 // Armazena os dados na sessão para depuração

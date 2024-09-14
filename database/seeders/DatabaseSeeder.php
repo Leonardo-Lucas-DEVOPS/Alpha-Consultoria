@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Vários registros aleatórios
-        User::factory(10)->create();
+        User::factory(1)->create();
         Employee::factory(10)->create();
         Vehicle::factory(10)->create();
         Freelancer::factory(10)->create();

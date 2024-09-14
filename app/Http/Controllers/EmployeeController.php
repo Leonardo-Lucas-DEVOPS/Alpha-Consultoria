@@ -51,15 +51,20 @@ class EmployeeController extends Controller
         }
     }
     public function show(Employee $employee)
-    {
-        // Recupera todos os registros da tabela 'employees'
-        $employees = Employee::orderBy('created_at', 'desc')->paginate(5);
-        $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(3);
+{
+    // Atualiza o status dos funcionários com mais de 3 meses
+    $this->updateStatusForModel(Employee::class);
 
+    // Filtrar os funcionários que pertencem à empresa do usuário logado
+    $employees = $this->filterConsults(Employee::class);
 
-        // Retorna a view 'employee.partials.show-employee' com os dados recuperados
-        return view('employee.show-employee', compact('employees', 'olddatas'));
-    }
+    // Filtrar os dados de auditoria de funcionários pertencentes à mesma empresa
+    $olddatas = $this->filterAudit(AuditEmployee::class);
+
+    // Retorna a view 'employee.show-employee' com os dados filtrados
+    return view('employee.show-employee', compact('employees', 'olddatas'));
+}
+
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
@@ -125,7 +130,7 @@ class EmployeeController extends Controller
         try {
             $employee->return_status = "Aprovado";
             $employee->save();
-            return redirect(route('dashboard'))
+            return redirect(route('employee.show'))
                 ->with('success', 'Registro aprovado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
@@ -139,7 +144,7 @@ class EmployeeController extends Controller
         try {
             $employee->return_status = "Rejeitado";
             $employee->save();
-            return redirect(route('dashboard'))
+            return redirect(route('employee.show'))
                 ->with('success', 'Registro rejeitado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
@@ -160,7 +165,7 @@ class EmployeeController extends Controller
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
                 }
                 Employee::destroy($id);
-                return redirect(route('dashboard'))
+                return redirect(route('employee.show'))
                     ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
                 // Armazena os dados na sessão para depuração

@@ -1,21 +1,22 @@
 <x-app-layout>
+    @if (session('success'))
+    <div class="alert alert-success mb-1">
+        {{ session('success') }}
+    </div>
+    @endif
+    @if (session('alert'))
+    <div class="alert alert-warning mb-1">
+        {{ session('alert') }}
+    </div>
+    @endif
+    @if (session('fail'))
+    <div class="alert alert-danger mb-1">
+        {{ session('fail') }}
+    </div>
+    @endif
+    
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if (session('success'))
-                <div class="alert alert-success mb-3">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if (session('fail'))
-                <div class="alert alert-danger mb-3">
-                    {{ session('fail') }}
-                </div>
-            @endif
-            @if (session('alert'))
-                <div class="alert alert-warning mb-3">
-                    {{ session('alert') }}
-                </div>
-            @endif
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="container p-6 text-gray-900">
                     <div class="row justify-content-center">

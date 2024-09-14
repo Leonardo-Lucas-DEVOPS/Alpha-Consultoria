@@ -51,11 +51,20 @@ class FreelancerController extends Controller
         }
     }
     public function show(Freelancer $freelancer)
-    {
-        $freelancers = Freelancer::orderBy('created_at', 'desc')->paginate(5);
-        $olddatas = AuditFreelancer::orderBy('created_at', 'desc')->paginate(3);
-        return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
-    }
+{
+    // Atualiza o status dos freelancers com mais de 3 meses
+    $this->updateStatusForModel(Freelancer::class);
+
+    // Filtrar os freelancers que pertencem à empresa do usuário logado
+    $freelancers = $this->filterConsults(Freelancer::class);
+
+    // Filtrar os dados de auditoria de freelancers pertencentes à mesma empresa
+    $olddatas = $this->filterAudit(AuditFreelancer::class);
+
+    // Retornar a view 'freelancer.show-freelancer' com os freelancers e dados de auditoria filtrados
+    return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
+}
+
     public function edit($id)
     {
         $freelancer = Freelancer::findOrFail($id);
@@ -128,20 +137,20 @@ class FreelancerController extends Controller
         try {
             $freelancer->return_status = "Aprovado";
             $freelancer->save();
-            return redirect(route('dashboard'))
+            return redirect(route('freelancer.show'))
                 ->with('success', 'Registro aprovado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na aprovação dos dados: ' . $e->getMessage());
         }
     }
-        public function reject(string $id)
+    public function reject(string $id)
     {
         $freelancer = Freelancer::findOrFail($id);
         try {
             $freelancer->return_status = "Rejeitado";
             $freelancer->save();
-            return redirect(route('dashboard'))
+            return redirect(route('freelancer.show'))
                 ->with('success', 'Registro rejeitado.');
         } catch (ValidationException $e) {
             return redirect(route('dashboard'))
@@ -161,12 +170,12 @@ class FreelancerController extends Controller
                         ->with('fail', 'Consultas completas não podem ser excluídas.');
                 }
                 Freelancer::destroy($id);
-                return redirect(route('dashboard'))
+                return redirect(route('freelancer.show'))
                     ->with('success', 'Registro deletado com sucesso');
             } catch (ValidationException $e) {
                 // Armazena os dados na sessão para depuração
-                return redirect(route('dashboard'))
-                    ->with('fail', 'Falha na exclusão dos dados: ' . $e->getMessage());
+                return redirect(route('freelancer.show'))
+                    ->with('success', 'Registro deletado com sucesso');
             }
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');
