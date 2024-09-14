@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicons/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicons/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicons/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('imgas/favicons/site.webmanifest') }}">
+    <link rel="manifest" href="{{ asset('images/favicons/site.webmanifest') }}">
     <style>
         :root {
             --branco: #fff;
@@ -42,7 +42,7 @@
 
         .navbar-brand img {
             height: 40px;
-            margin-left: 75%;
+            margin-left: 25%;
         }
 
         .btn-custom,
@@ -132,6 +132,20 @@
         }
 
         @media screen and (max-width: 992px) {
+            .navbar-collapse {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .nav-item {
+                padding: 5px;
+            }
+
+            .btn-custom,
+            .btn-outline-custom {
+                padding: 0px 0px;
+                margin: 2px;
+            }
             .home {
                 top: 25%;
                 padding-left: 4%;
@@ -141,8 +155,24 @@
                 font-size: 370%;
                 /* Tamanho reduzido para telas menores */
             }
+            
         }
 
+        @media screen and (min-width: 992px) {
+            .navbar {
+                display: flex;
+                flex-direction: row
+            }
+
+            .botoes {
+                order: 2;
+            }
+
+            .links {
+                order: 1;
+            }
+        }
+        
         @keyframes slideIn {
             to {
                 opacity: 1;
@@ -157,27 +187,8 @@
         <nav class="navbar navbar-expand-lg navbar-dark">
             <a class="navbar-brand" href="#">
                 <img src="/images/logo.png" alt="Logo Alpha Consultoria">
-            </a>
 
-            <button class="navbar-toggler btn btn-outline-custom" data-bs-toggle="collapse"
-                href="#responsividadeNavBar" aria-expanded="false" aria-controls="responsividadeNavBar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="responsividadeNavBar">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#sobre-nos">Sobre Nós</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#servicos">Serviços</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                            href="https://wa.me/5511993233989?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20os%20serviços%20da%20Alpha%20Consultoria.">Contato</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ml-auto">
+                <ul class="botoes navbar-nav ml-auto">
                     @if (Route::has('login'))
                     @auth
                     <li class="nav-item">
@@ -195,7 +206,21 @@
                     @endauth
                     @endif
                 </ul>
+            </a>
 
+            <div class="navbar-collapse">
+                <ul class="links navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sobre-nos">Sobre Nós</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#servicos">Serviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="https://wa.me/5511993233989?text=Olá,%20gostaria%20de%20mais%20informações%20sobre%20os%20serviços%20da%20Alpha%20Consultoria.">Contato</a>
+                    </li>
+                </ul>
             </div>
         </nav>
 
