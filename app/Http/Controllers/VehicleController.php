@@ -47,6 +47,12 @@ class VehicleController extends Controller
     {
         // Atualiza o status dos veículos com mais de 3 meses 
         $this->updateStatusForModel(Vehicle::class);
+
+        if (Auth::user()->usertype == 3) {
+            $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(5);
+            $olddatas = AuditVehicle::orderBy('created_at', 'desc')->paginate(5);
+            return view('vehicle.show-vehicle', compact('vehicles', 'olddatas'));
+        }
         // Busca os veículos e dados 
         $vehicles = $this->filterConsults(Vehicle::class);
         // Busca os veículos e dados

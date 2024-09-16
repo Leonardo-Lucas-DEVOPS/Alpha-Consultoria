@@ -55,6 +55,13 @@ class EmployeeController extends Controller
     // Atualiza o status dos funcionários com mais de 3 meses
     $this->updateStatusForModel(Employee::class);
 
+    
+    if (Auth::user()->usertype == 3){
+        $employees = Employee::orderBy('created_at', 'desc')->paginate(5);
+        $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(5);
+        return view('employee.show-employee', compact('employees', 'olddatas'));
+    }
+
     // Filtrar os funcionários que pertencem à empresa do usuário logado
     $employees = $this->filterConsults(Employee::class);
 
