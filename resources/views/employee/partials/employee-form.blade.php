@@ -51,9 +51,6 @@
                 name="nascimento" type="date" class="mt-1 block w-full" autocomplete required />
 
         </div>
-        <div>
-            <x-text-input id="user_id" name="user_id" type="hidden" class="mt-1 block w-full" autocomplete />
-        </div>
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>

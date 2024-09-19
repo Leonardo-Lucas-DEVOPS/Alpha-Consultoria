@@ -41,5 +41,4 @@ abstract class Controller
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
         return $model::whereIn('OldUser_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(3);
     }
-  
 }

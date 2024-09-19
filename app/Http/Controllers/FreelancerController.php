@@ -51,19 +51,24 @@ class FreelancerController extends Controller
         }
     }
     public function show(Freelancer $freelancer)
-{
-    // Atualiza o status dos freelancers com mais de 3 meses
-    $this->updateStatusForModel(Freelancer::class);
+    {
+        // Atualiza o status dos freelancers com mais de 3 meses
+        $this->updateStatusForModel(Freelancer::class);
 
-    // Filtrar os freelancers que pertencem à empresa do usuário logado
-    $freelancers = $this->filterConsults(Freelancer::class);
+        if (Auth::user()->usertype == 3){
+            $freelancers = Freelancer::orderBy('created_at', 'desc')->paginate(5);
+            $olddatas = AuditFreelancer::orderBy('created_at', 'desc')->paginate(5);
+            return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
+        }
+        // Filtrar os freelancers que pertencem à empresa do usuário logado
+        $freelancers = $this->filterConsults(Freelancer::class);
 
-    // Filtrar os dados de auditoria de freelancers pertencentes à mesma empresa
-    $olddatas = $this->filterAudit(AuditFreelancer::class);
+        // Filtrar os dados de auditoria de freelancers pertencentes à mesma empresa
+        $olddatas = $this->filterAudit(AuditFreelancer::class);
 
-    // Retornar a view 'freelancer.show-freelancer' com os freelancers e dados de auditoria filtrados
-    return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
-}
+        // Retornar a view 'freelancer.show-freelancer' com os freelancers e dados de auditoria filtrados
+        return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
+    }
 
     public function edit($id)
     {
