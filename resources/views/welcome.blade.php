@@ -146,6 +146,7 @@
                 padding: 0px 0px;
                 margin: 2px;
             }
+
             .home {
                 top: 25%;
                 padding-left: 4%;
@@ -155,7 +156,7 @@
                 font-size: 370%;
                 /* Tamanho reduzido para telas menores */
             }
-            
+
         }
 
         @media screen and (min-width: 992px) {
@@ -172,7 +173,7 @@
                 order: 1;
             }
         }
-        
+
         @keyframes slideIn {
             to {
                 opacity: 1;
@@ -190,20 +191,20 @@
 
                 <ul class="botoes navbar-nav ml-auto">
                     @if (Route::has('login'))
-                    @auth
-                    <li class="nav-item">
-                        <a class="btn btn-outline-custom" href="{{ url('/dashboard') }}">Dashboard</a>
-                    </li>
-                    @else
-                    <li class="nav-item">
-                        <a class="btn btn-outline-custom mr-2" href="{{ route('login') }}">Entrar</a>
-                    </li>
-                    @if (Route::has('register'))
-                    <li class="nav-item">
-                        <a class="btn btn-custom" href="{{ route('register') }}">Criar conta</a>
-                    </li>
-                    @endif
-                    @endauth
+                        @auth
+                            <li class="nav-item">
+                                <a class="btn btn-outline-custom" href="{{ url('/dashboard') }}">Dashboard</a>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a class="btn btn-outline-custom mr-2" href="{{ route('login') }}">Entrar</a>
+                            </li>
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="btn btn-custom" href="{{ route('register') }}">Criar conta</a>
+                                </li>
+                            @endif
+                        @endauth
                     @endif
                 </ul>
             </a>

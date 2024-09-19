@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\VehicleController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FinanceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -70,8 +71,8 @@ Route::middleware('auth')
 ->controller(AffiliateController::class)
 ->group(function () {
     Route::get      ('/affiliate/create', 'create')       ->name('affiliate.create');
-    Route::get      ('/affiliate/show',  'show')          ->name('affiliate.show');
     Route::post     ('/affiliate/store', 'store')         ->name('affiliate.store');
+    Route::get      ('/affiliate/show',  'show')          ->name('affiliate.show');
     Route::get      ('/affiliate/edit/{id}', 'edit')      ->name('affiliate.edit');
     Route::patch    ('/affiliate/update/{id}', 'update')  ->name('affiliate.update');
     Route::delete   ('/affiliate/destroy/{id}', 'destroy')->name('affiliate.destroy');
@@ -87,6 +88,12 @@ Route::middleware('auth')
     Route::get      ('/admin/edit/{id}', 'edit')      ->name('admin.edit');
     Route::patch    ('/admin/update/{id}', 'update')  ->name('admin.update');
     Route::delete   ('/admin/destroy/{id}', 'destroy')->name('admin.destroy');
+});
+
+Route::middleware('auth')
+->controller(FinanceController::class)
+->group(function () {
+    Route::get      ('/finance/show', 'show')->name('finance.show');
 });
 
 require_once __DIR__ . '/auth.php';

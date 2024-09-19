@@ -25,31 +25,26 @@
             <x-input-label for="rg" :value="__('RG do funcionário   ')" />
             <x-text-input value="{{ $employee ? $employee->rg : old('rg') }}" id="rg" name="rg"
                 type="text" class="mt-1 block w-full" autocomplete placeholder="Apenas digitos" required />
-
         </div>
         <div>
             <x-input-label for="cpf" :value="__('CPF do funcionário')" />
             <x-text-input value="{{ $employee ? $employee->cpf : old('cpf') }}" id="cpf" name="cpf"
                 type="text" class="mt-1 block w-full" autocomplete placeholder="Apenas digitos" required />
-
         </div>
         <div>
             <x-input-label for="mae" :value="__('Nome da mãe do funcionário')" />
             <x-text-input value="{{ $employee ? $employee->mae : old('mae') }}" id="mae" name="mae"
                 type="text" class="mt-1 block w-full" autocomplete required />
-
         </div>
         <div>
             <x-input-label for="pai" :value="__('Nome do pai do funcionário')" />
             <x-text-input value="{{ $employee ? $employee->pai : old('pai') }}" id="pai" name="pai"
                 type="text" class="mt-1 block w-full" autocomplete />
-
         </div>
         <div>
             <x-input-label for="nascimento" :value="__('Data do nascimento do funcionário')" />
             <x-text-input value="{{ $employee ? $employee->nascimento : old('nascimento') }}" id="nascimento"
                 name="nascimento" type="date" class="mt-1 block w-full" autocomplete required />
-
         </div>
 
         <div class="flex items-center gap-4">

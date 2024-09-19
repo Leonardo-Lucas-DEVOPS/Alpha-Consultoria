@@ -78,11 +78,11 @@
                                         alt="Card">
                                     <div class="card-body">
                                         <h5 class="card-title">Gerenciar finanças</h5>
-                                        <p class="card-text">finanças das empresa.
+                                        <p class="card-text">Finanças das empresas.
                                         </p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ route('dashboard') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('finance.show') }}" class="btn btn-dark">Consultar</a>
                                     </div>
                                 </div>
                             </div>
