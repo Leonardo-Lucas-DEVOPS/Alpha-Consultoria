@@ -54,7 +54,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <p>Tem certeza que deseja excluir o afiliado
-                                            <strong>{{ $affiliate->name }}</strong>?</p>
+                                            <strong>{{ $affiliate->name }}</strong>?
+                                        </p>
 
                                     </div>
                                     <div class="modal-footer">
