@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ProfileController;
@@ -16,6 +17,18 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth','verified'])->name('dashboard');
+
+Route::get('/teste', function() {
+    $invoices = [
+        'empresa' => 'coca-cola',
+        'funcionarios' => '10',
+        'prestadores' => '20',
+        'veiculos' => '300'
+    ];
+
+    $pdf = Pdf::loadView('finance.partials.finance-pdf', compact('invoices'));
+    return $pdf->stream('fatura.pdf');
+});
 
 //profile
 Route::middleware('auth')->group(function () {

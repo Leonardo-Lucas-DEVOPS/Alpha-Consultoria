@@ -20,6 +20,7 @@ class FinanceController extends Controller
                          ->groupBy('users.name')
                          ->orderBy('users.created_at', 'desc')
                          ->paginate(5);
+                         
         return view('finance.show-finance', compact('companies'));
     }
 }

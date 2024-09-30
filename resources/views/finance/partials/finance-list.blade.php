@@ -92,4 +92,8 @@
             @endforeach
         </tbody>
     </table>
+    <!-- Navegação de Paginação -->
+    <div class="mt-4">
+        {{ $companies->links() }}
+    </div>
 </div>
