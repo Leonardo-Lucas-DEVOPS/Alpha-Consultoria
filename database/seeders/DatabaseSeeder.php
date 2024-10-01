@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'atl@gmail.com',
             'phone' => '11997385214',
+            'address' => 'Rua Girassol',
             'password' => Hash::make('123'),
             'usertype' => '3',
             'email_verified_at' => now(),

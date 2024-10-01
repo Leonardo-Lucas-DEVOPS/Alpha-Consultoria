@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('cpf_cnpj'); // Definir um valor padrão
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
             $table->string('phone');
+            $table->string('address');
+            $table->string('password');
             $table->integer('usertype')->default(2);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

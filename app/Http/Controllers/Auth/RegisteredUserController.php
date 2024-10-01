@@ -30,10 +30,11 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'cpf_cnpj' => ['required','string','unique:' . User::class,], // validação do campo cpf/cnpj
+            'cpf_cnpj' => ['required','string', 'unique:' . User::class],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'phone' => ['required', 'string', 'min:11', 'max:11', 'unique:' . User::class], // validação do campo phone
+            'phone' => ['required', 'string', 'min:11', 'max:11', 'unique:' . User::class],
+            'address' => ['required', 'string'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -42,6 +43,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'address' => $request->address,
             'password' => Hash::make($request->password),
         ]);
 

@@ -33,8 +33,9 @@ class AffiliateController extends Controller
                 'cpf_cnpj' => Auth::user()->cpf_cnpj,
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make('12345678'),
                 'phone' => Auth::user()->phone,
+                'address' => Auth::user()->address,
+                'password' => Hash::make('12345678'),
                 'usertype' => '1',
             ]);
 

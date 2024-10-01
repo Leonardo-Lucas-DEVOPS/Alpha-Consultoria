@@ -42,14 +42,15 @@ class AdminController extends Controller
                 'cpf_cnpj' => Auth::user()->cpf_cnpj,
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
                 'phone' => Auth::user()->phone,
+                'address' => $request->address,
+                'password' => Hash::make($request->password),
                 'usertype' => '1',
             ]);
 
             return redirect()->route('dashboard')->with('success', 'Admin cadastrado com sucesso');
         } catch (\Exception $e) {
-            return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Admin");
+            return redirect()->route('dashboard')->with('fail', "Erro ao cadastrar o Admin $e->");
         }
     }
 
