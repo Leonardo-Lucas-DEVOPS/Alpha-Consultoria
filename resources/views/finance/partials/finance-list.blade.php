@@ -29,13 +29,18 @@
                     <td class="px-4 py-2">{{ $company->Funcionarios }}</td>
                     <td class="px-4 py-2">{{ $company->Prestadores }}</td>
                     <td class="px-4 py-2">{{ $company->Veiculos }}</td>
-                    <td class="px-4 py-2">V. Fat.</td>
+                    <td class="px-4 py-2">R$.</td>
                     <td class="px-4 py-2">
                         <div class="flex space-y-2">
                             <div class="actions">
                                 <button class="btn btn-info" data-bs-toggle="modal"
-                                    data-bs-target="#modalFatura">Gerenciar Fatura</button>
-                                <div class="modal fade" id="modalFatura" tabindex="-1" aria-hidden="true">
+                                    data-bs-target="#modalFatura_{{ $company->id }}">Gerenciar Fatura</button>
+
+                                    <form action="{{ route('finance.update', $company->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                <div class="modal fade" id="modalFatura_{{ $company->id }}" tabindex="-1"
+                                    aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -49,36 +54,39 @@
                                                     com seus respectivos custos
                                                 </p>
 
-                                                <p>Funcionário</p>
+                                                <label for="valorFuncionario">Funcionário</label>
                                                 <div class="input-group mb-3">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" id="valorFuncionario"
+                                                        name="valorFuncionario" value="{{ $company->ValorFuncionarios }}"
                                                         aria-label="Preço para cada funcionário">
                                                     <span class="input-group-text">.00</span>
                                                 </div>
 
-                                                <p>Prestador de serviço</p>
+                                                {{-- <label for="prestador">Prestador de serviço</label>
                                                 <div class="input-group mb-3">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" id="prestador"
+                                                        name="prestador" value="{{ $company->ValorPrestadores }}"
                                                         aria-label="Preço para cada prestador de serviço">
                                                     <span class="input-group-text">.00</span>
                                                 </div>
 
-                                                <p>Veículo</p>
+                                                <label for="veiculo">Veículo</label>
                                                 <div class="input-group mb-3">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" class="form-control"
+                                                    <input type="text" class="form-control" id="veiculo"
+                                                        name="veiculo" value="{{ $company->ValorVeiculos}}"
                                                         aria-label="Preço para cada veículo">
                                                     <span class="input-group-text">.00</span>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <div class="modal-footer">
-                                                <form action="{{ route('dashboard') }}" method="GET">
                                                     <button class="btn btn-primary">Estabelecer preços</button>
                                                 </form>
 
-                                                <form action="{{ route('dashboard') }}" method="GET">
+                                                <form action="{{ route('finance.invoice', $company->id) }}"
+                                                    method="GET">
                                                     <button class="btn btn-info">Gerar Fatura</button>
                                                 </form>
                                             </div>

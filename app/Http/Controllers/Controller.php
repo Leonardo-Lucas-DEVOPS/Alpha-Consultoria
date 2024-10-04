@@ -34,6 +34,7 @@ abstract class Controller
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
         return $model::whereIn('user_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(5);
     }
+
     public function filterAudit($model)
     {
         // Lista de IDs dos usuários com o mesmo cnpj do usuário logado

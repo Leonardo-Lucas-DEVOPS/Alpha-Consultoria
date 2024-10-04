@@ -18,18 +18,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth','verified'])->name('dashboard');
 
-Route::get('/teste', function() {
-    $invoices = [
-        'empresa' => 'coca-cola',
-        'funcionarios' => '10',
-        'prestadores' => '20',
-        'veiculos' => '300'
-    ];
-
-    $pdf = Pdf::loadView('finance.partials.finance-pdf', compact('invoices'));
-    return $pdf->stream('fatura.pdf');
-});
-
 //profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -106,7 +94,9 @@ Route::middleware('auth')
 Route::middleware('auth')
 ->controller(FinanceController::class)
 ->group(function () {
-    Route::get      ('/finance/show', 'show')->name('finance.show');
+    Route::get      ('/finance/show', 'show')                   ->name('finance.show');
+    Route::patch    ('/finance/update/{id}', 'update')          ->name('finance.update');
+    Route::get      ('/finance/invoice/{id}', 'generateInvoice')->name('finance.invoice');
 });
 
 require_once __DIR__ . '/auth.php';
