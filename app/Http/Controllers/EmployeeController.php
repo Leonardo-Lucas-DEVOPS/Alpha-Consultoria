@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AuditEmployee;
-use App\Models\Employee;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Employee;
+use App\Models\AuditEmployee;
+use Illuminate\Validation\ValidationException;
 
 class EmployeeController extends Controller
 {
@@ -39,8 +39,6 @@ class EmployeeController extends Controller
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
-
-            // Cria o registro do empregado com o ID do usuário
             Employee::create(array_merge($validatedData, ['user_id' => $userId]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
@@ -51,26 +49,25 @@ class EmployeeController extends Controller
         }
     }
     public function show(Employee $employee)
-{
-    // Atualiza o status dos funcionários com mais de 3 meses
-    $this->updateStatusForModel(Employee::class);
+    {
+        // Atualiza o status dos funcionários com mais de 3 meses
+        $this->updateStatusForModel(Employee::class);
 
-    
-    if (Auth::user()->usertype == 3){
-        $employees = Employee::orderBy('created_at', 'desc')->paginate(5);
-        $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(5);
+        if (Auth::user()->usertype == 3) {
+            $employees = Employee::orderBy('created_at', 'desc')->paginate(5);
+            $olddatas = AuditEmployee::orderBy('created_at', 'desc')->paginate(5);
+            return view('employee.show-employee', compact('employees', 'olddatas'));
+        }
+
+        // Filtrar os funcionários que pertencem à empresa do usuário logado
+        $employees = $this->filterConsults(Employee::class);
+
+        // Filtrar os dados de auditoria de funcionários pertencentes à mesma empresa
+        $olddatas = $this->filterAudit(AuditEmployee::class);
+
+        // Retorna a view 'employee.show-employee' com os dados filtrados
         return view('employee.show-employee', compact('employees', 'olddatas'));
     }
-
-    // Filtrar os funcionários que pertencem à empresa do usuário logado
-    $employees = $this->filterConsults(Employee::class);
-
-    // Filtrar os dados de auditoria de funcionários pertencentes à mesma empresa
-    $olddatas = $this->filterAudit(AuditEmployee::class);
-
-    // Retorna a view 'employee.show-employee' com os dados filtrados
-    return view('employee.show-employee', compact('employees', 'olddatas'));
-}
 
     public function edit($id)
     {

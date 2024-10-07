@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AuditFreelancer;
-use App\Models\Freelancer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Freelancer;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use App\Models\AuditFreelancer;
 use Illuminate\Validation\ValidationException;
-
 
 class FreelancerController extends Controller
 {
@@ -42,8 +43,8 @@ class FreelancerController extends Controller
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
-
             Freelancer::create(array_merge($validatedData, ['user_id' => $userId]));
+
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))

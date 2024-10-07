@@ -2,15 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Vehicle;
-use App\Models\AuditVehicle;
-use App\Models\Freelancer;
-use App\Models\AuditFreelancer;
-use App\Models\Employee;
-use App\Models\AuditEmployee;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 abstract class Controller
 {
@@ -41,5 +34,37 @@ abstract class Controller
         $allUserIds = User::where('cpf_cnpj',  Auth::user()->cpf_cnpj)->pluck('id');
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
         return $model::whereIn('OldUser_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(3);
+    }
+
+    public function consultsPerCompany($id = null)
+    {
+        $company = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
+            ->leftJoin('freelancers', 'users.id', '=', 'freelancers.user_id')
+            ->leftJoin('vehicles', 'users.id', '=', 'vehicles.user_id')
+            ->select(
+                'users.id',
+                'users.name AS Company',
+                'users.cost_employee AS cost_Employee',
+                'users.cost_freelancer AS cost_Freelancer',
+                'users.cost_vehicle AS cost_Vehicle',
+                'users.price AS Price',
+                User::raw('COUNT(DISTINCT employees.id) AS Employees'),
+                User::raw('COUNT(DISTINCT freelancers.id) AS Freelancers'),
+                User::raw('COUNT(DISTINCT vehicles.id) AS Vehicles')
+            )
+            ->groupBy('users.id', 'users.name', 'users.price', 'users.cost_employee', 'users.cost_freelancer', 'users.cost_vehicle')
+            ->orderBy('users.created_at', 'desc');
+
+        if ($id) {
+            $company->where('users.id', $id);
+        }
+
+        if (Auth::check() && Auth::user()->usertype == 2) {
+            $company->where('users.id', Auth::user()->id);
+        } else {
+            $company->where('users.usertype', '2');
+        }
+
+        return $company->paginate(5);
     }
 }

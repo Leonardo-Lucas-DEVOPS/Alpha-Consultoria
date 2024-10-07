@@ -46,7 +46,7 @@
 
         <p>Fatura N°: {{ $invoices['id'] }}</p>
 
-        <p>Data: {{ $invoices['data'] }} | Vencimento: </p>
+        <p>Data: {{ $invoices['data'] }} </p>
 
         <p>Siuação: Pedido recebido</p>
     </header>
@@ -78,16 +78,14 @@
                 <th>N° de Funcionários</th>
                 <th>N° de Prestadores de Serviços</th>
                 <th>N° de Veículos</th>
-                <th>Preço</th>
+                <th>Valor da Fatura</th>
             </tr>
-            @foreach ($companies as $company)
-                <tr>
-                    <td>{{ $company->Funcionarios }}</td>
-                    <td>{{ $company->Prestadores }}</td>
-                    <td>{{ $company->Veiculos }}</td>
-                    <td>Ola</td>
-                </tr>
-            @endforeach
+            <tr>
+                <td>{{ $company->Employees }}</td>
+                <td>{{ $company->Freelancers }}</td>
+                <td>{{ $company->Vehicles }}</td>
+                <td>R${{ $company->Price }}.00</td>
+            </tr>
         </table>
     </main>
 

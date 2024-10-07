@@ -30,7 +30,11 @@ class UserFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'address' => fake()->address(),
             'password' => static::$password ??= Hash::make('password'),
-            'usertype' => fake()->numberBetween(1, 2),
+            'cost_Employee' => fake()->numerify(0),
+            'cost_Freelancer' => fake()->numerify(0),
+            'cost_Vehicle' => fake()->numerify(0),
+            'price' => fake()->numerify(0),
+            'usertype' => fake()->numberBetween(2, 3),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
         ];

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AuditVehicle;
-use App\Models\Vehicle;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Vehicle;
+use App\Models\AuditVehicle;
 use Illuminate\Validation\ValidationException;
 
 class VehicleController extends Controller
@@ -45,7 +45,7 @@ class VehicleController extends Controller
 
     public function show(Vehicle $vehicle)
     {
-        // Atualiza o status dos veículos com mais de 3 meses 
+        // Atualiza o status dos veículos com mais de 3 meses
         $this->updateStatusForModel(Vehicle::class);
 
         if (Auth::user()->usertype == 3) {
@@ -53,7 +53,7 @@ class VehicleController extends Controller
             $olddatas = AuditVehicle::orderBy('created_at', 'desc')->paginate(5);
             return view('vehicle.show-vehicle', compact('vehicles', 'olddatas'));
         }
-        // Busca os veículos e dados 
+        // Busca os veículos e dados
         $vehicles = $this->filterConsults(Vehicle::class);
         // Busca os veículos e dados
         $olddatas = $this->filterAudit(AuditVehicle::class);
