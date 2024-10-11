@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use App\Models\Employee;
+use App\Models\Invoice;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmployeeFactory extends Factory
@@ -29,7 +29,7 @@ class EmployeeFactory extends Factory
             'nascimento' => $this->faker->date(), // Gera uma data de nascimento fictícia
             'pai' => $this->faker->name, // Gera o nome do pai fictício
             'mae' => $this->faker->name, // Gera o nome da mãe fictício
-            'user_id' => User::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
+            'invoice_id' => Invoice::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
             'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Rejeitado']), // Status aleatório
         ];
     }

@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Invoice;
 use App\Models\Employee;
 use App\Models\AuditEmployee;
 use Illuminate\Validation\ValidationException;
+
+define('FORMATACAO', '/[^a-zA-Z0-9]/');
+define('EM_ANALISE', 'Em análise');
 
 class EmployeeController extends Controller
 {
@@ -15,6 +19,7 @@ class EmployeeController extends Controller
     {
         return view('employee.create-employee', ['employee' => null]);
     }
+
     public function store(Request $request)
     {
         try {
@@ -34,12 +39,28 @@ class EmployeeController extends Controller
             ]);
 
             // Formatação dos dados (remover pontos, traços e outros caracteres não numéricos)
-            $validatedData['rg'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['rg']);
-            $validatedData['cpf'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cpf']);
+            $validatedData['rg'] = preg_replace(FORMATACAO, '', $validatedData['rg']);
+            $validatedData['cpf'] = preg_replace(FORMATACAO, '', $validatedData['cpf']);
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
-            Employee::create(array_merge($validatedData, ['user_id' => $userId]));
+
+            // Cria uma nova fatura (Invoice) e obtém o ID dela
+            $invoice = Invoice::create([
+                'user_id' => $userId,
+                'status' => 'Pendente',
+                'cost_employee' => 0,
+                'cost_freelancer' => 0,
+                'cost_vehicle' => 0,
+            ]);
+
+            // Verifica se a fatura foi criada corretamente
+            if (!$invoice) {
+                return redirect(route('dashboard'))->with('fail', 'Falha ao criar a fatura.');
+            }
+
+            // Cria o empregado associado à fatura criada (adicionando o 'invoice_id' manualmente)
+            Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id])); // Cria uma nova fatura (Invoice) e verifica se foi criada corretamente
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -48,6 +69,7 @@ class EmployeeController extends Controller
                 ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
     }
+
     public function show(Employee $employee)
     {
         // Atualiza o status dos funcionários com mais de 3 meses
@@ -73,7 +95,7 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        if ($employee->return_status != 'Em análise') {
+        if ($employee->return_status != EM_ANALISE) {
             return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
         }
         return view('employee.create-employee', compact('employee'));
@@ -105,18 +127,16 @@ class EmployeeController extends Controller
                 'OldNascimento' => $employee->nascimento,
                 'OldPai' =>      $employee->pai,
                 'OldMae' =>      $employee->mae,
-                'OldUser_id' =>  $employee->user_id,
                 'OldReturn_status' => $employee->return_status,
             ]);
             // Atualiza os dados do empregado
-            $employee->rg = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('rg'));
-            $employee->cpf = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('cpf'));
+            $employee->rg = preg_replace(FORMATACAO, '', $request->input('rg'));
+            $employee->cpf = preg_replace(FORMATACAO, '', $request->input('cpf'));
             $employee->name = $request->input('name');
             $employee->pai = $request->input('pai');
             $employee->mae = $request->input('mae');
             $employee->nascimento = $request->input('nascimento');
-            $employee->return_status = 'Em análise';
-            $employee->user_id = Auth::id(); // Ou use outro campo se necessário
+            $employee->return_status = EM_ANALISE;
 
             $employee->save();
 
@@ -163,7 +183,7 @@ class EmployeeController extends Controller
             try {
                 $employee = Employee::findOrFail($id);
 
-                if ($employee->return_status != 'Em análise' && Auth::user()->usertype == 2) {
+                if ($employee->return_status != EM_ANALISE && Auth::user()->usertype == 2) {
 
                     return redirect(route('dashboard'))
                         ->with('fail', 'Consultas completas não podem ser excluídas.');

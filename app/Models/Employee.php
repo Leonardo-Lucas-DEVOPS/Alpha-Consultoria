@@ -16,13 +16,13 @@ class Employee extends Model
         'nascimento',
         'pai',
         'mae',
-        'user_id',
+        'invoice_id',
         'return_status',
     ];
 
-    // Definir relacionamento com o usuário, se necessário
+    // Definir relacionamento com a fatura, se necessário
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Invoice::class);
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ProfileController;

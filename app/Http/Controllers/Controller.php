@@ -25,7 +25,7 @@ abstract class Controller
         // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
         $allUserIds = User::where('cpf_cnpj',  Auth::user()->cpf_cnpj)->pluck('id');
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
-        return $model::whereIn('user_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(5);
+        return $model::whereIn('invoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(5);
     }
 
     public function filterAudit($model)
@@ -33,7 +33,7 @@ abstract class Controller
         // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
         $allUserIds = User::where('cpf_cnpj',  Auth::user()->cpf_cnpj)->pluck('id');
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
-        return $model::whereIn('OldUser_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(3);
+        return $model::whereIn('OldInvoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(3);
     }
 
     public function consultsPerCompany($id = null)

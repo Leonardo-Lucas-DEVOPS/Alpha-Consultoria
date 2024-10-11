@@ -8,17 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class AuditEmployee extends Model
 {
     use HasFactory;
+    
     protected  $fillable = [
-
         'OldName',
         'OldRg',
         'OldCpf',
         'OldNascimento',
         'OldPai',
         'OldMae',
-        'OldUser_id',
+        'OldInvoice_id',
         'employee_id',
         'OldReturn_status',
-
     ];
 }

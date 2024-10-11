@@ -39,7 +39,7 @@
                     <td class="px-4 py-2">{{ $employee->nascimento }}</td>
                     <td class="px-4 py-2">{{ $employee->pai }}</td>
                     <td class="px-4 py-2">{{ $employee->mae }}</td>
-                    <td class="px-4 py-2">{{ $employee->user_id }}</td>
+                    <td class="px-4 py-2">{{ $employee->invoice_id }}</td>
                     <td class="px-4 py-2">{{ $employee->created_at }}</td>
                     <td class="px-4 py-2">{{ $employee->return_status }}</td>
                     @if (Auth::user()->usertype == 2)

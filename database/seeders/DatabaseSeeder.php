@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use App\Models\Invoice;
 use App\Models\Employee;
 use App\Models\Freelancer;
-use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +38,8 @@ class DatabaseSeeder extends Seeder
 
         // Vários registros aleatórios
         User::factory(1)->create();
-        Employee::factory(10)->create();
+        Invoice::factory(2)->create();
+        Employee::factory(4)->create();
         Vehicle::factory(10)->create();
         Freelancer::factory(10)->create();
     }

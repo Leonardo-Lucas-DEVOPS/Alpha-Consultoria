@@ -21,7 +21,7 @@ class CreateEmployeesTable extends Migration
             $table->date('nascimento');
             $table->string('pai')->nullable();
             $table->string('mae');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
             $table->string('return_status')->default('Em análise');
             $table->timestamps();
         });
