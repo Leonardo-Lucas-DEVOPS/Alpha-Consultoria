@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('OldMae')->nullable();
             $table->string('OldCnh')->nullable();
             $table->string('OldPlaca')->nullable();
-            $table->string('OldUser_id')->nullable();$table->foreignId('freelancer_id')->nullable()->constrained('freelancers')->onDelete('cascade');//id do Consultor
+            $table->string('OldInvoice_id')->nullable();
+            $table->foreignId('freelancer_id')->nullable()->constrained('freelancers')->onDelete('cascade');//id do Consultor
             $table->string('OldReturn_status')->nullable();
             $table->timestamps();
         });

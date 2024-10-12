@@ -38,14 +38,11 @@ class EmployeeController extends Controller
                 'nascimento' => 'required|date',
             ]);
 
-            // Formatação dos dados (remover pontos, traços e outros caracteres não numéricos)
             $validatedData['rg'] = preg_replace(FORMATACAO, '', $validatedData['rg']);
             $validatedData['cpf'] = preg_replace(FORMATACAO, '', $validatedData['cpf']);
 
-            // Obtém o ID do usuário autenticado
             $userId = Auth::id();
 
-            // Cria uma nova fatura (Invoice) e obtém o ID dela
             $invoice = Invoice::create([
                 'user_id' => $userId,
                 'status' => 'Pendente',
@@ -54,13 +51,7 @@ class EmployeeController extends Controller
                 'cost_vehicle' => 0,
             ]);
 
-            // Verifica se a fatura foi criada corretamente
-            if (!$invoice) {
-                return redirect(route('dashboard'))->with('fail', 'Falha ao criar a fatura.');
-            }
-
-            // Cria o empregado associado à fatura criada (adicionando o 'invoice_id' manualmente)
-            Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id])); // Cria uma nova fatura (Invoice) e verifica se foi criada corretamente
+            Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {

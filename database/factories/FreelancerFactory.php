@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use App\Models\Freelancer;
+use App\Models\Invoice;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FreelancerFactory extends Factory
@@ -31,7 +31,7 @@ class FreelancerFactory extends Factory
             'mae' => $this->faker->name, // Gera o nome da mãe fictício
             'placa' => strtoupper($this->faker->bothify('???-####')), // Gera uma placa no formato ABC-1234
             'cnh' => $this->faker->bothify('###############'), // Gera um número de CNH fictício
-            'user_id' => User::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
+            'invoice_id' => Invoice::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
             'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
         ];
     }

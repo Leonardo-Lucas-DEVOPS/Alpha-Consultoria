@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Vehicle;
 use App\Models\AuditVehicle;
+use App\Models\Invoice;
 use Illuminate\Validation\ValidationException;
 
 class VehicleController extends Controller
@@ -34,7 +35,16 @@ class VehicleController extends Controller
             $validatedData['chassi'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['chassi']);
 
             $userId = Auth::id();
-            Vehicle::create(array_merge($validatedData, ['user_id' => $userId]));
+
+            Invoice::create([
+                'user_id' => Auth::id(),
+                'status' => 'Pendente',
+                'cost_employee' => 0,
+                'cost_freelancer' => 0,
+                'cost_vehicle' => 0
+            ]);
+
+            Vehicle::create(array_merge($validatedData, ['invoice_id' => $userId]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -93,7 +103,7 @@ class VehicleController extends Controller
                 'OldChassi' => $vehicle->chassi,
                 'OldRenavam' => $vehicle->renavam,
                 'OldPlaca' => $vehicle->placa,
-                'OldUser_id' => $vehicle->user_id,
+                'OldInvoice_id' => $vehicle->invoice_id,
                 'OldReturn_status' => $vehicle->return_status,
             ]);
 
@@ -102,7 +112,6 @@ class VehicleController extends Controller
             $vehicle->placa = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('placa'));
             $vehicle->renavam = preg_replace('/[^a-zA-Z0-9]/', '', $request->input('renavam'));
             $vehicle->return_status = 'Em análise';
-            $vehicle->user_id = Auth::id();
 
             $vehicle->save();
 

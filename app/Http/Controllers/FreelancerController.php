@@ -6,9 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Freelancer;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use App\Models\AuditFreelancer;
+use App\Models\Invoice;
 use Illuminate\Validation\ValidationException;
 
 class FreelancerController extends Controller
@@ -17,6 +16,7 @@ class FreelancerController extends Controller
     {
         return view('freelancer.create-freelancer', ['freelancer' => null]);
     }
+
     public function store(Request $request)
     {
         try {
@@ -36,6 +36,7 @@ class FreelancerController extends Controller
                 'cnh' => 'required|unique:freelancers,placa',
                 'placa' => 'required|unique:freelancers,placa',
             ]);
+
             $validatedData['rg'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['rg']);
             $validatedData['cpf'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cpf']);
             $validatedData['cnh'] = preg_replace('/[^a-zA-Z0-9]/', '', $validatedData['cnh']);
@@ -43,7 +44,16 @@ class FreelancerController extends Controller
 
             // Obtém o ID do usuário autenticado
             $userId = Auth::id();
-            Freelancer::create(array_merge($validatedData, ['user_id' => $userId]));
+
+            Invoice::create([
+                'user_id' => $userId,
+                'status' => 'Pendente',
+                'cost_employee' => 0,
+                'cost_freelancer' => 0,
+                'cost_vehicle' => 0,
+            ]);
+
+            Freelancer::create(array_merge($validatedData, ['invoice_id' => $userId]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
@@ -126,7 +136,6 @@ class FreelancerController extends Controller
             $freelancer->mae = $request->input('mae');
             $freelancer->nascimento = $request->input('nascimento');
             $freelancer->return_status = 'Em análise';
-            $freelancer->user_id = Auth::id(); // Ou use outro campo se necessário
 
             $freelancer->save();
 

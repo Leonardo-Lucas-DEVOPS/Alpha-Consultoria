@@ -13,7 +13,7 @@ class Vehicle extends Model
         'placa',
         'chassi',
         'renavam',
-        'user_id',
+        'invoice_id',
         'return_status',
     ];
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Freelancer extends Model
 {
     use HasFactory;
+    
     protected $fillable = [
         'name',
         'rg',
@@ -17,7 +18,7 @@ class Freelancer extends Model
         'mae',
         'placa',
         'cnh',
-        'user_id',
+        'invoice_id',
         'return_status',
     ];
 }

@@ -33,7 +33,7 @@
                     <td class="px-4 py-2">{{ $vehicle->placa }}</td>
                     <td class="px-4 py-2">{{ $vehicle->renavam }}</td>
                     <td class="px-4 py-2">{{ $vehicle->chassi }}</td>
-                    <td class="px-4 py-2">{{ $vehicle->user_id }}</td>
+                    <td class="px-4 py-2">{{ $vehicle->invoice_id }}</td>
                     <td class="px-4 py-2">{{ $vehicle->created_at }}</td>
                     <td class="px-4 py-2">{{ $vehicle->return_status }}</td>
                     @if (Auth::user()->usertype == 2)

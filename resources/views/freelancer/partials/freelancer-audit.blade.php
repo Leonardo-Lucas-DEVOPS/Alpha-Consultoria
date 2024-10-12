@@ -40,7 +40,7 @@
                     <td class="px-4 py-2">{{ $olddata->OldMae }}</td>
                     <td class="px-4 py-2">{{ $olddata->OldCnh }}</td>
                     <td class="px-4 py-2">{{ $olddata->OldPlaca }}</td>
-                    <td class="px-4 py-2">{{ $olddata->OldUser_id }}</td>
+                    <td class="px-4 py-2">{{ $olddata->OldInvoice_id }}</td>
                     <td class="px-4 py-2">{{ $olddata->created_at }}</td>
                     <td class="px-4 py-2">{{ $olddata->OldReturn_status }}</td>
                 </tr>

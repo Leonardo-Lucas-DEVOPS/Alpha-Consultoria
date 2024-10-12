@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class AuditFreelancer extends Model
 {
     use HasFactory;
-    protected  $fillable = [
 
+    protected  $fillable = [
         'OldName',
         'OldRg',
         'OldCpf',
@@ -18,9 +18,8 @@ class AuditFreelancer extends Model
         'OldMae',
         'OldCnh',
         'OldPlaca',
-        'OldUser_id',
+        'OldInvoice_id',
         'freelancer_id',
         'OldReturn_status',
-
     ];
 }

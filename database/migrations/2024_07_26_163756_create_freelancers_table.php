@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('mae');
             $table->string('placa')->unique();
             $table->string('cnh')->unique();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
             $table->string('return_status')->default('Em análise');
             $table->timestamps();
         });

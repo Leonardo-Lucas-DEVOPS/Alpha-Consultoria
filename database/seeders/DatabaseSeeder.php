@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         User::factory(1)->create();
         Invoice::factory(2)->create();
         Employee::factory(4)->create();
-        Vehicle::factory(10)->create();
-        Freelancer::factory(10)->create();
+        Freelancer::factory(4)->create();
+        Vehicle::factory(4)->create();
     }
 }
