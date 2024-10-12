@@ -127,6 +127,7 @@ class EmployeeController extends Controller
                 'OldNascimento' => $employee->nascimento,
                 'OldPai' =>      $employee->pai,
                 'OldMae' =>      $employee->mae,
+                'OldInvoice_id' => $employee->invoice_id,
                 'OldReturn_status' => $employee->return_status,
             ]);
             // Atualiza os dados do empregado
