@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
@@ -23,7 +24,7 @@ abstract class Controller
     public function filterConsults($model)
     {
         // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
-        $allUserIds = User::where('cpf_cnpj',  Auth::user()->cpf_cnpj)->pluck('id');
+        $allUserIds = User::where('id',  Auth::user()->id)->pluck('id');
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
         return $model::whereIn('invoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(5);
     }

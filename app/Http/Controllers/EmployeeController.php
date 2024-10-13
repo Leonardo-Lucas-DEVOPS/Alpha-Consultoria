@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Carbon\Carbon;
 use App\Models\Invoice;
+use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\AuditEmployee;
 use Illuminate\Validation\ValidationException;
@@ -43,16 +46,47 @@ class EmployeeController extends Controller
 
             $userId = Auth::id();
 
-            $invoice = Invoice::create([
-                'user_id' => $userId,
-                'status' => 'Pendente',
-                'cost_employee' => 0,
-                'cost_freelancer' => 0,
-                'cost_vehicle' => 0,
-            ]);
+            // Pegar o número de faturas e o último ID da fatura para o usuário
+            $companyInvoice = User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
+                ->select(
+                    'users.name',
+                    'invoices.id',
+                    DB::raw('COUNT(DISTINCT invoices.id) AS NumberInvoices')
+                )
+                ->where('users.id', '=', $userId)
+                ->groupBy('invoices.id', 'users.name')
+                ->orderBy('invoices.created_at', 'desc')
+                ->first();
 
+            // Pegar a data da última fatura e adicionar 30 dias
+            $invoiceDate = User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
+                ->select(
+                    DB::raw('DATE_ADD(invoices.created_at, INTERVAL 30 DAY) AS InvoiceDate'),
+                    'invoices.created_at'
+                )
+                ->where('users.id', '=', $userId)
+                ->orderBy('invoices.created_at', 'desc')
+                ->first();
+
+            // Comparar a data e verificar se já passou o intervalo de 30 dias
+            if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
+                // Criar uma nova fatura se não houver faturas ou se o intervalo de 30 dias já passou
+                $invoice = Invoice::create([
+                    'user_id' => $userId,
+                    'status' => 'Pendente',
+                    'cost_employee' => 0,
+                    'cost_freelancer' => 0,
+                    'cost_vehicle' => 0
+                ]);
+            } else {
+                // Se já existe uma fatura válida, use a existente
+                $invoice = $companyInvoice;
+            }
+
+            // Criar o empregado relacionado à fatura
             Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id]));
 
+            // Retornar para o dashboard com a mensagem de sucesso
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
             // Armazena os dados na sessão para depuração
@@ -91,6 +125,7 @@ class EmployeeController extends Controller
         }
         return view('employee.create-employee', compact('employee'));
     }
+
     public function update(Request $request, $id)
     {
         try {
