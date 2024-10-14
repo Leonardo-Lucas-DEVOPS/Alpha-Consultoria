@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Invoice;
+use Illuminate\Support\Facades\DB;
+
 
 abstract class Controller
 {
@@ -37,6 +39,32 @@ abstract class Controller
 
         // Agora, buscamos todas as consultas da model que pertencem à todas as faturas da lista $allInvoicesPerUser
         return $model::whereIn('OldInvoice_id', $allInvoicesPerUser)->orderBy('created_at', 'desc')->paginate(3);
+    }
+
+    public function invoicesPerCompany()
+    {
+        return User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
+            ->select(
+                'users.name',
+                'invoices.id',
+                DB::raw('COUNT(DISTINCT invoices.id) AS NumberInvoices')
+            )
+            ->where('users.id', '=', Auth::user()->id)
+            ->groupBy('invoices.id', 'users.name')
+            ->orderBy('invoices.created_at', 'desc')
+            ->first();
+    }
+
+    public function invoicesPerDate()
+    {
+        return User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
+            ->select(
+                DB::raw('DATE_ADD(invoices.created_at, INTERVAL 30 DAY) AS InvoiceDate'),
+                'invoices.created_at'
+            )
+            ->where('users.id', '=', Auth::user()->id)
+            ->orderBy('invoices.created_at', 'desc')
+            ->first();
     }
 
     public function consultsPerCompany($id = null)

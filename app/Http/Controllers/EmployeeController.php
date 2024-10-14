@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Invoice;
-use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\AuditEmployee;
 use Illuminate\Validation\ValidationException;
@@ -47,26 +45,9 @@ class EmployeeController extends Controller
             $userId = Auth::id();
 
             // Pegar o número de faturas e o último ID da fatura para o usuário
-            $companyInvoice = User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
-                ->select(
-                    'users.name',
-                    'invoices.id',
-                    DB::raw('COUNT(DISTINCT invoices.id) AS NumberInvoices')
-                )
-                ->where('users.id', '=', $userId)
-                ->groupBy('invoices.id', 'users.name')
-                ->orderBy('invoices.created_at', 'desc')
-                ->first();
-
+            $companyInvoice = $this->invoicesPerCompany();
             // Pegar a data da última fatura e adicionar 30 dias
-            $invoiceDate = User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
-                ->select(
-                    DB::raw('DATE_ADD(invoices.created_at, INTERVAL 30 DAY) AS InvoiceDate'),
-                    'invoices.created_at'
-                )
-                ->where('users.id', '=', $userId)
-                ->orderBy('invoices.created_at', 'desc')
-                ->first();
+            $invoiceDate = $this->invoicesPerDate();
 
             // Comparar a data e verificar se já passou o intervalo de 30 dias
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
@@ -207,22 +188,16 @@ class EmployeeController extends Controller
     {
         // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if (Auth::user()->usertype >= 2) {
-            try {
-                $employee = Employee::findOrFail($id);
+            $employee = Employee::findOrFail($id);
 
-                if ($employee->return_status != EM_ANALISE && Auth::user()->usertype == 2) {
+            if ($employee->return_status != EM_ANALISE && Auth::user()->usertype == 2) {
 
-                    return redirect(route('dashboard'))
-                        ->with('fail', 'Consultas completas não podem ser excluídas.');
-                }
-                Employee::destroy($id);
-                return redirect(route('employee.show'))
-                    ->with('success', 'Registro deletado com sucesso');
-            } catch (ValidationException $e) {
-                // Armazena os dados na sessão para depuração
                 return redirect(route('dashboard'))
-                    ->with('fail', 'Falha na exclusão dos dados: ' . $e->getMessage());
+                    ->with('fail', 'Consultas completas não podem ser excluídas.');
             }
+            Employee::destroy($id);
+            return redirect(route('employee.show'))
+                ->with('success', 'Registro deletado com sucesso');
         } else {
             return redirect(route('dashboard'))->with('fail', 'Você não tem permissão para deletar este registro.');
         }

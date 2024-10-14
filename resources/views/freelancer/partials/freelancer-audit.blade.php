@@ -22,7 +22,7 @@
                 <th class="px-4 py-2">Mâe</th>
                 <th class="px-4 py-2">Cnh</th>
                 <th class="px-4 py-2">Placa</th>
-                <th class="px-4 py-2">Consultor</th>
+                <th class="px-4 py-2">N° Fatura</th>
                 <th class="px-4 py-2">Alterado em</th>
                 <th class="px-4 py-2">Status de Retorno</th>
             </tr>

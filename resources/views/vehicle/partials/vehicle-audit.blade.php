@@ -17,7 +17,7 @@
                 <th class="px-4 py-2">Placa</th>
                 <th class="px-4 py-2">Renavam</th>
                 <th class="px-4 py-2">Chassi</th>
-                <th class="px-4 py-2">Consultor</th>
+                <th class="px-4 py-2">Fatura</th>
                 <th class="px-4 py-2">Alterado em</th>
                 <th class="px-4 py-2">Status de Retorno</th>
             </tr>
