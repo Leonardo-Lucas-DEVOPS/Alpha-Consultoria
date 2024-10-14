@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Invoice;
 
 abstract class Controller
 {
@@ -23,18 +23,20 @@ abstract class Controller
     }
     public function filterConsults($model)
     {
-        // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
-        $allUserIds = User::where('id',  Auth::user()->id)->pluck('id');
-        // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
-        return $model::whereIn('invoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(5);
+        // Lista de faturas responsáveis do usuário logado
+        $allInvoicesPerUser = Invoice::where('user_id', Auth::user()->id)->pluck('id');
+
+        // Agora, buscamos todas as consultas da model que pertencem à todas as faturas da lista $allInvoicesPerUser
+        return $model::whereIn('invoice_id', $allInvoicesPerUser)->orderBy('created_at', 'desc')->paginate(5);
     }
 
     public function filterAudit($model)
     {
-        // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
-        $allUserIds = User::where('cpf_cnpj',  Auth::user()->cpf_cnpj)->pluck('id');
-        // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
-        return $model::whereIn('OldInvoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(3);
+        // Lista de faturas responsáveis do usuário logado
+        $allInvoicesPerUser = Invoice::where('user_id',  Auth::user()->id)->pluck('id');
+
+        // Agora, buscamos todas as consultas da model que pertencem à todas as faturas da lista $allInvoicesPerUser
+        return $model::whereIn('OldInvoice_id', $allInvoicesPerUser)->orderBy('created_at', 'desc')->paginate(3);
     }
 
     public function consultsPerCompany($id = null)

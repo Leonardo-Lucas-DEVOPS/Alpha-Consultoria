@@ -20,7 +20,7 @@
                 <th class="px-4 py-2">Nascimento</th>
                 <th class="px-4 py-2">Pai</th>
                 <th class="px-4 py-2">Mãe</th>
-                <th class="px-4 py-2">Consultor</th>
+                <th class="px-4 py-2">N° Fatura</th>
                 <th class="px-4 py-2">Criado em</th>
                 <th class="px-4 py-2">Status de Retorno</th>
 
