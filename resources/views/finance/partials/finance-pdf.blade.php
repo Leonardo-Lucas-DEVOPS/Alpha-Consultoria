@@ -9,32 +9,71 @@
 
     <meta name="description"
         content="Alpha Consultoria é especializada em investigações corporativas e segurança empresarial, garantindo a integridade e proteção da sua empresa.">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/png" sizes="180x180" href="data:image/png;base64,{favicon-32x32.png}">
 
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            text-align: center;
+        :root {
+            --branco: #fff;
+            --amarelo: #ffc107;
+            --preto: #212222;
+            --cinza: #cecece
         }
 
-        table {
-            margin: 6%
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            border-style: groove;
+            align-items: center
+        }
+
+        header {
+            background-color: var(--preto);
+            padding: 5%;
+            text-align: left;
         }
 
         h1,
         p {
-            padding: 1%;
             justify-content: center;
+            padding: 1%;
+        }
+
+        .info {
+            background-color: #e6e6e6;
+            border-radius: 30%;
+            width: 80%;
+            margin-left: 10%;
+        }
+
+        table {
+            margin: 5%
         }
 
         th,
         td {
-            padding: 3%;
-            text-align: center
+            text-align: center;
+            border-style: groove;
+        }
+
+        .geral {
+            margin-left: 7%;
+        }
+
+        .consultas {
+            margin-left: 5%;
+        }
+
+        .geral th {
+            background-color: var(--amarelo);
+        }
+
+        .consultas th {
+            background-color: var(--cinza);
+        }
+
+        .whatsapp {
+            width: 10%;
+            height: 35%;
+            margin-left: 80%;
         }
     </style>
 </head>
@@ -42,38 +81,52 @@
 <body>
 
     <header>
-        <h1>Fatura completa</h1>
-
-        <p>Fatura N°: {{ $invoices['id'] }}</p>
-
-        <p>Data: {{ $invoices['generation_date'] }} | Vencimento: {{ $invoices['due_date']}} </p>
-
-        <p>Siuação: Pedido recebido</p>
+        <img src="{{ $invoices['logo'] }}" alt="Logo da Alpha-Consultoria" style="width:10%; height:5%;">
     </header>
 
     <main>
-        <table>
+        <h1>Fatura completa</h1>
+
+        <hr>
+
+        <h2>Dados Empresariais</h2>
+
+        <div class="info">
+            <p>Fatura N°: {{ $invoices['id'] }}</p>
+
+            <p>Data de Emissão: {{ $invoices['generation_date'] }} | Data de Vencimento: {{ $invoices['due_date'] }}</p>
+
+            <p>Situação: Pedido <b>{{ $invoices['status']}}</b></p>
+        </div>
+
+        <table class="geral">
             <tr>
                 <th>Consultoria: Alpha Consultoria</th>
                 <th>Empresa: {{ $invoices['company'] }}</th>
             </tr>
             <tr>
+                <td>CPF/CNPJ: 12345670001889</td>
+                <td>CPF/CNPJ {{ $invoices['cpf_cnpj'] }}</td>
+            </tr>
+            <tr>
                 <td>Endereço: João Veloso filho, 1402, São Paulo-SP</td>
-                <td>E-Mail: {{ $invoices['email'] }}</td>
+                <td>Endereço: {{ $invoices['address'] }}</td>
             </tr>
             <tr>
                 <td>E-Mail: atendimento@alphaassessoriarh.com</td>
-                <td>Telefone: {{ $invoices['phone'] }}</td>
+                <td>E-Mail: {{ $invoices['email'] }}</td>
             </tr>
             <tr>
                 <td>Telefone: (11) 99323-3989</td>
-                <td>Endereço: {{ $invoices['address'] }}</td>
+                <td>Telefone: {{ $invoices['phone'] }}</td>
             </tr>
         </table>
 
         <hr>
 
-        <table>
+        <h2>Registros de consultas</h2>
+
+        <table class="consultas">
             <tr>
                 <th>N° de Funcionários</th>
                 <th>N° de Prestadores de Serviços</th>
@@ -90,6 +143,11 @@
     </main>
 
     <footer>
+        <a href="https://wa.me/5511993233989?text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os%20da%20Alpha%20Consultoria."
+            target="_blank" rel="noopener noreferrer" style="width: 25%; height: 25%; margin-left: 70%;">
+            <img src="{{ $invoices['whatsapp'] }}" alt="Contato da Alpha-Consultoria" class="whatsapp">
+        </a>
+
         <p>Todos os direitos reservados a Alpha Consultoria®</p>
     </footer>
 

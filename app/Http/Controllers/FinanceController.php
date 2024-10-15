@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -60,22 +61,28 @@ class FinanceController extends Controller
         }
     }
 
-    public function generateInvoice(string $id)
+    public function generateInvoice(string $invoiceId)
     {
         try {
-            $invoice = User::findOrFail($id);
+            $invoice = Invoice::findOrFail($invoiceId);
+
+            $user = User::findOrFail($invoice->user_id);
 
             $invoices = [
+                'logo' => public_path('images/logo.png'),
                 'id' => $invoice->id,
                 'generation_date' => $invoice->created_at->format('d/m/Y'),
-                'due_date' => $invoice->created_at->format('d/m/Y')->addDays(30),
-                'company' => $invoice->name,
-                'email' => $invoice->email,
-                'phone' => $invoice->phone,
-                'address' => $invoice->address,
+                'due_date' => $invoice->created_at->addDays(30)->format('d/m/Y'),
+                'status' => $invoice->status,
+                'company' => $user->name,
+                'cpf_cnpj' => $user->cpf_cnpj,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'address' => $user->address,
+                'whatsapp' => public_path('images/whatsapp.png')
             ];
 
-            $company = $this->consultsPerCompany($id)->first();
+            $company = $this->consultsPerCompany($user->id)->first();
 
             if (!$company) {
                 return redirect(route('finance.show'))->with('fail', 'Empresa não encontrada');
@@ -84,7 +91,7 @@ class FinanceController extends Controller
             $pdf = Pdf::loadView('finance.partials.finance-pdf', compact('invoices', 'company'));
             return $pdf->stream('fatura.pdf');
         } catch (ValidationException $e) {
-            return redirect(route('finance.show'))->with('fail', 'Empresa não encontrada: ' . $e->getMessage());
+            return redirect(route('finance.show'))->with('fail', 'Erro ao gerar fatura: ' . $e->getMessage());
         }
     }
 }

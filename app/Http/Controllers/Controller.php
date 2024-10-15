@@ -68,23 +68,6 @@ abstract class Controller
 
     public function consultsPerCompany($id = null)
     {
-        // $company = User::leftJoin('employees', 'users.id', '=', 'employees.user_id')
-        //     ->leftJoin('freelancers', 'users.id', '=', 'freelancers.user_id')
-        //     ->leftJoin('vehicles', 'users.id', '=', 'vehicles.user_id')
-        //     ->select(
-        //         'users.id',
-        //         'users.name AS Company',
-        //         'users.cost_employee AS cost_Employee',
-        //         'users.cost_freelancer AS cost_Freelancer',
-        //         'users.cost_vehicle AS cost_Vehicle',
-        //         'users.price AS Price',
-        //         User::raw('COUNT(DISTINCT employees.id) AS Employees'),
-        //         User::raw('COUNT(DISTINCT freelancers.id) AS Freelancers'),
-        //         User::raw('COUNT(DISTINCT vehicles.id) AS Vehicles')
-        //     )
-        //     ->groupBy('users.id', 'users.name', 'users.price', 'users.cost_employee', 'users.cost_freelancer', 'users.cost_vehicle')
-        //     ->orderBy('users.created_at', 'desc');
-
         $company = User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
             ->leftJoin('employees', 'invoices.id', '=', 'employees.invoice_id')
             ->leftJoin('freelancers', 'invoices.id', '=', 'freelancers.invoice_id')
