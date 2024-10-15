@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('status');
+            $table->string('status')->default('Pendente');
             $table->integer('cost_employee')->default(0);
             $table->integer('cost_freelancer')->default(0);
             $table->integer('cost_vehicle')->default(0);
+            $table->integer('price')->default(0);
             $table->timestamps();
         });
     }

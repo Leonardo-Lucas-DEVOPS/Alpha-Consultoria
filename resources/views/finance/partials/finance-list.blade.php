@@ -15,6 +15,7 @@
         <thead class="bg-gray-200">
             <tr>
                 <th class="px-4 py-2">Empresa</th>
+                <th class="px-4 py-2">Mês da Fatura</th>
                 <th class="px-4 py-2">N° Funcionários</th>
                 <th class="px-4 py-2">N° Prestadores de Serviço</th>
                 <th class="px-4 py-2">N° Veículos</th>
@@ -26,6 +27,7 @@
             @foreach ($companies as $company)
                 <tr class="border-b">
                     <td class="px-4 py-2">{{ $company->Company }}</td>
+                    <td class="px-4 py-2">{{ $company->InvoiceMonth }}</td>
                     <td class="px-4 py-2">{{ $company->Employees }}</td>
                     <td class="px-4 py-2">{{ $company->Freelancers }}</td>
                     <td class="px-4 py-2">{{ $company->Vehicles }}</td>
@@ -34,7 +36,7 @@
                         <div class="flex space-y-2">
                             <div class="actions">
                                 <button class="btn btn-info" data-bs-toggle="modal"
-                                    data-bs-target="#modalInvoice_{{ $company->id }}">Gerenciar Fatura</button>
+                                    data-bs-target="#modalInvoice_{{ $company->id}}">Gerenciar Fatura</button>
                                 <form action="{{ route('finance.update', $company->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
@@ -60,7 +62,7 @@
                                                         <input type="text" class="form-control"
                                                             id="valueEmployee_{{ $company->id }}"
                                                             name="valueEmployee[{{ $company->id }}]"
-                                                            value="{{ $company->cost_Employee ?? 0 }}"
+                                                            value="{{ $company->cost_employee ?? 0 }}"
                                                             aria-label="Preço para cada funcionário da empresa {{ $company->Company }}">
                                                         <span class="input-group-text">.00</span>
                                                     </div>
@@ -72,7 +74,7 @@
                                                         <input type="text" class="form-control"
                                                             id="valueFreelancer_{{ $company->id }}"
                                                             name="valueFreelancer[{{ $company->id }}]"
-                                                            value="{{ $company->cost_Freelancer ?? 0 }}"
+                                                            value="{{ $company->cost_freelancer ?? 0 }}"
                                                             aria-label="Preço para cada prestador de serviço da empresa {{ $company->Company }}">
                                                         <span class="input-group-text">.00</span>
                                                     </div>
@@ -84,7 +86,7 @@
                                                         <input type="text" class="form-control"
                                                             id="valueVehicle_{{ $company->id }}"
                                                             name="valueVehicle[{{ $company->id }}]"
-                                                            value="{{ $company->cost_Vehicle ?? 0 }}"
+                                                            value="{{ $company->cost_vehicle ?? 0 }}"
                                                             aria-label="Preço para cada veículo da empresa {{ $company->Company }}">
                                                         <span class="input-group-text">.00</span>
                                                     </div>

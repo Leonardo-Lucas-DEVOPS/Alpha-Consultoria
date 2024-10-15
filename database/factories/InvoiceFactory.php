@@ -22,7 +22,8 @@ class InvoiceFactory extends Factory
             'status' => fake()->randomElement(['Pago', 'Pendente', 'Em atraso']),
             'cost_employee' => fake()->randomDigit(1, 10),
             'cost_freelancer' => fake()->randomDigit(1, 10),
-            'cost_vehicle' => fake()->randomDigit(1, 10)
+            'cost_vehicle' => fake()->randomDigit(1, 10),
+            'price' => fake()->randomDigit(1, 30)
         ];
     }
 }

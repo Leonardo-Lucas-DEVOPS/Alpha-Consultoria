@@ -46,7 +46,7 @@
 
         <p>Fatura N°: {{ $invoices['id'] }}</p>
 
-        <p>Data: {{ $invoices['data'] }} </p>
+        <p>Data: {{ $invoices['generation_date'] }} | Vencimento: {{ $invoices['due_date']}} </p>
 
         <p>Siuação: Pedido recebido</p>
     </header>

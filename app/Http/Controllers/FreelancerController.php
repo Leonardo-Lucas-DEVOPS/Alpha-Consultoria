@@ -53,12 +53,13 @@ class FreelancerController extends Controller
             $invoiceData = $this->invoicesPerDate();
 
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceData->InvoiceDate)->isPast()) {
-                Invoice::create([
+                $invoice = Invoice::create([
                     'user_id' => $userId,
                     'status' => 'Pendente',
                     'cost_employee' => 0,
                     'cost_freelancer' => 0,
-                    'cost_vehicle' => 0
+                    'cost_vehicle' => 0,
+                    'price' => 0
                 ]);
             } else {
                 $invoice = $companyInvoice;

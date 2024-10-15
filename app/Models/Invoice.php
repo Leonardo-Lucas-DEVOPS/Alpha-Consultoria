@@ -14,7 +14,8 @@ class Invoice extends Model
         'status',
         'cost_employee',
         'cost_freelancer',
-        'cost_vehicle'
+        'cost_vehicle',
+        'price'
     ];
 
     // Definir relacionamento com o usuário, se necessário

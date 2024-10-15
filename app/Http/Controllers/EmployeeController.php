@@ -53,11 +53,7 @@ class EmployeeController extends Controller
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
                 // Criar uma nova fatura se não houver faturas ou se o intervalo de 30 dias já passou
                 $invoice = Invoice::create([
-                    'user_id' => $userId,
-                    'status' => 'Pendente',
-                    'cost_employee' => 0,
-                    'cost_freelancer' => 0,
-                    'cost_vehicle' => 0
+                    'user_id' => $userId
                 ]);
             } else {
                 // Se já existe uma fatura válida, use a existente
