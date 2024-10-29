@@ -75,7 +75,7 @@ abstract class Controller
             ->select(
                 'users.name AS Company',
                 'invoices.id',
-                'invoices.created_at AS InvoiceMonth',
+                DB::raw('DATE_FORMAT(invoices.created_at, "%d/%m/%Y") AS InvoiceMonth'),
                 'invoices.cost_employee',
                 'invoices.cost_freelancer',
                 'invoices.cost_vehicle',

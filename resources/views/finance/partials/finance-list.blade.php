@@ -36,7 +36,7 @@
                         <div class="flex space-y-2">
                             <div class="actions">
                                 <button class="btn btn-info" data-bs-toggle="modal"
-                                    data-bs-target="#modalInvoice_{{ $company->id}}">Gerenciar Fatura</button>
+                                    data-bs-target="#modalInvoice_{{ $company->id }}">Gerenciar Fatura</button>
                                 <form action="{{ route('finance.update', $company->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
@@ -56,7 +56,8 @@
                                                     </p>
 
                                                     <label for="valueEmployee_{{ $company->id }}">Funcionário
-                                                        (Empresa: {{ $company->Company }})</label>
+                                                        (Empresa: {{ $company->Company }})
+                                                    </label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control"
@@ -67,7 +68,8 @@
                                                         <span class="input-group-text">.00</span>
                                                     </div>
 
-                                                    <label for="valueFreelancer_{{ $company->id }}">Prestador de serviço
+                                                    <label for="valueFreelancer_{{ $company->id }}">Prestador de
+                                                        serviço
                                                         (Empresa: {{ $company->Company }})</label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text">$</span>
@@ -93,8 +95,9 @@
 
                                                 </div>
                                                 <div class="modal-footer">
-
-                                                    <button class="btn btn-primary">Estabelecer preços</button>
+                                                    @if (Auth::user()->usertype == 3)
+                                                        <button class="btn btn-primary">Estabelecer preços</button>
+                                                    @endif
                                 </form>
 
                                 <form action="{{ route('finance.invoice', $company->id) }}" method="GET">

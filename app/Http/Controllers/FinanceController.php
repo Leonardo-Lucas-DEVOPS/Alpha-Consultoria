@@ -71,7 +71,7 @@ class FinanceController extends Controller
             $invoices = [
                 'logo' => public_path('images/logo.png'),
                 'id' => $invoice->id,
-                'generation_date' => $invoice->created_at->format('d/m/Y'),
+                'generation_date' => $invoice->created_at->addDays(15)->format('d/m/Y'),
                 'due_date' => $invoice->created_at->addDays(30)->format('d/m/Y'),
                 'status' => $invoice->status,
                 'company' => $user->name,
