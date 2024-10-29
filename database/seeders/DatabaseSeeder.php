@@ -26,7 +26,6 @@ class DatabaseSeeder extends Seeder
             'phone' => '11997385214',
             'address' => 'Rua Girassol',
             'password' => Hash::make('123'),
-            'price' => 0,
             'usertype' => 3,
             'email_verified_at' => now(),
             'created_at' => now(),
