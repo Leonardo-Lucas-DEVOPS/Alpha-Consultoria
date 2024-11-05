@@ -22,6 +22,7 @@ abstract class Controller
             $record->save();
         }
     }
+
     public function filterConsults($model)
     {
         // Lista de faturas responsáveis do usuário logado
@@ -49,7 +50,7 @@ abstract class Controller
                 DB::raw('COUNT(DISTINCT invoices.id) AS NumberInvoices')
             )
             ->where('users.id', '=', Auth::user()->id)
-            ->groupBy('invoices.id', 'users.name')
+            ->groupBy('users.name', 'invoices.id')
             ->orderBy('invoices.created_at', 'desc')
             ->first();
     }
@@ -58,8 +59,7 @@ abstract class Controller
     {
         return User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
             ->select(
-                DB::raw('DATE_ADD(invoices.created_at, INTERVAL 30 DAY) AS InvoiceDate'),
-                'invoices.created_at'
+                DB::raw('DATE_ADD(invoices.created_at, INTERVAL 30 DAY) AS InvoiceDate')
             )
             ->where('users.id', '=', Auth::user()->id)
             ->orderBy('invoices.created_at', 'desc')
@@ -75,28 +75,45 @@ abstract class Controller
             ->select(
                 'users.name AS Company',
                 'invoices.id',
-                DB::raw('DATE_FORMAT(invoices.created_at, "%d/%m/%Y") AS InvoiceMonth'),
+                DB::raw('
+                    DATE_FORMAT(
+                        DATE_ADD(invoices.created_at, INTERVAL CASE WHEN invoices.id = (
+                            SELECT MIN(invoices.id) FROM invoices WHERE invoices.user_id = users.id
+                        ) THEN 45 ELSE 30 END DAY),
+                        "%d/%m/%Y"
+                    ) AS InvoiceDue
+                '),
                 'invoices.cost_employee',
                 'invoices.cost_freelancer',
                 'invoices.cost_vehicle',
                 'invoices.price AS Price',
+                'invoices.status',
                 DB::raw('COUNT(DISTINCT employees.id) AS Employees'),
                 DB::raw('COUNT(DISTINCT freelancers.id) AS Freelancers'),
                 DB::raw('COUNT(DISTINCT vehicles.id) AS Vehicles')
             )
-            ->groupBy('users.name', 'invoices.id', 'invoices.created_at', 'invoices.cost_employee', 'invoices.cost_freelancer', 'invoices.cost_vehicle', 'invoices.price')
+            ->groupBy('users.id', 'users.name', 'invoices.id', 'invoices.created_at',
+                'invoices.cost_employee', 'invoices.cost_freelancer', 'invoices.cost_vehicle',
+                'invoices.price', 'invoices.status'
+            )
             ->orderBy('users.created_at', 'desc');
-
+    
         if ($id) {
             $company->where('users.id', $id);
         }
-
+    
         if (Auth::check() && Auth::user()->usertype == 2) {
-            $company->where('users.id', Auth::user()->id);
+            $company->where('invoices.user_id', Auth::user()->id);
+            $company->whereRaw('DATE_ADD(
+                                    invoices.created_at,
+                                    INTERVAL CASE WHEN invoices.id =
+                                        (SELECT MIN(invoices.id) FROM invoices
+                                        WHERE invoices.user_id = users.id) THEN 30 ELSE 15 END DAY) <= NOW()');
         } else {
             $company->where('users.usertype', '2');
+            $company->where('invoices.status', '!=', 'Pago');
         }
-
+    
         return $company->paginate(5);
     }
 }

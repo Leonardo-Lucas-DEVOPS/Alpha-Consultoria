@@ -95,6 +95,7 @@ Route::middleware('auth')
 ->group(function () {
     Route::get      ('/finance/show', 'show')                   ->name('finance.show');
     Route::patch    ('/finance/update/{id}', 'update')          ->name('finance.update');
+    Route::patch    ('/finance/payment/{id}', 'confirmPayment') ->name('finance.payment');
     Route::get      ('/finance/invoice/{id}', 'generateInvoice')->name('finance.invoice');
 });
 

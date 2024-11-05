@@ -15,7 +15,7 @@
         <thead class="bg-gray-200">
             <tr>
                 <th class="px-4 py-2">Empresa</th>
-                <th class="px-4 py-2">Mês da Fatura</th>
+                <th class="px-4 py-2">Vencimento da Fatura</th>
                 <th class="px-4 py-2">N° Funcionários</th>
                 <th class="px-4 py-2">N° Prestadores de Serviço</th>
                 <th class="px-4 py-2">N° Veículos</th>
@@ -27,7 +27,7 @@
             @foreach ($companies as $company)
                 <tr class="border-b">
                     <td class="px-4 py-2">{{ $company->Company }}</td>
-                    <td class="px-4 py-2">{{ $company->InvoiceMonth }}</td>
+                    <td class="px-4 py-2">{{ $company->InvoiceDue }}</td>
                     <td class="px-4 py-2">{{ $company->Employees }}</td>
                     <td class="px-4 py-2">{{ $company->Freelancers }}</td>
                     <td class="px-4 py-2">{{ $company->Vehicles }}</td>
@@ -100,9 +100,16 @@
                                                     @endif
                                 </form>
 
-                                <form action="{{ route('finance.invoice', $company->id) }}" method="GET">
-                                    <button class="btn btn-info">Gerar Fatura</button>
-                                </form>
+                                @if (Auth::user()->usertype == 3)
+                                    <form action="{{ route('finance.payment', $company->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button class="btn btn-success" type="submit">Confirmar pagamento</button>
+                                    </form>
+                                @endif
+                                    <form action="{{ route('finance.invoice', $company->id) }}" method="GET">
+                                        <button class="btn btn-info">Gerar</button>
+                                    </form>
                             </div>
                         </div>
 </div>

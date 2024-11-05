@@ -67,7 +67,6 @@ class VehicleController extends Controller
 
     public function show(Vehicle $vehicle)
     {
-        // Atualiza o status dos veículos com mais de 3 meses
         $this->updateStatusForModel(Vehicle::class);
 
         if (Auth::user()->usertype == 3) {
@@ -75,11 +74,10 @@ class VehicleController extends Controller
             $olddatas = AuditVehicle::orderBy('created_at', 'desc')->paginate(5);
             return view('vehicle.show-vehicle', compact('vehicles', 'olddatas'));
         }
-        // Busca os veículos e dados
+
         $vehicles = $this->filterConsults(Vehicle::class);
-        // Busca os veículos e dados
         $olddatas = $this->filterAudit(AuditVehicle::class);
-        // Retornar a view com os veículos e dados de auditoria filtrados
+        
         return view('vehicle.show-vehicle', compact('vehicles', 'olddatas'));
     }
 
@@ -90,6 +88,7 @@ class VehicleController extends Controller
         if ($vehicle->return_status != EM_ANALISE) {
             return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
         }
+
         return view('Vehicle.create-vehicle', compact('vehicle'));
     }
 
@@ -119,7 +118,6 @@ class VehicleController extends Controller
                 'OldReturn_status' => $vehicle->return_status,
             ]);
 
-            // Atualiza os dados do veículo
             $vehicle->chassi = preg_replace(FORMATACAO, '', $request->input('chassi'));
             $vehicle->placa = preg_replace(FORMATACAO, '', $request->input('placa'));
             $vehicle->renavam = preg_replace(FORMATACAO, '', $request->input('renavam'));
@@ -164,7 +162,6 @@ class VehicleController extends Controller
 
     public function destroy(string $id)
     {
-        // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if (Auth::user()->usertype >= 2) {
             $vehicle = Vehicle::findOrFail($id);
 

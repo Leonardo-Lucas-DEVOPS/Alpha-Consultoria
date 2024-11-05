@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+define('FORMATACAO_DATA', 'd/m/Y');
 define('VALIDACAO_INPUT', 'required|numeric');
 
 class FinanceController extends Controller
@@ -16,6 +18,15 @@ class FinanceController extends Controller
     public function show(Request $request)
     {
         $companies = $this->consultsPerCompany();
+
+        foreach ($companies as $company) {
+            $invoiceDueDate = Carbon::createFromFormat(FORMATACAO_DATA, $company->InvoiceDue);
+
+            if ($invoiceDueDate->isPast() || $company->status != 'Pago') {
+                $company->status = 'Em atraso';
+            }
+        }
+
         return view('finance.show-finance', compact('companies'));
     }
 
@@ -28,7 +39,7 @@ class FinanceController extends Controller
                 'valueVehicle.*' => VALIDACAO_INPUT,
             ]);
 
-            // // Pegando as empresas
+            // Pegando as empresas
             $companies = $this->consultsPerCompany();
 
             foreach ($companies as $company) {
@@ -36,15 +47,12 @@ class FinanceController extends Controller
                 $valueFreelancer = $request->input("valueFreelancer.{$company->id}", $company->cost_freelancer);
                 $valueVehicle = $request->input("valueVehicle.{$company->id}", $company->cost_vehicle);
 
-                // Calcula o total com base nos valores capturados
                 $totalEmployees = $valueEmployee * $company->Employees;
                 $totalFreelancers = $valueFreelancer * $company->Freelancers;
                 $totalVehicles = $valueVehicle * $company->Vehicles;
 
-                // Atualiza o preço total
                 $price = $totalEmployees + $totalFreelancers + $totalVehicles;
 
-                // Atualiza a tabela
                 DB::table('invoices')
                     ->where('id', $company->id)
                     ->update([
@@ -61,18 +69,44 @@ class FinanceController extends Controller
         }
     }
 
+    public function confirmPayment(string $id)
+    {
+        try {
+            $invoice = Invoice::findOrFail($id);
+
+            $invoice->status = 'Pago';
+            $invoice->save();
+
+            return redirect(route('finance.show'))->with('success', 'Pagamento da fatura confirmada com sucesso');
+        } catch (ValidationException $e) {
+            return redirect(route('finance.show'))->with('fail', 'Falha ao confirmar fatura: ' . $e->getMessage());
+        }
+    }
+
     public function generateInvoice(string $invoiceId)
     {
         try {
             $invoice = Invoice::findOrFail($invoiceId);
-
             $user = User::findOrFail($invoice->user_id);
+
+            $firstInvoice = Invoice::where('user_id', $user->id)->orderBy('created_at')->first();
+
+            $generationDate = $invoice->created_at;
+            $dueDate = $invoice->created_at;
+
+            if ($invoice->id === $firstInvoice->id) {
+                $generationDate = $generationDate->addDays(30)->format(FORMATACAO_DATA);
+                $dueDate = $dueDate->addDays(45)->format('d/m/y');
+            } else {
+                $generationDate = $generationDate->addDays(15)->format(FORMATACAO_DATA);
+                $dueDate = $dueDate->addDays(30)->format('d/m/Y');
+            }
 
             $invoices = [
                 'logo' => public_path('images/logo.png'),
                 'id' => $invoice->id,
-                'generation_date' => $invoice->created_at->addDays(15)->format('d/m/Y'),
-                'due_date' => $invoice->created_at->addDays(30)->format('d/m/Y'),
+                'generation_date' => $generationDate,
+                'due_date' => $dueDate,
                 'status' => $invoice->status,
                 'company' => $user->name,
                 'cpf_cnpj' => $user->cpf_cnpj,

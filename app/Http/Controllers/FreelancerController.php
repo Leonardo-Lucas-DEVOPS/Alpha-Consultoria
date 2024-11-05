@@ -24,7 +24,6 @@ class FreelancerController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validação dos dados (aceitar qualquer formato para RG e CPF)
             $validatedData = $request->validate([
                 'rg' => 'required|string',
                 'cpf' => [
@@ -45,8 +44,7 @@ class FreelancerController extends Controller
             $validatedData['cpf'] = preg_replace(FORMATACAO, '', $validatedData['cpf']);
             $validatedData['cnh'] = preg_replace(FORMATACAO, '', $validatedData['cnh']);
             $validatedData['placa'] = preg_replace(FORMATACAO, '', $validatedData['placa']);
-
-            // Obtém o ID do usuário autenticado
+            
             $userId = Auth::id();
 
             $companyInvoice = $this->invoicesPerCompany();
@@ -68,14 +66,13 @@ class FreelancerController extends Controller
             Freelancer::create(array_merge($validatedData, ['invoice_id' => $invoice->id]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
-        } catch (ValidationException $e) {   // Armazena os dados na sessão para depuração
+        } catch (ValidationException $e) {
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
     }
     public function show(Freelancer $freelancer)
     {
-        // Atualiza o status dos freelancers com mais de 3 meses
         $this->updateStatusForModel(Freelancer::class);
 
         if (Auth::user()->usertype == 3) {
@@ -83,13 +80,10 @@ class FreelancerController extends Controller
             $olddatas = AuditFreelancer::orderBy('created_at', 'desc')->paginate(5);
             return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
         }
-        // Filtrar os freelancers que pertencem à empresa do usuário logado
-        $freelancers = $this->filterConsults(Freelancer::class);
 
-        // Filtrar os dados de auditoria de freelancers pertencentes à mesma empresa
+        $freelancers = $this->filterConsults(Freelancer::class);
         $olddatas = $this->filterAudit(AuditFreelancer::class);
 
-        // Retornar a view 'freelancer.show-freelancer' com os freelancers e dados de auditoria filtrados
         return view('freelancer.show-freelancer', compact('freelancers', 'olddatas'));
     }
 
@@ -100,6 +94,7 @@ class FreelancerController extends Controller
         if ($freelancer->return_status != EM_ANALISE) {
             return redirect(route('dashboard'))->with('fail', 'Uma consulta já finalizada não poderá mais ser alterada, agende uma nova');
         }
+
         return view('freelancer.create-freelancer', compact('freelancer'));
     }
     public function update(Request $request, $id)
@@ -138,7 +133,6 @@ class FreelancerController extends Controller
                 'OldReturn_status' => $freelancer->return_status,
             ]);
 
-            // Atualiza os dados do empregado
             $freelancer->name = $request->input('name');
             $freelancer->rg = preg_replace(FORMATACAO, '', $request->input('rg'));
             $freelancer->cpf = preg_replace(FORMATACAO, '', $request->input('cpf'));
@@ -153,7 +147,6 @@ class FreelancerController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na atualização dos dados: ' . $e->getMessage());
         }
@@ -186,7 +179,6 @@ class FreelancerController extends Controller
     }
     public function destroy(string $id)
     {
-        // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if (Auth::user()->usertype >= 2) {
             $freelancer = Freelancer::findOrFail($id);
 

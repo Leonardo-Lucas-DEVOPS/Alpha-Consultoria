@@ -24,7 +24,6 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validação dos dados (aceitar qualquer formato para RG e CPF)
             $validatedData = $request->validate([
                 'rg' => 'required|string',
                 'cpf' => [
@@ -44,29 +43,19 @@ class EmployeeController extends Controller
 
             $userId = Auth::id();
 
-            // Pegar o número de faturas e o último ID da fatura para o usuário
             $companyInvoice = $this->invoicesPerCompany();
-            // Pegar a data da última fatura e adicionar 30 dias
             $invoiceDate = $this->invoicesPerDate();
 
-            // Comparar a data e verificar se já passou o intervalo de 30 dias
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
-                // Criar uma nova fatura se não houver faturas ou se o intervalo de 30 dias já passou
-                $invoice = Invoice::create([
-                    'user_id' => $userId
-                ]);
+                $invoice = Invoice::create(['user_id' => $userId]);
             } else {
-                // Se já existe uma fatura válida, use a existente
                 $invoice = $companyInvoice;
             }
 
-            // Criar o empregado relacionado à fatura
             Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id]));
 
-            // Retornar para o dashboard com a mensagem de sucesso
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na validação dos dados: ' . $e->getMessage());
         }
@@ -74,7 +63,6 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        // Atualiza o status dos funcionários com mais de 3 meses
         $this->updateStatusForModel(Employee::class);
 
         if (Auth::user()->usertype == 3) {
@@ -83,13 +71,10 @@ class EmployeeController extends Controller
             return view('employee.show-employee', compact('employees', 'olddatas'));
         }
 
-        // Filtrar os funcionários que pertencem à empresa do usuário logado
         $employees = $this->filterConsults(Employee::class);
 
-        // Filtrar os dados de auditoria de funcionários pertencentes à mesma empresa
         $olddatas = $this->filterAudit(AuditEmployee::class);
 
-        // Retorna a view 'employee.show-employee' com os dados filtrados
         return view('employee.show-employee', compact('employees', 'olddatas'));
     }
 
@@ -121,7 +106,7 @@ class EmployeeController extends Controller
             ]);
 
             $employee = Employee::findOrFail($id);
-            // Criação de uma auditoria antes de atualizar os dados
+
             AuditEmployee::create([
                 'employee_id' => $employee->id,
                 'OldName' =>     $employee->name,
@@ -133,7 +118,7 @@ class EmployeeController extends Controller
                 'OldInvoice_id' => $employee->invoice_id,
                 'OldReturn_status' => $employee->return_status,
             ]);
-            // Atualiza os dados do empregado
+
             $employee->rg = preg_replace(FORMATACAO, '', $request->input('rg'));
             $employee->cpf = preg_replace(FORMATACAO, '', $request->input('cpf'));
             $employee->name = $request->input('name');
@@ -146,7 +131,6 @@ class EmployeeController extends Controller
 
             return redirect(route('dashboard'))->with('success', 'Registro atualizado com sucesso');
         } catch (ValidationException $e) {
-            // Armazena os dados na sessão para depuração
             return redirect(route('dashboard'))
                 ->with('fail', 'Falha na atualização dos dados: ' . $e->getMessage());
         }
@@ -182,7 +166,6 @@ class EmployeeController extends Controller
 
     public function destroy(string $id)
     {
-        // Verifica se o usuário tem permissão para deletar (usertype 2 ou 3)
         if (Auth::user()->usertype >= 2) {
             $employee = Employee::findOrFail($id);
 
