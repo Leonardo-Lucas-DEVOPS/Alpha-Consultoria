@@ -79,7 +79,7 @@ abstract class Controller
                     DATE_FORMAT(
                         DATE_ADD(invoices.created_at, INTERVAL CASE WHEN invoices.id = (
                             SELECT MIN(invoices.id) FROM invoices WHERE invoices.user_id = users.id
-                        ) THEN 45 ELSE 30 END DAY),
+                        ) THEN 35 ELSE 30 END DAY),
                         "%d/%m/%Y"
                     ) AS InvoiceDue
                 '),
@@ -108,7 +108,7 @@ abstract class Controller
                                     invoices.created_at,
                                     INTERVAL CASE WHEN invoices.id =
                                         (SELECT MIN(invoices.id) FROM invoices
-                                        WHERE invoices.user_id = users.id) THEN 30 ELSE 15 END DAY) <= NOW()');
+                                        WHERE invoices.user_id = users.id) THEN 30 ELSE 25 END DAY) <= NOW()');
         } else {
             $company->where('users.usertype', '2');
             $company->where('invoices.status', '!=', 'Pago');

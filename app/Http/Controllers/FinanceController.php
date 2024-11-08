@@ -21,12 +21,14 @@ class FinanceController extends Controller
 
         foreach ($companies as $company) {
             $invoiceDueDate = Carbon::createFromFormat(FORMATACAO_DATA, $company->InvoiceDue);
-
-            if ($invoiceDueDate->isPast() || $company->status != 'Pago') {
+    
+            if ($invoiceDueDate->isPast() && $company->status != 'Pago') {
                 $company->status = 'Em atraso';
+
+                DB::table('invoices')->where('id', $company->id)->update(['status' => 'Em atraso']);
             }
         }
-
+    
         return view('finance.show-finance', compact('companies'));
     }
 
@@ -96,9 +98,9 @@ class FinanceController extends Controller
 
             if ($invoice->id === $firstInvoice->id) {
                 $generationDate = $generationDate->addDays(30)->format(FORMATACAO_DATA);
-                $dueDate = $dueDate->addDays(45)->format('d/m/y');
+                $dueDate = $dueDate->addDays(35)->format('d/m/y');
             } else {
-                $generationDate = $generationDate->addDays(15)->format(FORMATACAO_DATA);
+                $generationDate = $generationDate->addDays(25)->format(FORMATACAO_DATA);
                 $dueDate = $dueDate->addDays(30)->format('d/m/Y');
             }
 

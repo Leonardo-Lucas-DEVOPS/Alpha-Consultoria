@@ -109,7 +109,7 @@
                 <td>CPF/CNPJ {{ $invoices['cpf_cnpj'] }}</td>
             </tr>
             <tr>
-                <td>Endereço: João Veloso filho, 1402, São Paulo-SP</td>
+                <td>Endereço: João Veloso Filho, 1402, São Paulo-SP</td>
                 <td>Endereço: {{ $invoices['address'] }}</td>
             </tr>
             <tr>
