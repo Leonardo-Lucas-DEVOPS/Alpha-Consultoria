@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Freelancer;
 use App\Models\AuditFreelancer;
@@ -45,25 +46,19 @@ class FreelancerController extends Controller
             $validatedData['cnh'] = preg_replace(FORMATACAO, '', $validatedData['cnh']);
             $validatedData['placa'] = preg_replace(FORMATACAO, '', $validatedData['placa']);
             
-            $userId = Auth::id();
+            $userCpfCnpj = Auth::user()->cpf_cnpj;
+            $company = User::where('cpf_cnpj', $userCpfCnpj)->where('usertype', 2)->first();
 
             $companyInvoice = $this->invoicesPerCompany();
-            $invoiceData = $this->invoicesPerDate();
+            $invoiceDate = $this->invoicesPerDate();
 
-            if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceData->InvoiceDate)->isPast()) {
-                $invoice = Invoice::create([
-                    'user_id' => $userId,
-                    'status' => 'Pendente',
-                    'cost_employee' => 0,
-                    'cost_freelancer' => 0,
-                    'cost_vehicle' => 0,
-                    'price' => 0
-                ]);
+            if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
+                $invoice = Invoice::create(['user_id' => $company->id, 'user_cpf' => $userCpfCnpj]);
             } else {
                 $invoice = $companyInvoice;
             }
 
-            Freelancer::create(array_merge($validatedData, ['invoice_id' => $invoice->id]));
+            Freelancer::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpf' => $userCpfCnpj]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -129,7 +124,8 @@ class FreelancerController extends Controller
                 'OldMae' => $freelancer->mae,
                 'OldCnh' => $freelancer->cnh,
                 'OldPlaca' => $freelancer->placa,
-                'OldUser_id' => $freelancer->user_id,
+                'OldInvoice_id' => $freelancer->invoice_id,
+                'OldInvoice_cpf' => $freelancer->invoice_cpf,
                 'OldReturn_status' => $freelancer->return_status,
             ]);
 

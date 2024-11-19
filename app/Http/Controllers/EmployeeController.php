@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Employee;
 use App\Models\AuditEmployee;
@@ -41,18 +42,19 @@ class EmployeeController extends Controller
             $validatedData['rg'] = preg_replace(FORMATACAO, '', $validatedData['rg']);
             $validatedData['cpf'] = preg_replace(FORMATACAO, '', $validatedData['cpf']);
 
-            $userId = Auth::id();
+            $userCpfCnpj = Auth::user()->cpf_cnpj;
+            $company = User::where('cpf_cnpj', $userCpfCnpj)->where('usertype', 2)->first();
 
             $companyInvoice = $this->invoicesPerCompany();
             $invoiceDate = $this->invoicesPerDate();
 
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
-                $invoice = Invoice::create(['user_id' => $userId]);
+                $invoice = Invoice::create(['user_id' => $company->id, 'user_cpf' => $userCpfCnpj]);
             } else {
                 $invoice = $companyInvoice;
             }
 
-            Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id]));
+            Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpf' => $userCpfCnpj]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -115,7 +117,8 @@ class EmployeeController extends Controller
                 'OldNascimento' => $employee->nascimento,
                 'OldPai' =>      $employee->pai,
                 'OldMae' =>      $employee->mae,
-                'OldInvoice_id' => $employee->invoice_id,
+                'OldInvoice_id' => $employee->user_id,
+                'OldInvoice_cpf' => $employee->user_cpf,
                 'OldReturn_status' => $employee->return_status,
             ]);
 

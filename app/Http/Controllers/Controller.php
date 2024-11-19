@@ -25,50 +25,56 @@ abstract class Controller
 
     public function filterConsults($model)
     {
-        // Lista de faturas responsáveis do usuário logado
-        $allInvoicesPerUser = Invoice::where('user_id', Auth::user()->id)->pluck('id');
+        // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
+        $allUserIds = Invoice::where('user_cpf',  Auth::user()->cpf_cnpj)->pluck('id');
 
-        // Agora, buscamos todas as consultas da model que pertencem à todas as faturas da lista $allInvoicesPerUser
-        return $model::whereIn('invoice_id', $allInvoicesPerUser)->orderBy('created_at', 'desc')->paginate(5);
+        // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
+        return $model::whereIn('invoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(5);
     }
 
     public function filterAudit($model)
     {
-        // Lista de faturas responsáveis do usuário logado
-        $allInvoicesPerUser = Invoice::where('user_id',  Auth::user()->id)->pluck('id');
+        // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
+        $allUserIds = Invoice::where('user_cpf',  Auth::user()->cpf_cnpj)->pluck('id');
 
-        // Agora, buscamos todas as consultas da model que pertencem à todas as faturas da lista $allInvoicesPerUser
-        return $model::whereIn('OldInvoice_id', $allInvoicesPerUser)->orderBy('created_at', 'desc')->paginate(3);
+        // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
+        return $model::whereIn('OldInvoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(3);
     }
 
     public function invoicesPerCompany()
     {
-        return User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
+        $allUserIds = User::where('cpf_cnpj', Auth::user()->cpf_cnpj)->pluck('id');
+
+        return User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.user_cpf')
             ->select(
                 'users.name',
                 'invoices.id',
                 DB::raw('COUNT(DISTINCT invoices.id) AS NumberInvoices')
             )
-            ->where('users.id', '=', Auth::user()->id)
-            ->groupBy('users.name', 'invoices.id')
+            ->whereIn('users.id', $allUserIds)
+            ->groupBy('users.name', 'invoices.id', 'users.cpf_cnpj')
             ->orderBy('invoices.created_at', 'desc')
             ->first();
     }
 
     public function invoicesPerDate()
     {
-        return User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
+        $allUserIds = User::where('cpf_cnpj', Auth::user()->cpf_cnpj)->pluck('id');
+
+        return User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.user_cpf')
             ->select(
                 DB::raw('DATE_ADD(invoices.created_at, INTERVAL 30 DAY) AS InvoiceDate')
             )
-            ->where('users.id', '=', Auth::user()->id)
+            ->whereIn('users.id', $allUserIds)
             ->orderBy('invoices.created_at', 'desc')
             ->first();
     }
 
     public function consultsPerCompany($id = null)
     {
-        $company = User::leftJoin('invoices', 'users.id', '=', 'invoices.user_id')
+        $allUserIds = User::where('cpf_cnpj', Auth::user()->cpf_cnpj)->pluck('id');
+
+        $invoices = User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.user_cpf')
             ->leftJoin('employees', 'invoices.id', '=', 'employees.invoice_id')
             ->leftJoin('freelancers', 'invoices.id', '=', 'freelancers.invoice_id')
             ->leftJoin('vehicles', 'invoices.id', '=', 'vehicles.invoice_id')
@@ -92,28 +98,43 @@ abstract class Controller
                 DB::raw('COUNT(DISTINCT freelancers.id) AS Freelancers'),
                 DB::raw('COUNT(DISTINCT vehicles.id) AS Vehicles')
             )
-            ->groupBy('users.id', 'users.name', 'invoices.id', 'invoices.created_at',
-                'invoices.cost_employee', 'invoices.cost_freelancer', 'invoices.cost_vehicle',
-                'invoices.price', 'invoices.status'
+            ->where('users.usertype', 2)
+            ->groupBy(
+                'users.id',
+                'users.name',
+                'invoices.id',
+                'invoices.created_at',
+                'invoices.cost_employee',
+                'invoices.cost_freelancer',
+                'invoices.cost_vehicle',
+                'invoices.price',
+                'invoices.status'
             )
             ->orderBy('users.created_at', 'desc');
-    
+
         if ($id) {
-            $company->where('users.id', $id);
+            $invoices->where('invoices.id', $id);
         }
-    
+
         if (Auth::check() && Auth::user()->usertype == 2) {
-            $company->where('invoices.user_id', Auth::user()->id);
-            $company->whereRaw('DATE_ADD(
-                                    invoices.created_at,
-                                    INTERVAL CASE WHEN invoices.id =
-                                        (SELECT MIN(invoices.id) FROM invoices
-                                        WHERE invoices.user_id = users.id) THEN 30 ELSE 25 END DAY) <= NOW()');
+            $invoices->whereIn('invoices.user_id', $allUserIds);
+            $invoices->whereRaw("
+                DATE_ADD(
+                    invoices.created_at,
+                    INTERVAL CASE
+                        WHEN invoices.id = (
+                            SELECT MIN(i.id)
+                            FROM invoices AS i
+                            WHERE i.user_id = invoices.user_id
+                        ) THEN 30
+                        ELSE 25
+                    END DAY
+                ) <= NOW()
+            ");
         } else {
-            $company->where('users.usertype', '2');
-            $company->where('invoices.status', '!=', 'Pago');
+            $invoices->where('invoices.status', '!=', 'Pago');
         }
-    
-        return $company->paginate(5);
+
+        return $invoices->paginate(5);
     }
 }

@@ -19,6 +19,7 @@ class AuditFreelancer extends Model
         'OldCnh',
         'OldPlaca',
         'OldInvoice_id',
+        'OldInvoice_cpf',
         'freelancer_id',
         'OldReturn_status',
     ];

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('renavam')->unique();
             $table->string('chassi')->unique();
             $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
+            $table->string('invoice_cpf');
             $table->string('return_status')->default('Em análise');
             $table->timestamps();
         });

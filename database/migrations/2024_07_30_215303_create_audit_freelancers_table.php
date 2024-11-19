@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('OldCnh')->nullable();
             $table->string('OldPlaca')->nullable();
             $table->string('OldInvoice_id')->nullable();
+            $table->string('OldInvoice_cpf')->nullable();
             $table->foreignId('freelancer_id')->nullable()->constrained('freelancers')->onDelete('cascade');//id do Consultor
             $table->string('OldReturn_status')->nullable();
             $table->timestamps();

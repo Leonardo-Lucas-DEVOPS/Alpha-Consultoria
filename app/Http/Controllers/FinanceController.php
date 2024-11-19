@@ -15,21 +15,21 @@ define('VALIDACAO_INPUT', 'required|numeric');
 
 class FinanceController extends Controller
 {
-    public function show(Request $request)
+    public function show()
     {
-        $companies = $this->consultsPerCompany();
+        $invoices = $this->consultsPerCompany();
 
-        foreach ($companies as $company) {
-            $invoiceDueDate = Carbon::createFromFormat(FORMATACAO_DATA, $company->InvoiceDue);
-    
-            if ($invoiceDueDate->isPast() && $company->status != 'Pago') {
-                $company->status = 'Em atraso';
+        foreach ($invoices as $invoice) {
+            $invoiceDueDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceDue);
 
-                DB::table('invoices')->where('id', $company->id)->update(['status' => 'Em atraso']);
+            if ($invoiceDueDate->isPast() && $invoice->status != 'Pago') {
+                $invoice->status = 'Em atraso';
+
+                DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Em atraso']);
             }
         }
-    
-        return view('finance.show-finance', compact('companies'));
+
+        return view('finance.show-finance', compact('invoices'));
     }
 
     public function update(Request $request)
@@ -42,21 +42,21 @@ class FinanceController extends Controller
             ]);
 
             // Pegando as empresas
-            $companies = $this->consultsPerCompany();
+            $invoices = $this->consultsPerCompany();
 
-            foreach ($companies as $company) {
-                $valueEmployee = $request->input("valueEmployee.{$company->id}", $company->cost_employee);
-                $valueFreelancer = $request->input("valueFreelancer.{$company->id}", $company->cost_freelancer);
-                $valueVehicle = $request->input("valueVehicle.{$company->id}", $company->cost_vehicle);
+            foreach ($invoices as $invoice) {
+                $valueEmployee = $request->input("valueEmployee.{$invoice->id}", $invoice->cost_employee);
+                $valueFreelancer = $request->input("valueFreelancer.{$invoice->id}", $invoice->cost_freelancer);
+                $valueVehicle = $request->input("valueVehicle.{$invoice->id}", $invoice->cost_vehicle);
 
-                $totalEmployees = $valueEmployee * $company->Employees;
-                $totalFreelancers = $valueFreelancer * $company->Freelancers;
-                $totalVehicles = $valueVehicle * $company->Vehicles;
+                $totalEmployees = $valueEmployee * $invoice->Employees;
+                $totalFreelancers = $valueFreelancer * $invoice->Freelancers;
+                $totalVehicles = $valueVehicle * $invoice->Vehicles;
 
                 $price = $totalEmployees + $totalFreelancers + $totalVehicles;
 
                 DB::table('invoices')
-                    ->where('id', $company->id)
+                    ->where('id', $invoice->id)
                     ->update([
                         'cost_employee' => $valueEmployee,
                         'cost_freelancer' => $valueFreelancer,
@@ -85,10 +85,10 @@ class FinanceController extends Controller
         }
     }
 
-    public function generateInvoice(string $invoiceId)
+    public function generateInvoice(string $id)
     {
         try {
-            $invoice = Invoice::findOrFail($invoiceId);
+            $invoice = Invoice::findOrFail($id);
             $user = User::findOrFail($invoice->user_id);
 
             $firstInvoice = Invoice::where('user_id', $user->id)->orderBy('created_at')->first();
@@ -117,14 +117,14 @@ class FinanceController extends Controller
                 'address' => $user->address,
                 'whatsapp' => public_path('images/whatsapp.png')
             ];
+            
+            $consults = $this->consultsPerCompany($id)->first();
 
-            $company = $this->consultsPerCompany($user->id)->first();
-
-            if (!$company) {
+            if (!$consults) {
                 return redirect(route('finance.show'))->with('fail', 'Empresa não encontrada');
             }
 
-            $pdf = Pdf::loadView('finance.partials.finance-pdf', compact('invoices', 'company'));
+            $pdf = Pdf::loadView('finance.partials.finance-pdf', compact('invoices', 'consults'));
             return $pdf->stream('fatura.pdf');
         } catch (ValidationException $e) {
             return redirect(route('finance.show'))->with('fail', 'Erro ao gerar fatura: ' . $e->getMessage());

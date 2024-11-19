@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('placa')->unique();
             $table->string('cnh')->unique();
             $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
+            $table->string('invoice_cpf');
             $table->string('return_status')->default('Em análise');
             $table->timestamps();
         });

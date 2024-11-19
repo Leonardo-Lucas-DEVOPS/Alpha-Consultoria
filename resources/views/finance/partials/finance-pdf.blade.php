@@ -134,10 +134,10 @@
                 <th>Valor da Fatura</th>
             </tr>
             <tr>
-                <td>{{ $company->Employees }}</td>
-                <td>{{ $company->Freelancers }}</td>
-                <td>{{ $company->Vehicles }}</td>
-                <td>R${{ $company->Price }}.00</td>
+                <td>{{ $consults->Employees }}</td>
+                <td>{{ $consults->Freelancers }}</td>
+                <td>{{ $consults->Vehicles }}</td>
+                <td>R${{ $consults->Price }},00</td>
             </tr>
         </table>
     </main>

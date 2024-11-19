@@ -19,6 +19,7 @@ class InvoiceFactory extends Factory
     {
         return [
             'user_id' => User::inRandomOrder()->first()->id,
+            'user_cpf' => User::inRandomOrder()->first()->cpf_cnpj,
             'status' => fake()->randomElement(['Pago', 'Pendente', 'Em atraso']),
             'cost_employee' => fake()->randomDigit(1, 10),
             'cost_freelancer' => fake()->randomDigit(1, 10),

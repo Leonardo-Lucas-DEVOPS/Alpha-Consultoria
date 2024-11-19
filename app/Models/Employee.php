@@ -17,6 +17,7 @@ class Employee extends Model
         'pai',
         'mae',
         'invoice_id',
+        'invoice_cpf',
         'return_status',
     ];
 

@@ -29,7 +29,8 @@ class EmployeeFactory extends Factory
             'nascimento' => $this->faker->date(), // Gera uma data de nascimento fictícia
             'pai' => $this->faker->name, // Gera o nome do pai fictício
             'mae' => $this->faker->name, // Gera o nome da mãe fictício
-            'invoice_id' => Invoice::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriamente
+            'invoice_id' => Invoice::inRandomOrder()->first()->id, // Associa uma fatura existente aleatoriamente
+            'invoice_cpf' => Invoice::inRandomOrder()->first()->user_cpf, // Associa um cpf existente aleatoriamente
             'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Rejeitado']), // Status aleatório
         ];
     }

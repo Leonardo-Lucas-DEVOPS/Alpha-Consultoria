@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Vehicle;
 use App\Models\AuditVehicle;
@@ -38,25 +39,19 @@ class VehicleController extends Controller
             $validatedData['renavam'] = preg_replace(FORMATACAO, '', $validatedData['renavam']);
             $validatedData['chassi'] = preg_replace(FORMATACAO, '', $validatedData['chassi']);
 
-            $userId = Auth::id();
+            $userCpfCnpj = Auth::user()->cpf_cnpj;
+            $company = User::where('cpf_cnpj', $userCpfCnpj)->where('usertype', 2)->first();
 
             $companyInvoice = $this->invoicesPerCompany();
-            $invoiceData = $this->invoicesPerDate();
+            $invoiceDate = $this->invoicesPerDate();
 
-            if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceData->InvoiceDate)->isPast()) {
-                $invoice = Invoice::create([
-                    'user_id' => $userId,
-                    'status' => 'Pendente',
-                    'cost_employee' => 0,
-                    'cost_freelancer' => 0,
-                    'cost_vehicle' => 0,
-                    'price' => 0
-                ]);
+            if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
+                $invoice = Invoice::create(['user_id' => $company->id, 'user_cpf' => $userCpfCnpj]);
             } else {
                 $invoice = $companyInvoice;
             }
 
-            Vehicle::create(array_merge($validatedData, ['invoice_id' => $invoice->id]));
+            Vehicle::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpf' => $userCpfCnpj]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -114,7 +109,8 @@ class VehicleController extends Controller
                 'OldChassi' => $vehicle->chassi,
                 'OldRenavam' => $vehicle->renavam,
                 'OldPlaca' => $vehicle->placa,
-                'OldInvoice_id' => $vehicle->invoice_id,
+                'OldInvoice_id' => $vehicle->user_id,
+                'OldInvoice_cpf' => $vehicle->user_cpf,
                 'OldReturn_status' => $vehicle->return_status,
             ]);
 

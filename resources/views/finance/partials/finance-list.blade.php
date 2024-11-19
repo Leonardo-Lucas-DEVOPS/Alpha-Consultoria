@@ -24,23 +24,23 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($companies as $company)
+            @foreach ($invoices as $invoice)
                 <tr class="border-b">
-                    <td class="px-4 py-2">{{ $company->Company }}</td>
-                    <td class="px-4 py-2">{{ $company->InvoiceDue }}</td>
-                    <td class="px-4 py-2">{{ $company->Employees }}</td>
-                    <td class="px-4 py-2">{{ $company->Freelancers }}</td>
-                    <td class="px-4 py-2">{{ $company->Vehicles }}</td>
-                    <td class="px-4 py-2">R${{ $company->Price }}.00</td>
+                    <td class="px-4 py-2">{{ $invoice->Company }}</td>
+                    <td class="px-4 py-2">{{ $invoice->InvoiceDue }}</td>
+                    <td class="px-4 py-2">{{ $invoice->Employees }}</td>
+                    <td class="px-4 py-2">{{ $invoice->Freelancers }}</td>
+                    <td class="px-4 py-2">{{ $invoice->Vehicles }}</td>
+                    <td class="px-4 py-2">R${{ $invoice->Price }}.00</td>
                     <td class="px-4 py-2">
                         <div class="flex space-y-2">
                             <div class="actions">
                                 <button class="btn btn-info" data-bs-toggle="modal"
-                                    data-bs-target="#modalInvoice_{{ $company->id }}">Gerenciar Fatura</button>
-                                <form action="{{ route('finance.update', $company->id) }}" method="POST">
+                                    data-bs-target="#modalInvoice_{{ $invoice->id }}">Gerenciar Fatura</button>
+                                <form action="{{ route('finance.update', $invoice->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
-                                    <div class="modal fade" id="modalInvoice_{{ $company->id }}" tabindex="-1"
+                                    <div class="modal fade" id="modalInvoice_{{ $invoice->id }}" tabindex="-1"
                                         aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
@@ -51,45 +51,48 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <p>Edite e gere uma fatura para a empresa
-                                                        <strong>{{ $company->Company }}</strong>
+                                                        <strong>{{ $invoice->Company }}</strong>
                                                         com seus respectivos custos
                                                     </p>
 
-                                                    <label for="valueEmployee_{{ $company->id }}">Funcionário
-                                                        (Empresa: {{ $company->Company }})
+                                                    <label for="valueEmployee_{{ $invoice->id }}">Funcionário
+                                                        (Empresa: {{ $invoice->Company }})
                                                     </label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control"
-                                                            id="valueEmployee_{{ $company->id }}"
-                                                            name="valueEmployee[{{ $company->id }}]"
-                                                            value="{{ $company->cost_employee ?? 0 }}"
-                                                            aria-label="Preço para cada funcionário da empresa {{ $company->Company }}">
+                                                            id="valueEmployee_{{ $invoice->id }}"
+                                                            name="valueEmployee[{{ $invoice->id }}]"
+                                                            value="{{ $invoice->cost_employee ?? 0 }}"
+                                                            aria-label="Preço para cada funcionário da empresa {{ $invoice->invoice }}"
+                                                            @if (Auth::user()->usertype !== 3) disabled @endif>
                                                         <span class="input-group-text">.00</span>
                                                     </div>
 
-                                                    <label for="valueFreelancer_{{ $company->id }}">Prestador de
+                                                    <label for="valueFreelancer_{{ $invoice->id }}">Prestador de
                                                         serviço
-                                                        (Empresa: {{ $company->Company }})</label>
+                                                        (Empresa: {{ $invoice->Company }})</label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control"
-                                                            id="valueFreelancer_{{ $company->id }}"
-                                                            name="valueFreelancer[{{ $company->id }}]"
-                                                            value="{{ $company->cost_freelancer ?? 0 }}"
-                                                            aria-label="Preço para cada prestador de serviço da empresa {{ $company->Company }}">
+                                                            id="valueFreelancer_{{ $invoice->id }}"
+                                                            name="valueFreelancer[{{ $invoice->id }}]"
+                                                            value="{{ $invoice->cost_freelancer ?? 0 }}"
+                                                            aria-label="Preço para cada prestador de serviço da empresa {{ $invoice->invoice }}"
+                                                            @if (Auth::user()->usertype !== 3) disabled @endif>
                                                         <span class="input-group-text">.00</span>
                                                     </div>
 
-                                                    <label for="valueVehicle_{{ $company->id }}">Veículo
-                                                        (Empresa: {{ $company->Company }})</label>
+                                                    <label for="valueVehicle_{{ $invoice->id }}">Veículo
+                                                        (Empresa: {{ $invoice->Company }})</label>
                                                     <div class="input-group mb-3">
                                                         <span class="input-group-text">$</span>
                                                         <input type="text" class="form-control"
-                                                            id="valueVehicle_{{ $company->id }}"
-                                                            name="valueVehicle[{{ $company->id }}]"
-                                                            value="{{ $company->cost_vehicle ?? 0 }}"
-                                                            aria-label="Preço para cada veículo da empresa {{ $company->Company }}">
+                                                            id="valueVehicle_{{ $invoice->id }}"
+                                                            name="valueVehicle[{{ $invoice->id }}]"
+                                                            value="{{ $invoice->cost_vehicle ?? 0 }}"
+                                                            aria-label="Preço para cada veículo da empresa {{ $invoice->invoice }}"
+                                                            @if (Auth::user()->usertype !== 3) disabled @endif>
                                                         <span class="input-group-text">.00</span>
                                                     </div>
 
@@ -101,15 +104,15 @@
                                 </form>
 
                                 @if (Auth::user()->usertype == 3)
-                                    <form action="{{ route('finance.payment', $company->id) }}" method="POST">
+                                    <form action="{{ route('finance.payment', $invoice->id) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
                                         <button class="btn btn-success" type="submit">Confirmar pagamento</button>
                                     </form>
                                 @endif
-                                    <form action="{{ route('finance.invoice', $company->id) }}" method="GET">
-                                        <button class="btn btn-info">Gerar</button>
-                                    </form>
+                                <form action="{{ route('finance.invoice', $invoice->id) }}" method="GET">
+                                    <button class="btn btn-info">Gerar</button>
+                                </form>
                             </div>
                         </div>
 </div>
@@ -123,6 +126,6 @@
 </table>
 <!-- Navegação de Paginação -->
 <div class="mt-4">
-    {{ $companies->links() }}
+    {{ $invoices->links() }}
 </div>
 </div>

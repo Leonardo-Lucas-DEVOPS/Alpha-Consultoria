@@ -14,6 +14,7 @@ class AuditVehicle extends Model
         'OldChassi',
         'OldRenavam',
         'OldInvoice_id',
+        'OldInvoice_cpf',
         'vehicle_id',
         'OldReturn_status',
     ];

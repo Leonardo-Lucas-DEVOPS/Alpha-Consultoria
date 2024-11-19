@@ -22,6 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->string('pai')->nullable();
             $table->string('mae');
             $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
+            $table->string('invoice_cpf');
             $table->string('return_status')->default('Em análise');
             $table->timestamps();
         });

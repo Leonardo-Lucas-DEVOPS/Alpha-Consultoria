@@ -14,6 +14,7 @@ class Vehicle extends Model
         'chassi',
         'renavam',
         'invoice_id',
+        'invoice_cpf',
         'return_status',
     ];
 }
