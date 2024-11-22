@@ -9,14 +9,12 @@
         </p>
     </header>
 
-
-    <form class="mt-5f  space-y-6"
+    <form class="space-y-6"
         action="{{ $vehicle ? route('vehicle.update', $vehicle->id) : route('vehicle.store') }}" method="POST">
         @csrf
         @if ($vehicle)
             @method('PATCH')
         @endif
-
 
         <div>
             <x-input-label for="placa" :value="__('Placa do veículo')" />

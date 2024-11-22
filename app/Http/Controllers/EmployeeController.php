@@ -49,12 +49,12 @@ class EmployeeController extends Controller
             $invoiceDate = $this->invoicesPerDate();
 
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
-                $invoice = Invoice::create(['user_id' => $company->id, 'user_cpf' => $userCpfCnpj]);
+                $invoice = Invoice::create(['company_id' => $company->id, 'company_cpfcnpj' => $userCpfCnpj]);
             } else {
                 $invoice = $companyInvoice;
             }
 
-            Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpf' => $userCpfCnpj]));
+            Employee::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpfcnpj' => $userCpfCnpj]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -117,8 +117,8 @@ class EmployeeController extends Controller
                 'OldNascimento' => $employee->nascimento,
                 'OldPai' =>      $employee->pai,
                 'OldMae' =>      $employee->mae,
-                'OldInvoice_id' => $employee->user_id,
-                'OldInvoice_cpf' => $employee->user_cpf,
+                'OldInvoice_id' => $employee->invoice_id,
+                'OldInvoice_cpfcnpj' => $employee->invoice_cpfcnpj,
                 'OldReturn_status' => $employee->return_status,
             ]);
 

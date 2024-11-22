@@ -22,7 +22,7 @@ class VehicleFactory extends Factory
             'chassi' => strtoupper(fake()->bothify('##?#?###########')), // Gera um chassi fictício
             'renavam' => fake()->numerify('###########'), // Gera um número RENAVAM fictício com 11 dígitos
             'invoice_id' => Invoice::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriament
-            'invoice_cpf' => Invoice::inRandomOrder()->first()->user_cpf, // Associa um usuário existente aleatoriamente
+            'invoice_cpfcnpj' => Invoice::inRandomOrder()->first()->company_cpfcnpj, // Associa um usuário existente aleatoriamente
             'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
         ];
     }

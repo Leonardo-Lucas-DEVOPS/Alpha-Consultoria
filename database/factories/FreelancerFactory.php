@@ -31,8 +31,8 @@ class FreelancerFactory extends Factory
             'mae' => $this->faker->name, // Gera o nome da mãe fictício
             'placa' => strtoupper($this->faker->bothify('???-####')), // Gera uma placa no formato ABC-1234
             'cnh' => $this->faker->bothify('###############'), // Gera um número de CNH fictício
-            'invoice_id' => Invoice::inRandomOrder()->first()->id, // Associa uma fatura existente aleatoriamente
-            'invoice_cpf' => Invoice::inRandomOrder()->first()->user_cpf, // Associa um cpf existente aleatoriamente
+            'invoice_id' => Invoice::inRandomOrder()->first()->company_id, // Associa uma fatura existente aleatoriamente
+            'invoice_cpfcnpj' => Invoice::inRandomOrder()->first()->company_cpfcnpj, // Associa um cpf existente aleatoriamente
             'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
         ];
     }

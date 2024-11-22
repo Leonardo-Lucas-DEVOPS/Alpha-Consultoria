@@ -13,7 +13,7 @@ abstract class Controller
     {
         // Busca todos os registros criados há mais de 3 meses
         $records = $model::where('updated_at', '<=', now()->subMonths(6))
-            ->where('return_status', '!=', 'Em Análise') // Evita alterar se já estiver "Em Análise"
+            ->whereNot('return_status', 'Em Análise') // Evita alterar se já estiver "Em Análise"
             ->get();
 
         // Atualiza o status de consulta para "Em Analise"
@@ -26,7 +26,7 @@ abstract class Controller
     public function filterConsults($model)
     {
         // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
-        $allUserIds = Invoice::where('user_cpf',  Auth::user()->cpf_cnpj)->pluck('id');
+        $allUserIds = Invoice::where('company_cpfcnpj',  Auth::user()->cpf_cnpj)->pluck('id');
 
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
         return $model::whereIn('invoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(5);
@@ -35,7 +35,7 @@ abstract class Controller
     public function filterAudit($model)
     {
         // Lista de IDs dos usuários com o mesmo cnpj do usuário logado
-        $allUserIds = Invoice::where('user_cpf',  Auth::user()->cpf_cnpj)->pluck('id');
+        $allUserIds = Invoice::where('company_cpfcnpj',  Auth::user()->cpf_cnpj)->pluck('id');
 
         // Agora, buscamos todas as consultas da model que pertencem aos IDs da lista $allUserIds
         return $model::whereIn('OldInvoice_id', $allUserIds)->orderBy('created_at', 'desc')->paginate(3);
@@ -45,7 +45,7 @@ abstract class Controller
     {
         $allUserIds = User::where('cpf_cnpj', Auth::user()->cpf_cnpj)->pluck('id');
 
-        return User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.user_cpf')
+        return User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.company_cpfcnpj')
             ->select(
                 'users.name',
                 'invoices.id',
@@ -61,7 +61,7 @@ abstract class Controller
     {
         $allUserIds = User::where('cpf_cnpj', Auth::user()->cpf_cnpj)->pluck('id');
 
-        return User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.user_cpf')
+        return User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.company_cpfcnpj')
             ->select(
                 DB::raw('DATE_ADD(invoices.created_at, INTERVAL 30 DAY) AS InvoiceDate')
             )
@@ -74,7 +74,7 @@ abstract class Controller
     {
         $allUserIds = User::where('cpf_cnpj', Auth::user()->cpf_cnpj)->pluck('id');
 
-        $invoices = User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.user_cpf')
+        $invoices = User::leftJoin('invoices', 'users.cpf_cnpj', '=', 'invoices.company_cpfcnpj')
             ->leftJoin('employees', 'invoices.id', '=', 'employees.invoice_id')
             ->leftJoin('freelancers', 'invoices.id', '=', 'freelancers.invoice_id')
             ->leftJoin('vehicles', 'invoices.id', '=', 'vehicles.invoice_id')
@@ -84,7 +84,7 @@ abstract class Controller
                 DB::raw('
                     DATE_FORMAT(
                         DATE_ADD(invoices.created_at, INTERVAL CASE WHEN invoices.id = (
-                            SELECT MIN(invoices.id) FROM invoices WHERE invoices.user_id = users.id
+                            SELECT MIN(invoices.id) FROM invoices WHERE invoices.company_id = users.id
                         ) THEN 35 ELSE 30 END DAY),
                         "%d/%m/%Y"
                     ) AS InvoiceDue
@@ -117,7 +117,7 @@ abstract class Controller
         }
 
         if (Auth::check() && Auth::user()->usertype == 2) {
-            $invoices->whereIn('invoices.user_id', $allUserIds);
+            $invoices->whereIn('invoices.company_id', $allUserIds);
             $invoices->whereRaw("
                 DATE_ADD(
                     invoices.created_at,
@@ -125,14 +125,14 @@ abstract class Controller
                         WHEN invoices.id = (
                             SELECT MIN(i.id)
                             FROM invoices AS i
-                            WHERE i.user_id = invoices.user_id
+                            WHERE i.company_id = invoices.company_id
                         ) THEN 30
                         ELSE 25
                     END DAY
                 ) <= NOW()
             ");
         } else {
-            $invoices->where('invoices.status', '!=', 'Pago');
+            $invoices->whereNot('invoices.status', 'Pago');
         }
 
         return $invoices->paginate(5);

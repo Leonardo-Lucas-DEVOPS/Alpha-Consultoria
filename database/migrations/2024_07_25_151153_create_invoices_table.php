@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('user_cpf');
-            $table->string('status')->default('Pendente');
+            $table->foreignId('company_id')->constrained('users')->onDelete('cascade');
+            $table->string('company_cpfcnpj');
+            $table->string('status')->default('Em aberto');
             $table->integer('cost_employee')->default(0);
             $table->integer('cost_freelancer')->default(0);
             $table->integer('cost_vehicle')->default(0);

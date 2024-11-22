@@ -46,14 +46,13 @@ class AffiliateController extends Controller
     }
     public function show(User $affiliate)
     {
-
         if (auth::user()->usertype == 3) {
-            $affiliates = User::orderBy('created_at', 'desc')->paginate(5);
+            $affiliates = User::where('usertype', 1)->orderBy('created_at', 'desc')->paginate(5);
             return view('affiliates.show-affiliates', compact('affiliates'));
         }
 
         // Filtrar os afiliados com o mesmo cpf_cnpj do admin e com usertype igual a 1
-        $affiliates = User::where('usertype', '1')
+        $affiliates = User::where('usertype', 1)
             ->where('cpf_cnpj', Auth::user()->cpf_cnpj)
             ->orderBy('created_at', 'desc')
             ->paginate(5);

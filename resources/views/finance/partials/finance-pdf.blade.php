@@ -56,6 +56,7 @@
 
         .geral {
             margin-left: 7%;
+            width: 600px;
         }
 
         .consultas {

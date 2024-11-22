@@ -20,13 +20,22 @@ class FinanceController extends Controller
         $invoices = $this->consultsPerCompany();
 
         foreach ($invoices as $invoice) {
+            // $invoiceGenerationDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceGeneration);
             $invoiceDueDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceDue);
 
-            if ($invoiceDueDate->isPast() && $invoice->status != 'Pago') {
-                $invoice->status = 'Em atraso';
+            if ($invoice->status != 'Pago') {
+                if ($invoiceDueDate->isPast()) {
+                    $invoice->status = 'Pendente';
 
-                DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Em atraso']);
+                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Pendente']);
+                }
             }
+
+            // if ($invoiceGenerationDate->isPast()) {
+            //     $invoice->status = 'Aguardando pagamento';
+
+            //     DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Aguardando pagamento']);
+            // } else
         }
 
         return view('finance.show-finance', compact('invoices'));
@@ -89,9 +98,9 @@ class FinanceController extends Controller
     {
         try {
             $invoice = Invoice::findOrFail($id);
-            $user = User::findOrFail($invoice->user_id);
+            $user = User::findOrFail($invoice->company_id);
 
-            $firstInvoice = Invoice::where('user_id', $user->id)->orderBy('created_at')->first();
+            $firstInvoice = Invoice::where('company_id', $user->id)->orderBy('created_at')->first();
 
             $generationDate = $invoice->created_at;
             $dueDate = $invoice->created_at;

@@ -18,13 +18,13 @@ class InvoiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::inRandomOrder()->first()->id,
-            'user_cpf' => User::inRandomOrder()->first()->cpf_cnpj,
-            'status' => fake()->randomElement(['Pago', 'Pendente', 'Em atraso']),
+            'company_id' => User::inRandomOrder()->first()->id,
+            'company_cpfcnpj' => User::inRandomOrder()->first()->cpf_cnpj,
+            'status' => fake()->randomElement(['Em aberto', 'Aguardando pagamento', 'Pendente', 'Pago']),
             'cost_employee' => fake()->randomDigit(1, 10),
             'cost_freelancer' => fake()->randomDigit(1, 10),
             'cost_vehicle' => fake()->randomDigit(1, 10),
-            'price' => fake()->randomDigit(1, 30)
+            'price' => fn (array $attributes) => $attributes['cost_employee'] + $attributes['cost_freelancer'] + $attributes['cost_vehicle'],
         ];
     }
 }

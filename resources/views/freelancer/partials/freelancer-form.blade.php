@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form class="mt-5 space-y-6"
+    <form class="space-y-6"
         action="{{ $freelancer ? route('freelancer.update', $freelancer->id) : route('freelancer.store') }}"
         method="POST">
         @csrf

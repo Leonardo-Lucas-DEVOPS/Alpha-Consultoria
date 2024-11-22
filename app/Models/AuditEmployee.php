@@ -17,7 +17,7 @@ class AuditEmployee extends Model
         'OldPai',
         'OldMae',
         'OldInvoice_id',
-        'OldInvoice_cpf',
+        'OldInvoice_cpfcnpj',
         'employee_id',
         'OldReturn_status',
     ];

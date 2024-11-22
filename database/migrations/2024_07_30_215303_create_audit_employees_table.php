@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('OldPai')->nullable();
             $table->string('OldMae')->nullable();
             $table->string('OldInvoice_id')->nullable();
-            $table->string('OldInvoice_cpf')->nullable();
+            $table->string('OldInvoice_cpfcnpj')->nullable();
             $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('cascade'); //id do Consultor
             $table->string('OldReturn_status')->nullable();
             $table->timestamps();

@@ -53,12 +53,12 @@ class FreelancerController extends Controller
             $invoiceDate = $this->invoicesPerDate();
 
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
-                $invoice = Invoice::create(['user_id' => $company->id, 'user_cpf' => $userCpfCnpj]);
+                $invoice = Invoice::create(['company_id' => $company->id, 'company_cpfcnpj' => $userCpfCnpj]);
             } else {
                 $invoice = $companyInvoice;
             }
 
-            Freelancer::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpf' => $userCpfCnpj]));
+            Freelancer::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpfcnpj' => $userCpfCnpj]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -125,7 +125,7 @@ class FreelancerController extends Controller
                 'OldCnh' => $freelancer->cnh,
                 'OldPlaca' => $freelancer->placa,
                 'OldInvoice_id' => $freelancer->invoice_id,
-                'OldInvoice_cpf' => $freelancer->invoice_cpf,
+                'OldInvoice_cpfcnpj' => $freelancer->invoice_cpfcnpj,
                 'OldReturn_status' => $freelancer->return_status,
             ]);
 

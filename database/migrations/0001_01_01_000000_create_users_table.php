@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('password');
             $table->integer('usertype')->default(2);
+            $table->string('company');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

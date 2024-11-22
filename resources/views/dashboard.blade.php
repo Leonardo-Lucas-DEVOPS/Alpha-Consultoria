@@ -33,7 +33,7 @@
                                         </p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ route('admin.show') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('admin.show') }}" class="btn btn-dark">{{ __('Manage') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                                         <p class="card-text">Usuários de nível inferior de acesso limitado.</p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ route('affiliate.create') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('affiliate.create') }}" class="btn btn-dark">{{ __('Consult') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                         </p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ route('affiliate.show') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('affiliate.show') }}" class="btn btn-dark">{{ __('Manage') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                                         </p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ route('finance.show') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ route('finance.show') }}" class="btn btn-dark">{{ __('Manage') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                                             municipal, e antecedentes criminais de pessoas.</p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ Route('employee.create') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ Route('employee.create') }}" class="btn btn-dark">{{ __('Consult') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +115,7 @@
                                             prestadores.</p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ Route('freelancer.create') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ Route('freelancer.create') }}" class="btn btn-dark">{{ __('Consult') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
                                             Situação Judicial, Informações Técnicas.</p>
                                     </div>
                                     <div class="m-2 mt-0">
-                                        <a href="{{ Route('vehicle.create') }}" class="btn btn-dark">Consultar</a>
+                                        <a href="{{ Route('vehicle.create') }}" class="btn btn-dark">{{ __('Consult') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -140,11 +140,11 @@
                             <div class="card" style="width: 100%;">
                                 <img src="{{ asset('images/G-employee.jpg') }}" class="card-img-top" alt="Card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Gerenciar funcionário</h5>
-                                    <p class="card-text">Editar consulta ou deletar solicitação.</p>
+                                    <h5 class="card-title">Gerenciar funcionários</h5>
+                                    <p class="card-text">Editar consulta, aprovar ou deletar solicitação.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="{{ route('employee.show') }}" class="btn btn-dark">Consultar</a>
+                                    <a href="{{ route('employee.show') }}" class="btn btn-dark">{{ __('Manage') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -155,10 +155,10 @@
                                     alt="Card">
                                 <div class="card-body">
                                     <h5 class="card-title">Gerenciar prestadores de serviço</h5>
-                                    <p class="card-text">Editar consulta ou deletar solicitação.</p>
+                                    <p class="card-text">Editar consulta, aprovar ou deletar solicitação.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="{{ route('freelancer.show') }}" class="btn btn-dark">Consultar</a>
+                                    <a href="{{ route('freelancer.show') }}" class="btn btn-dark">{{ __('Manage') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -168,10 +168,10 @@
                                 <img src="{{ asset('images/G-vehicle.jpg') }}" class="card-img-top" alt="Card">
                                 <div class="card-body">
                                     <h5 class="card-title">Gerenciar veículo</h5>
-                                    <p class="card-text">Editar consulta ou deletar solicitação.</p>
+                                    <p class="card-text">Editar consulta, aprovar ou deletar solicitação.</p>
                                 </div>
                                 <div class="m-2 mt-0">
-                                    <a href="{{ route('vehicle.show') }}" class="btn btn-dark">Consultar</a>
+                                    <a href="{{ route('vehicle.show') }}" class="btn btn-dark">{{ __('Manage') }}</a>
                                 </div>
                             </div>
                         </div>

@@ -46,12 +46,12 @@ class VehicleController extends Controller
             $invoiceDate = $this->invoicesPerDate();
 
             if (!$companyInvoice || $companyInvoice->NumberInvoices == 0 || Carbon::parse($invoiceDate->InvoiceDate)->isPast()) {
-                $invoice = Invoice::create(['user_id' => $company->id, 'user_cpf' => $userCpfCnpj]);
+                $invoice = Invoice::create(['company_id' => $company->id, 'company_cpfcnpj' => $userCpfCnpj]);
             } else {
                 $invoice = $companyInvoice;
             }
 
-            Vehicle::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpf' => $userCpfCnpj]));
+            Vehicle::create(array_merge($validatedData, ['invoice_id' => $invoice->id], ['invoice_cpfcnpj' => $userCpfCnpj]));
 
             return redirect(route('dashboard'))->with('success', 'Registro criado com sucesso');
         } catch (ValidationException $e) {
@@ -109,8 +109,8 @@ class VehicleController extends Controller
                 'OldChassi' => $vehicle->chassi,
                 'OldRenavam' => $vehicle->renavam,
                 'OldPlaca' => $vehicle->placa,
-                'OldInvoice_id' => $vehicle->user_id,
-                'OldInvoice_cpf' => $vehicle->user_cpf,
+                'OldInvoice_id' => $vehicle->invoice_id,
+                'OldInvoice_cpfcnpj' => $vehicle->invoice_cpfcnpj,
                 'OldReturn_status' => $vehicle->return_status,
             ]);
 

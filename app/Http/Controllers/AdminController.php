@@ -46,6 +46,7 @@ class AdminController extends Controller
                 'address' => $request->address,
                 'password' => Hash::make($request->password),
                 'usertype' => '1',
+                'company_id' => Auth::user()->id
             ]);
 
             return redirect()->route('dashboard')->with('success', 'Admin cadastrado com sucesso');
@@ -56,7 +57,7 @@ class AdminController extends Controller
 
     public function show(User $admin)
     {
-        $admins = User::where('usertype', '2')->orderBy('created_at', 'desc')->paginate(5);
+        $admins = User::where('usertype', 2)->orderBy('created_at', 'desc')->paginate(5);
         return view('admins.show-admins', compact('admins'));
     }
 

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('OldChassi')->nullable();
             $table->string('OldRenavam')->nullable();
             $table->string('OldInvoice_id')->nullable();
-            $table->string('OldInvoice_cpf')->nullable();
+            $table->string('OldInvoice_cpfcnpj')->nullable();
             $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->onDelete('cascade');//id do Consultor
             $table->string('OldReturn_status')->nullable();
             $table->timestamps();

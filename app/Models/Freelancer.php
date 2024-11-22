@@ -19,7 +19,7 @@ class Freelancer extends Model
         'placa',
         'cnh',
         'invoice_id',
-        'invoice_cpf',
+        'invoice_cpfcnpj',
         'return_status',
     ];
 }

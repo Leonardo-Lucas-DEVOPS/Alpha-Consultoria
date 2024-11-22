@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             'address' => 'Rua Girassol',
             'password' => Hash::make('123'),
             'usertype' => 3,
+            'company' => 'Test User',
             'email_verified_at' => now(),
             'created_at' => now(),
             'updated_at' => now(),
