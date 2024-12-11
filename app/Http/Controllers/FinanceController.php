@@ -20,22 +20,24 @@ class FinanceController extends Controller
         $invoices = $this->consultsPerCompany();
 
         foreach ($invoices as $invoice) {
-            // $invoiceGenerationDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceGeneration);
+            $invoiceGenerationDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceGeneration);
             $invoiceDueDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceDue);
 
-            if ($invoice->status != 'Pago') {
-                if ($invoiceDueDate->isPast()) {
-                    $invoice->status = 'Pendente';
+            if ($invoice->status != 'Pedido pago') {
+                if (!$invoiceGenerationDate->isPast() && !$invoiceDueDate->isPast()) {
+                    $invoice->status = 'Pedido em aberto';
 
-                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Pendente']);
+                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Pedido em aberto']);
+                } else if ($invoiceGenerationDate->isPast() && !$invoiceDueDate->isPast()) {
+                    $invoice->status = 'Aguardando pagamento';
+
+                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Aguardando pagamento']);
+                } else if ($invoiceGenerationDate->isPast() && $invoiceDueDate->isPast()) {
+                    $invoice->status = 'Pedido pendente';
+
+                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Pedido pendente']);
                 }
             }
-
-            // if ($invoiceGenerationDate->isPast()) {
-            //     $invoice->status = 'Aguardando pagamento';
-
-            //     DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Aguardando pagamento']);
-            // } else
         }
 
         return view('finance.show-finance', compact('invoices'));
@@ -85,7 +87,7 @@ class FinanceController extends Controller
         try {
             $invoice = Invoice::findOrFail($id);
 
-            $invoice->status = 'Pago';
+            $invoice->status = 'Pedido pago';
             $invoice->save();
 
             return redirect(route('finance.show'))->with('success', 'Pagamento da fatura confirmada com sucesso');
@@ -126,7 +128,7 @@ class FinanceController extends Controller
                 'address' => $user->address,
                 'whatsapp' => public_path('images/whatsapp.png')
             ];
-            
+
             $consults = $this->consultsPerCompany($id)->first();
 
             if (!$consults) {

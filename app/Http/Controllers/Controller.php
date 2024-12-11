@@ -85,6 +85,14 @@ abstract class Controller
                     DATE_FORMAT(
                         DATE_ADD(invoices.created_at, INTERVAL CASE WHEN invoices.id = (
                             SELECT MIN(invoices.id) FROM invoices WHERE invoices.company_id = users.id
+                        ) THEN 30 ELSE 25 END DAY),
+                        "%d/%m/%Y"
+                    ) AS InvoiceGeneration
+                '),
+                DB::raw('
+                    DATE_FORMAT(
+                        DATE_ADD(invoices.created_at, INTERVAL CASE WHEN invoices.id = (
+                            SELECT MIN(invoices.id) FROM invoices WHERE invoices.company_id = users.id
                         ) THEN 35 ELSE 30 END DAY),
                         "%d/%m/%Y"
                     ) AS InvoiceDue
@@ -132,7 +140,7 @@ abstract class Controller
                 ) <= NOW()
             ");
         } else {
-            $invoices->whereNot('invoices.status', 'Pago');
+            $invoices->whereNot('invoices.status', 'Pedido pago');
         }
 
         return $invoices->paginate(5);

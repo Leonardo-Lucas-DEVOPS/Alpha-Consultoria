@@ -37,6 +37,7 @@ class AffiliateController extends Controller
                 'address' => Auth::user()->address,
                 'password' => Hash::make('12345678'),
                 'usertype' => '1',
+                'company' => Auth::user()->name
             ]);
 
             return redirect()->route('dashboard')->with('success', 'Afiliado cadastrado com sucesso. (Senha padrão: 12345678)');

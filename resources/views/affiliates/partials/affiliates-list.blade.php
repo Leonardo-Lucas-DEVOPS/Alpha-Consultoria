@@ -14,6 +14,7 @@
         <thead class="bg-gray-200">
             <tr>
                 <th class="px-4 py-2">Nome</th>
+                <th class="px-4 py-2">Empresa afiliada</th>
                 <th class="px-4 py-2">E-Mail</th>
                 <th class="px-4 py-2">CPF/CNPJ</th>
                 <th class="px-4 py-2">Telefone</th>
@@ -24,6 +25,7 @@
             @foreach ($affiliates as $affiliate)
                 <tr class="border-b">
                     <td class="px-4 py-2">{{ $affiliate->name }}</td>
+                    <td class="px-4 py-2">{{ $affiliate->company }}</td>
                     <td class="px-4 py-2">{{ $affiliate->email }}</td>
                     <td class="px-4 py-2">{{ $affiliate->cpf_cnpj }}</td>
                     <td class="px-4 py-2">{{ $affiliate->phone }}</td>

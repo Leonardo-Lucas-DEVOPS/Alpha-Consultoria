@@ -18,7 +18,6 @@
                 <th class="px-4 py-2">E-Mail</th>
                 <th class="px-4 py-2">CPF/CNPJ</th>
                 <th class="px-4 py-2">Telefone</th>
-                <th class="px-4 py-2">Empresa afiliada</th>
                 <th class="px-2 py-1">Ação</th>
             </tr>
         </thead>
@@ -28,7 +27,6 @@
                     <td class="px-4 py-2">{{ $admin->name }}</td>
                     <td class="px-4 py-2">{{ $admin->email }}</td>
                     <td class="px-4 py-2">{{ $admin->cpf_cnpj }}</td>
-                    {{-- <td class="px-4 py-2">{{ $admin->company }}</td> --}}
                     <td class="px-4 py-2">{{ $admin->phone }}</td>
 
                     <td>

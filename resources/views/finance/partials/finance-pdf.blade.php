@@ -97,7 +97,7 @@
 
             <p>Data de Emissão: {{ $invoices['generation_date'] }} | Data de Vencimento: {{ $invoices['due_date'] }}</p>
 
-            <p>Situação: Pedido <b>{{ $invoices['status']}}</b></p>
+            <p>Situação: <b>{{ $invoices['status']}}</b></p>
         </div>
 
         <table class="geral">
