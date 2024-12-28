@@ -127,20 +127,20 @@ abstract class Controller
         if (Auth::check() && Auth::user()->usertype == 2) {
             $invoices->whereIn('invoices.company_id', $allUserIds);
             $invoices->whereRaw("
-                DATE_ADD(
-                    invoices.created_at,
-                    INTERVAL CASE
-                        WHEN invoices.id = (
-                            SELECT MIN(i.id)
-                            FROM invoices AS i
-                            WHERE i.company_id = invoices.company_id
-                        ) THEN 30
-                        ELSE 25
-                    END DAY
-                ) <= NOW()
-            ");
+                            DATE_ADD(
+                                invoices.created_at,
+                                INTERVAL CASE
+                                    WHEN invoices.id = (
+                                        SELECT MIN(i.id)
+                                        FROM invoices AS i
+                                        WHERE i.company_id = invoices.company_id
+                                    ) THEN 30
+                                    ELSE 25
+                                END DAY
+                            ) <= NOW()
+                        ");
         } else {
-            $invoices->whereNot('invoices.status', 'Pedido pago');
+            $invoices->whereNot('invoices.status', 'Fatura paga');
         }
 
         return $invoices->paginate(5);

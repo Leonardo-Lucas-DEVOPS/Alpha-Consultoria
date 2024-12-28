@@ -98,6 +98,8 @@
             <p>Data de Emissão: {{ $invoices['generation_date'] }} | Data de Vencimento: {{ $invoices['due_date'] }}</p>
 
             <p>Situação: <b>{{ $invoices['status']}}</b></p>
+
+            <p>Cobrado juros em 10% caso em ocorrência de atraso</p>
         </div>
 
         <table class="geral">

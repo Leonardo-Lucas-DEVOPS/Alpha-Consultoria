@@ -33,7 +33,7 @@ class FreelancerFactory extends Factory
             'cnh' => $this->faker->bothify('###############'), // Gera um número de CNH fictício
             'invoice_id' => Invoice::inRandomOrder()->first()->company_id, // Associa uma fatura existente aleatoriamente
             'invoice_cpfcnpj' => Invoice::inRandomOrder()->first()->company_cpfcnpj, // Associa um cpf existente aleatoriamente
-            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
+            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']) // Status aleatório
         ];
     }
 }

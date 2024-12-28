@@ -23,7 +23,7 @@ class VehicleFactory extends Factory
             'renavam' => fake()->numerify('###########'), // Gera um número RENAVAM fictício com 11 dígitos
             'invoice_id' => Invoice::inRandomOrder()->first()->id, // Associa um usuário existente aleatoriament
             'invoice_cpfcnpj' => Invoice::inRandomOrder()->first()->company_cpfcnpj, // Associa um usuário existente aleatoriamente
-            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']), // Status aleatório
+            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Reprovado']) // Status aleatório
         ];
     }
 }

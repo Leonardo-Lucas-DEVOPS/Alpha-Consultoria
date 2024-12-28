@@ -31,7 +31,7 @@ class EmployeeFactory extends Factory
             'mae' => $this->faker->name, // Gera o nome da mãe fictício
             'invoice_id' => Invoice::inRandomOrder()->first()->company_id, // Associa uma fatura existente aleatoriamente
             'invoice_cpfcnpj' => Invoice::inRandomOrder()->first()->company_cpfcnpj, // Associa um cpf existente aleatoriamente
-            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Rejeitado']), // Status aleatório
+            'return_status' => fake()->randomElement(['Em análise', 'Aprovado', 'Rejeitado']) // Status aleatório
         ];
     }
 }

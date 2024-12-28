@@ -23,19 +23,20 @@ class FinanceController extends Controller
             $invoiceGenerationDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceGeneration);
             $invoiceDueDate = Carbon::createFromFormat(FORMATACAO_DATA, $invoice->InvoiceDue);
 
-            if ($invoice->status != 'Pedido pago') {
+            if ($invoice->status != 'Fatura vencida' || ($invoice->status == 'Fatura vencida' && !$invoice->price_updated)) {
                 if (!$invoiceGenerationDate->isPast() && !$invoiceDueDate->isPast()) {
-                    $invoice->status = 'Pedido em aberto';
-
-                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Pedido em aberto']);
+                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Fatura aberta']);
                 } else if ($invoiceGenerationDate->isPast() && !$invoiceDueDate->isPast()) {
-                    $invoice->status = 'Aguardando pagamento';
-
                     DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Aguardando pagamento']);
                 } else if ($invoiceGenerationDate->isPast() && $invoiceDueDate->isPast()) {
-                    $invoice->status = 'Pedido pendente';
-
-                    DB::table('invoices')->where('id', $invoice->id)->update(['status' => 'Pedido pendente']);
+                    DB::table('invoices')
+                        ->where('status', '!=', 'Fatura vencida')
+                        ->whereRaw("DATE_ADD(invoices.created_at, INTERVAL 35 DAY) <= NOW()")
+                        ->update([
+                            'status' => 'Fatura vencida',
+                            'price' => DB::raw('price * 1.10'),
+                            'price_updated' => true,
+                        ]);
                 }
             }
         }
@@ -87,7 +88,7 @@ class FinanceController extends Controller
         try {
             $invoice = Invoice::findOrFail($id);
 
-            $invoice->status = 'Pedido pago';
+            $invoice->status = 'Fatura paga';
             $invoice->save();
 
             return redirect(route('finance.show'))->with('success', 'Pagamento da fatura confirmada com sucesso');

@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('users')->onDelete('cascade');
             $table->string('company_cpfcnpj');
-            $table->string('status')->default('Em aberto');
+            $table->string('status')->default('Fatura aberta');
             $table->integer('cost_employee')->default(0);
             $table->integer('cost_freelancer')->default(0);
             $table->integer('cost_vehicle')->default(0);
             $table->integer('price')->default(0);
+            $table->boolean('price_updated')->default(false);
             $table->timestamps();
         });
     }
