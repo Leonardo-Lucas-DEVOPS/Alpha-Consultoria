@@ -109,6 +109,8 @@
                                         @method('PATCH')
                                         <button class="btn btn-success" type="submit">Confirmar pagamento</button>
                                     </form>
+    
+                                    <a href="{{ route('finance.paying')}}"><button class="btn btn-warning">Pagar</button></a>
                                 @endif
                                 <form action="{{ route('finance.invoice', $invoice->id) }}" method="GET">
                                     <button class="btn btn-info">Gerar</button>

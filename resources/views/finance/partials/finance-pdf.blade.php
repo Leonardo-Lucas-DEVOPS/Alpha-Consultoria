@@ -80,7 +80,6 @@
 </head>
 
 <body>
-
     <header>
         <img src="{{ $invoices['logo'] }}" alt="Logo da Alpha-Consultoria" style="width:10%; height:5%;">
     </header>
@@ -109,7 +108,7 @@
             </tr>
             <tr>
                 <td>CPF/CNPJ: 12345670001889</td>
-                <td>CPF/CNPJ {{ $invoices['cpf_cnpj'] }}</td>
+                <td>CPF/CNPJ: {{ $invoices['cpf_cnpj'] }}</td>
             </tr>
             <tr>
                 <td>Endereço: João Veloso Filho, 1402, São Paulo-SP</td>
